@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name        reduce
 @namespace   msmr.dev
-@version     0.1.37
+@version     0.1.39
 @description Reduziertes Lese-Layout für häufig besuchte Seiten
 @author      msmr
 @license     MIT
@@ -231,6 +231,7 @@
 
   .go-ticker-teaser:visited {
     background-color: color-mix(in oklab, var(--gl-card) 60%, var(--gl-page)) !important;
+    color: var(--gl-muted) !important;
   }
 
   .go-ticker-teaser:hover,
@@ -246,6 +247,12 @@
     color: currentColor !important;
     background: none !important;
     text-decoration: none !important;
+  }
+
+  .go-ticker-teaser:visited:hover,
+  .go-ticker-teaser:visited:focus-visible {
+    background-color: color-mix(in oklab, var(--gl-fg) 55%, var(--gl-page)) !important;
+    color: color-mix(in oklab, var(--gl-card) 85%, var(--gl-fg)) !important;
   }
 
   .go-ticker-teaser:hover .go-ticker-teaser__datetime,
@@ -578,6 +585,7 @@
 
   article:has(> a > time) > a:visited {
     background-color: color-mix(in oklab, var(--hs-card) 60%, var(--hs-page)) !important;
+    color: var(--hs-muted) !important;
   }
 
   article:has(> a > time) > a:hover,
@@ -605,6 +613,12 @@
   article:has(> a > time) > a:focus-visible h3 + div > span {
     background: var(--hs-blue) !important;
     color: var(--hs-card) !important;
+  }
+
+  article:has(> a > time) > a:visited:hover,
+  article:has(> a > time) > a:visited:focus-visible {
+    background-color: color-mix(in oklab, var(--hs-blue) 55%, var(--hs-page)) !important;
+    color: color-mix(in oklab, var(--hs-card) 85%, var(--hs-fg)) !important;
   }
 
   section:has(article > a > time) > article:first-of-type,
