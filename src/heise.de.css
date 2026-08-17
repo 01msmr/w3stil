@@ -344,7 +344,15 @@ article h3 + div [class*="border-teal-700"] {
 article:has(h3 + div [class*="bg-heiseblau"]) h3 + div > span,
 article:has(h3 + div [class*="bg-heiseblau"]) > a:hover h3 + div > span,
 article:has(h3 + div [class*="bg-heiseblau"]) > a:focus-visible h3 + div > span {
-  opacity: 0.45 !important;
+  opacity: 0.4 !important;
+}
+
+/* Auch der Titel tritt zurück — ohne ihn blieb die Zeile trotz blasser Chips
+ * und blasser Fläche genauso präsent wie eine redaktionelle. Im Hover nicht,
+ * dort gilt wieder voller Kontrast auf blauer Fläche. */
+article:has(h3 + div [class*="bg-heiseblau"]) > a:not(:hover):not(:focus-visible),
+article:has(> a[href*="/bestenlisten/"]) > a:not(:hover):not(:focus-visible) {
+  color: color-mix(in oklab, var(--hs-fg) 55%, var(--hs-page)) !important;
 }
 
 /* "bestenlisten" ebenso gedämpft: Kaufberatung, kein redaktioneller
@@ -354,7 +362,7 @@ article:has(h3 + div [class*="bg-heiseblau"]) > a:focus-visible h3 + div > span 
 article:has(> a[href*="/bestenlisten/"]) h3 + div > span,
 article:has(> a[href*="/bestenlisten/"]) > a:hover h3 + div > span,
 article:has(> a[href*="/bestenlisten/"]) > a:focus-visible h3 + div > span {
-  opacity: 0.45 !important;
+  opacity: 0.4 !important;
 }
 
 /* Eine Alert-Zeile färbt sich beim Überfahren vollständig rot — Zeile,
@@ -403,12 +411,25 @@ article h3 + div > img[src*="video-camera-heiseblau-300"] {
   display: none !important;
 }
 
-/* Ist eine Zeile als Werbung gekennzeichnet, tritt auch ihre Fläche zurück:
- * ein Schritt von Weiß in Richtung des Seitengrunds. Das Dimmen der Chips
- * allein reichte nicht — die Zeile selbst blieb so hell wie jede andere.
- * Die Fläche sitzt am <article>, die Hover-Füllung am <a> darin; sie
- * überdeckt die Dämpfung also ohne Konflikt. expect: 0..60 */
-article:has(h3 + div [class*="bg-heiseblau"]),
-article:has(> a[href*="/bestenlisten/"]) {
-  background: color-mix(in oklab, var(--hs-card) 82%, var(--hs-page)) !important;
+/* Auch der Hover einer Werbezeile bleibt gedämpft: die Füllung mischt das
+ * Marken-Blau zum Seitengrund hin, statt in voller Sättigung aufzutreten.
+ * Sonst wäre ausgerechnet die Werbung der auffälligste Zustand der Liste.
+ * expect: 0..60 */
+article:has(h3 + div [class*="bg-heiseblau"]) > a:hover,
+article:has(h3 + div [class*="bg-heiseblau"]) > a:focus-visible,
+article:has(> a[href*="/bestenlisten/"]) > a:hover,
+article:has(> a[href*="/bestenlisten/"]) > a:focus-visible {
+  background: color-mix(in oklab, var(--hs-blue) 42%, var(--hs-page)) !important;
+
+  /* Weiß wäre auf der blassen Fläche zu kontrastarm — die Schrift bleibt
+   * dunkel und gedämpft. */
+  color: color-mix(in oklab, var(--hs-fg) 78%, var(--hs-page)) !important;
+}
+
+article:has(h3 + div [class*="bg-heiseblau"]) > a:hover > time,
+article:has(h3 + div [class*="bg-heiseblau"]) > a:focus-visible > time,
+article:has(> a[href*="/bestenlisten/"]) > a:hover > time,
+article:has(> a[href*="/bestenlisten/"]) > a:focus-visible > time {
+  background: var(--hs-card) !important;
+  color: var(--hs-muted) !important;
 }
