@@ -16,6 +16,13 @@ on:
 permissions:
   contents: write
 
+# Zwei gleichzeitige Läufe committen beide und der zweite wird abgewiesen.
+# Nacheinander statt parallel — und nichts abbrechen, sonst bliebe eine
+# Änderung unveröffentlicht.
+concurrency:
+  group: publish
+  cancel-in-progress: false
+
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -52,4 +59,7 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add reduce.user.css
           git commit -m "build: reduce.user.css $(grep -m1 '@version' reduce.user.css | tr -s ' ' | cut -d' ' -f2)"
-          git push
+
+          # Falls in der Zwischenzeit gepusht wurde: rebasen und erneut
+          # versuchen, statt den Lauf scheitern zu lassen.
+          git push || { git pull --rebase origin main && git push; }
