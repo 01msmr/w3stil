@@ -147,7 +147,8 @@ article:has(> a > time) > a {
   gap: 1em !important;
   position: relative !important;
   width: 100% !important;
-  padding: 0.38em var(--hs-bleed) !important;
+  /* Wie golems Artikelzeilen (0.5em), nicht wie dessen Servicezeilen. */
+  padding: 0.5em var(--hs-bleed) !important;
   margin: 0 !important;
 
   /* Deckend, nicht transparent — sonst kann :visited die Fläche nicht
@@ -181,7 +182,7 @@ article > a > time {
   color: var(--hs-muted) !important;
   font-family: var(--hs-mono) !important;
   font-variant-numeric: tabular-nums !important;
-  font-size: 0.74em !important;
+  font-size: calc(var(--hs-size) * var(--w3-chip-font)) !important;
   letter-spacing: 0.03em !important;
   transition: none !important;
   position: relative !important;
@@ -245,7 +246,10 @@ article h3 + div > span {
   padding: 0.25em 0.6em !important;
   color: var(--hs-muted) !important;
   font-family: var(--hs-mono) !important;
-  font-size: 0.74em !important;
+
+  /* Gegen die Zeilenschrift gerechnet: der Container erbt heises kleinere
+   * typo-meta-Größe, die Chips fielen sonst kleiner aus als bei golem. */
+  font-size: calc(var(--hs-size) * var(--w3-chip-font)) !important;
   letter-spacing: 0.03em !important;
   line-height: var(--hs-lh) !important;
   text-transform: uppercase !important;
@@ -538,8 +542,10 @@ article h3 + div > img[src*="video-camera-heiseblau-300"] {
 /* ── heise+ ─────────────────────────────────────────────────────────────
  * Paid-Artikel markiert heise mit zwei Inline-Bildern (hell/dunkel) direkt
  * im Titel. Beide verschwinden; stattdessen steht — wie bei golem — ein
- * nacktes, fettes Plus in der Chip-Leiste, per order ganz innen rechts,
- * direkt am Zeilenblock — hinter allen Chips (0) und Symbolen (-1).
+ * nacktes, fettes Plus in der Chip-Leiste, wie bei golem an zweiter
+ * Position von rechts: es teilt order 0 mit den Ressort-Chips und steht als
+ * Pseudo-Element im DOM vor ihnen — also links vom Chip, rechts von den
+ * Symbolen (-1). Hat eine Zeile keinen Chip, rückt es ganz nach rechts.
  * expect: 0..80 */
 article h3 > img[src*="heise_plus"] {
   display: none !important;
@@ -548,7 +554,7 @@ article h3 > img[src*="heise_plus"] {
 /* expect: 0..40 */
 article h3:has(> img[src*="heise_plus"]) + div::before {
   content: "+" !important;
-  order: 1 !important;
+  order: 0 !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
@@ -557,7 +563,11 @@ article h3:has(> img[src*="heise_plus"]) + div::before {
   color: var(--hs-muted) !important;
   font-family: var(--hs-mono) !important;
   font-weight: 700 !important;
-  font-size: var(--w3-plus-size) !important;
+
+  /* Gegen die Zeilenschrift gerechnet, nicht per em: die Chip-Leiste erbt
+   * heises kleinere typo-meta-Größe, das Plus fiele sonst kleiner aus als
+   * bei golem. */
+  font-size: calc(var(--hs-size) * var(--w3-plus-scale)) !important;
   line-height: 1 !important;
 }
 

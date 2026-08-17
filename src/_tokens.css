@@ -30,11 +30,18 @@
   --w3-label-mix: 12%;
 
   /* Deckung der Trennlinie zwischen den Zeilen. */
-  --w3-divider-mix: 50%;
+  --w3-divider-mix: 25%;
+
+  /* Schriftgröße der kleinen Chips (Uhrzeit, Ressort/Hinweise): Faktor
+   * relativ zur ZEILENschrift — einheitenlos aus demselben Grund wie
+   * --w3-plus-scale: die Label-Leisten erben je Domain andere Größen. */
+  --w3-chip-font: 0.74;
 
   /* Größe des nackten Plus-Zeichens, das Paid-Artikel markiert (golem Plus,
-   * heise+) — deutlich größer als die Chips, ohne eigene Fläche. */
-  --w3-plus-size: 1.2em;
+   * heise+): Faktor relativ zur ZEILENschrift, nicht zur Chip-Schrift —
+   * einheitenlos, weil die Label-Leisten der Domains unterschiedliche
+   * Schriftgrößen erben und em deshalb nicht dasselbe misst. */
+  --w3-plus-scale: 1.2;
 
   /* Das Gelesen-Häkchen: Font Awesomes "check" (Free/Solid, CC BY 4.0) als
    * Maske, dazu seine Höhe relativ zur Chip-Schrift. */
