@@ -171,37 +171,38 @@ Artefakt nicht neu baust.
 
 ## Veröffentlichen
 
-Gebaut wird in der GitHub-Action, nicht auf dem Server: das Hosting ist
-Shared Hosting mit eingeschränkter Shell, ein Node-Interpreter ist dort nicht
-erreichbar. Die Action legt `reduce.user.css` versioniert ins Repo; der Server
-holt sie mit `git pull` und kopiert sie in den Dokumentenstamm.
+Gebaut wird in der GitHub-Action, nicht auf dem Server: das Hosting ist Shared
+Hosting mit eingeschränkter Shell, ein Node-Interpreter ist dort nicht
+erreichbar — weder im PATH noch unter `/opt/plesk/node`. Die Action legt
+`reduce.user.css` versioniert ins Repo; alles Weitere erledigt Plesk.
 
 ```
-/w3.msmr.co/w3stil/            Klon — nicht im Web
-        └ reduce.user.css      von der Action gebaut und committet
-/w3.msmr.co/httpdocs/          Dokumentenstamm
-        └ reduce.user.css      die ausgelieferte Kopie
+push  →  Action baut, committet reduce.user.css
+      →  Webhook  →  Plesk pullt, stellt nach /w3.msmr.co/repo bereit
+      →  Bereitstellungsaktion kopiert eine Datei nach httpdocs
+      →  Stylus holt das Update über @updateURL
 ```
 
-Einmalig:
+Einrichtung in Plesk, unter **Websites & Domains → w3.msmr.co → Git**:
 
-```bash
-cd /w3.msmr.co
-git clone https://github.com/01msmr/w3stil.git
-```
+| Feld | Wert |
+| --- | --- |
+| URL | `https://github.com/01msmr/w3stil.git` |
+| Verzweigung | `main` |
+| Bereitstellungsmodus | automatisch |
+| Serverpfad | `/w3.msmr.co/repo` |
+| Zusätzliche Bereitstellungsaktion | `cp -f reduce.user.css /w3.msmr.co/httpdocs/reduce.user.css` |
 
-Und für jede Aktualisierung — ohne Node, ohne Buildschritt:
+Die Webhook-URL aus dem Plesk-Dialog gehört bei GitHub unter *Settings →
+Webhooks*, Content type `application/json`, nur das Push-Ereignis.
 
-```bash
-cd /w3.msmr.co/w3stil && git pull && cp reduce.user.css /w3.msmr.co/httpdocs/
-```
+Entscheidend ist der **Serverpfad außerhalb des Dokumentenstamms**. Stünde er
+auf `httpdocs`, kopierte Plesk das gesamte Repo ins Web — samt `src/`,
+`package-lock.json` und allem, was künftig dazukommt. So landet dort nur die
+eine Datei, und es gibt keine Ausschlussregel, die jemand pflegen müsste.
 
-`dist/` bleibt das lokale Bauprodukt und ignoriert. Veröffentlicht wird allein
-die Kopie in der Repo-Wurzel, die die Action pflegt — lokal muss sie niemand
-von Hand aktualisieren.
-
-Weil der Klon außerhalb des Dokumentenstamms liegt, ist `.git/` nicht im Web;
-eine nginx-Sperre dafür erübrigt sich.
+Das Verzeichnis muss vor der ersten Bereitstellung existieren, sonst bricht
+Plesk mit `fatal: this operation must be run in a work tree` ab.
 
 ### Node.js in Plesk
 
