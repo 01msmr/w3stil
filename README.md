@@ -37,11 +37,11 @@ danach auch gespeichert, wenn der Server aus ist — nur Updates brauchen ihn.
 nicht geändert hat — die Version kommt aus der Commit-Anzahl, ein Rebuild ohne
 Commit erzeugt also dieselbe.
 
-### Mit eigenem Server
+### Aus der Veröffentlichung benutzen
 
-`@updateURL` in `build.mjs` (Objekt `META`) zeigt auf `https://w3.msmr.co/reduce.user.css`;
-die drei Deploy-Secrets setzen (siehe unten) und pushen. Ab dann installierst
-du einmal von dieser Adresse, und Stylus holt Updates selbstständig.
+`https://w3.msmr.co/reduce.user.css` im Browser öffnen und installieren —
+einmal pro Rechner. Stylus holt Updates danach selbstständig über `@updateURL`.
+Wie die Datei dorthin kommt, steht unter [Veröffentlichen](#veröffentlichen).
 
 ### Was danach anders aussieht
 
@@ -118,10 +118,29 @@ die erwartete Trefferzahl mit:
 Ohne Annotation gilt nur „mindestens ein Treffer". Die Annotation fängt zusätzlich
 den Fall ab, dass ein Selektor plötzlich 400 Elemente trifft.
 
-**`@version` steigt aus der Git-Historie.** Ein Rebuild ohne Commit erzeugt
-dieselbe Version — Stylus ignoriert Updates mit gleicher oder niedrigerer Nummer
-stillschweigend. Ohne Git-Repo greift ein `0.`-präfixierter Zeitstempel, der
-immer unter jeder echten Version sortiert.
+**`@version` steigt aus der Git-Historie.** Sie setzt sich zusammen aus
+`major.minor` der `package.json` und der Anzahl der Commits als Patch — also
+`0.1.0`, `0.1.1`, `0.1.2` … Ein Rebuild ohne Commit erzeugt dieselbe Version,
+und Stylus ignoriert Updates mit gleicher oder niedrigerer Nummer
+stillschweigend. Major oder Minor bumpst du in der `package.json`; der Zähler
+läuft dabei weiter, die Reihenfolge bleibt also monoton. Ohne Git greift
+`major.minor.0`.
+
+**`@no-reset`** als erste Zeile einer Site-Datei lässt `_reset.css` für diese
+Domain weg:
+
+```css
+/* @no-reset
+ * …
+ */
+```
+
+Gedacht für Seiten, an denen ausdrücklich nur ein Ausschnitt verändert werden
+soll. `_reset.css` greift ins Grundlayout ein — Seitenhintergrund, Schrift,
+`aside` ausblenden — und lässt sich aus der Site-Datei heraus nicht
+zurücknehmen: `!important` in derselben Kaskadenschicht ist nicht rückgängig zu
+machen. `golem.de.css` und `heise.de.css` nutzen den Ausstieg, `wikipedia.org.css`
+nicht.
 
 **Kommentare fliegen aus `dist/`**, weil `_reset.css` in jeder Sektion landet und
 sich sonst n-fach dupliziert. `node build.mjs --comments` behält sie.
@@ -211,42 +230,38 @@ Anwendung, sondern eine statische Datei; eine aktivierte Node-Anwendung ohne
 `app.js` schiebt nur Passenger zwischen Anfrage und Datei. Der Interpreter
 bleibt zum Bauen trotzdem nutzbar.
 
-## Deploy per rsync (Alternative, derzeit ungenutzt)
+## Was CSS hier nicht kann
 
-`.github/workflows/deploy.yml` baut bei Push auf `main` und rsynct
-`dist/reduce.user.css` auf den Server. Benötigte Secrets:
+Vier Grenzen, die uns Zeit gekostet haben und die bei jeder Erweiterung wieder
+auftauchen. Alle vier sind live nachgemessen, nicht angelesen.
 
-| Secret | Beispiel |
-| --- | --- |
-| `DEPLOY_KEY` | privater SSH-Key (ed25519) |
-| `DEPLOY_HOST` | `deploy@msmr.co` |
-| `DEPLOY_PATH` | `/var/www/w3.msmr.co/` |
+**`:visited` kann fast nichts.** Erlaubt sind nur Farbeigenschaften, und nur
+**am Link selbst** — weder an Nachfahren noch an dessen Pseudo-Elementen. Ein
+Haken statt der Uhrzeit für gelesene Zeilen ist damit ausgeschlossen: er bräuchte
+`content` und `display`. Auch die Deckkraft darf sich nicht ändern: steht der
+unbesuchte Zustand auf `background: none`, bleibt jede besuchte Hintergrundfarbe
+wirkungslos. Deshalb setzen beide Zeilen-Regeln `background-color` auf einen
+deckenden Wert, obwohl optisch dasselbe herauskäme.
 
-`fetch-depth: 0` im Checkout ist nötig, sonst kann `build.mjs` keine Version aus
-der Historie ableiten.
+Das ist kein Bug, sondern der Schutz davor, dass eine Seite die Browser-Historie
+ausliest. `getComputedStyle` liefert für besuchte Links absichtlich die Werte des
+unbesuchten Zustands, `matches(':visited')` immer `false` — geprüft werden kann
+nur mit dem Auge oder über einen Testkasten mit bekannt besuchtem Ziel.
 
-Der Webserver muss `.user.css` als `text/css` ausliefern und sollte kurz cachen,
-damit Stylus' Update-Check nicht auf einer alten Fassung sitzen bleibt.
+**`:has()` darf nicht in `:has()`.** Eine Regel wie
+`main > *:has(.liste):has(+ *:has(.block))` fällt vollständig aus, ohne Warnung.
+Wo ein zweites `:has()` nötig wäre, muss eine Klasse als Marker herhalten.
 
-nginx:
+**Custom Properties vererben nur nach unten.** An `.ticker-list` deklarierte
+Variablen sind in deren Elternelementen undefiniert; jede Deklaration, die sie
+dort benutzt, fällt still aus — samt der Regel, in der sie steht. Deshalb hängen
+alle Variablen an `body:has(…)`.
 
-```nginx
-location ~ \.user\.css$ {
-    default_type text/css;
-    add_header Cache-Control "public, max-age=300";
-    add_header Access-Control-Allow-Origin "*";
-}
-```
-
-Traefik/Docker, als Label am statischen Backend:
-
-```yaml
-- "traefik.http.middlewares.usercss.headers.customresponseheaders.Cache-Control=public, max-age=300"
-```
-
-Prüfen: `curl -sI https://w3.msmr.co/reduce.user.css | grep -i content-type`
-muss `text/css` liefern — bei `text/plain` zeigt Stylus keinen
-Installationsdialog, sondern der Browser rendert Quelltext.
+**Stylus injiziert in der User-Origin.** Der installierte Style schlägt damit
+jedes `<style>`, das man zum Testen in die Seite hängt, auch mit `!important`.
+Wer Änderungen im Browser ausprobiert, muss den installierten Style vorher
+deaktivieren — sonst prüft man gegen die alte Fassung und sucht den Fehler an
+der falschen Stelle.
 
 ## Grenzen
 
