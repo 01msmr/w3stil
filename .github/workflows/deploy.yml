@@ -1,24 +1,31 @@
 name: build & publish
 
-# Veröffentlicht wird über das Repo selbst: diese Action baut und legt
-# reduce.user.css als versionierte Datei in die Wurzel. Auf dem Server genügt
-# danach ein git pull plus cp — dort ist kein Node erreichbar (Shared Hosting,
-# eingeschränkte Shell), deshalb baut niemand mehr auf der Zielmaschine.
+# Veröffentlicht wird über den Branch "publish": diese Action baut und
+# force-pusht dorthin genau die zwei Auslieferungsdateien (reduce.user.css,
+# reduce.user.js). Auf dem Server genügt danach ein git pull plus cp — dort
+# ist kein Node erreichbar (Shared Hosting, eingeschränkte Shell), deshalb
+# baut niemand auf der Zielmaschine.
+#
+# Warum ein eigener Branch statt eines Commits auf main: der Bot-Commit
+# machte den lokalen Stand nach jedem Push einen Commit rückständig, jeder
+# folgende Push brauchte erst ein Rebase. main trägt jetzt nur Quellen.
+# publish hat keine erhaltenswerte Historie und wird bei jedem Lauf per
+# --force ersetzt.
 #
 # Die Datei in dist/ bleibt das lokale Bauprodukt und weiterhin ignoriert.
 
 on:
   push:
     branches: [main]
-    paths: ['src/**', 'build.mjs', 'package.json', '.github/workflows/deploy.yml']
+    paths: ['src/**', 'build.mjs', 'package.json', 'reduce.user.js', '.github/workflows/deploy.yml']
   workflow_dispatch:
 
 permissions:
   contents: write
 
-# Zwei gleichzeitige Läufe committen beide und der zweite wird abgewiesen.
-# Nacheinander statt parallel — und nichts abbrechen, sonst bliebe eine
-# Änderung unveröffentlicht.
+# Zwei gleichzeitige Läufe würden beide force-pushen, der ältere könnte den
+# neueren überschreiben. Nacheinander statt parallel — und nichts abbrechen,
+# sonst bliebe eine Änderung unveröffentlicht.
 concurrency:
   group: publish
   cancel-in-progress: false
@@ -44,22 +51,18 @@ jobs:
           test "$(grep -c '^@-moz-document' dist/reduce.user.css)" -ge 1
           test -s dist/reduce.user.css
 
-      - name: publish into repo root
-        run: cp dist/reduce.user.css reduce.user.css
-
-      # Der Commit ändert nur reduce.user.css — die Datei steht nicht im
-      # paths-Filter oben, löst also keinen weiteren Lauf aus.
-      - name: commit if changed
+      # git switch --orphan räumt alle getrackten Dateien aus dem Worktree;
+      # reduce.user.js wird deshalb vorher beiseitegelegt. dist/ ist
+      # ignoriert und überlebt den Wechsel.
+      - name: publish branch
         run: |
-          if git diff --quiet -- reduce.user.css; then
-            echo "unverändert, kein Commit"
-            exit 0
-          fi
+          VERSION="$(grep -m1 '@version' dist/reduce.user.css | tr -s ' ' | cut -d' ' -f2)"
           git config user.name  'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add reduce.user.css
-          git commit -m "build: reduce.user.css $(grep -m1 '@version' reduce.user.css | tr -s ' ' | cut -d' ' -f2)"
-
-          # Falls in der Zwischenzeit gepusht wurde: rebasen und erneut
-          # versuchen, statt den Lauf scheitern zu lassen.
-          git push || { git pull --rebase origin main && git push; }
+          cp reduce.user.js "$RUNNER_TEMP/reduce.user.js"
+          git switch --orphan publish
+          cp dist/reduce.user.css reduce.user.css
+          cp "$RUNNER_TEMP/reduce.user.js" reduce.user.js
+          git add reduce.user.css reduce.user.js
+          git commit -m "publish: reduce.user.css $VERSION"
+          git push --force origin publish

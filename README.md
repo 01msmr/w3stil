@@ -67,9 +67,9 @@ Installation: Tampermonkey oder Violentmonkey installieren, dann
 Installationsdialog. Updates laufen über die `@updateURL` im Skript.
 
 Die Version im Skript wird von Hand gepflegt — es ist statisch und ändert
-sich nur, wenn heise das Chip-Markup umbaut. Kein Build, keine Action: die
-Datei liegt als Quelle im Repo-Root, Plesk kopiert sie unverändert (siehe
-[Veröffentlichen](#veröffentlichen)).
+sich nur, wenn heise das Chip-Markup umbaut. Kein Build: die Datei liegt als
+Quelle im Repo-Root, die Action kopiert sie unverändert auf den
+`publish`-Branch (siehe [Veröffentlichen](#veröffentlichen)).
 
 ## Entwickeln
 
@@ -203,7 +203,7 @@ mit `⊘` übersprungen statt fälschlich als kaputt gemeldet.
 
 Stylus hält keine Versionshistorie — ein fehlerhafter Deploy ist auf allen
 Rechnern sofort aktiv. Reparatur: Fehler in `src/` beheben, committen, pushen.
-Weil `@version` aus dem Commit-Zeitstempel kommt, ist die Korrektur automatisch
+Weil `@version` aus dem Commit-Zähler kommt, ist die Korrektur automatisch
 neuer als die kaputte Fassung. Ein `git revert` allein reicht nicht, wenn du das
 Artefakt nicht neu baust.
 
@@ -211,31 +211,30 @@ Artefakt nicht neu baust.
 
 Gebaut wird in der GitHub-Action, nicht auf dem Server: das Hosting ist Shared
 Hosting mit eingeschränkter Shell, ein Node-Interpreter ist dort nicht
-erreichbar — weder im PATH noch unter `/opt/plesk/node`. Die Action legt
-`reduce.user.css` versioniert ins Repo; alles Weitere erledigt Plesk.
+erreichbar — weder im PATH noch unter `/opt/plesk/node`. Die Action
+force-pusht die beiden Auslieferungsdateien auf den Branch `publish`;
+alles Weitere erledigt Plesk. `main` trägt nur Quellen, dort committet
+niemand außer dir.
 
 ```
-push  →  Action baut, committet reduce.user.css
-      →  Webhook  →  Plesk pullt, stellt nach /w3.msmr.co/repo bereit
-      →  Bereitstellungsaktion kopiert zwei Dateien nach httpdocs
-      →  Stylus holt das Update über @updateURL
+push auf main  →  Action baut, force-pusht publish (nur die zwei Dateien)
+               →  Webhook  →  Plesk pullt publish, stellt nach /w3.msmr.co/repo bereit
+               →  Bereitstellungsaktion kopiert zwei Dateien nach httpdocs
+               →  Stylus/Tampermonkey holen Updates über @updateURL
 ```
 
-Daraus folgt zweierlei für die Arbeit am Repo. Erstens: `reduce.user.css`
-**niemals von Hand bauen und committen** — die Action tut es nach jedem Push
-ohnehin, und zwar mit der dann korrekten Commit-Anzahl als `@version`; ein
-manueller Artefakt-Commit trägt eine bereits veraltete Nummer und kollidiert
-nur. Zweitens: die Action **committet auf `main`**, der eigene Stand ist also
-unmittelbar nach jedem Push einen Commit hinterher — vor dem nächsten Push
-`git pull` (bei bereits abgelehntem Push: Artefakt-Commit lokal verwerfen und
-auf `origin/main` rebasen, statt die Versionszeile von Hand zu mergen).
+Daraus folgt für die Arbeit am Repo: Artefakte **niemals von Hand bauen und
+committen** — sie leben ausschließlich auf `publish`, das die Action bei jedem
+Lauf komplett neu erzeugt. Auf `main` gibt es keine Bot-Commits mehr, der
+lokale Stand bleibt nach dem Push aktuell; das frühere Rebase-Ritual vor jedem
+zweiten Push entfällt.
 
 Einrichtung in Plesk, unter **Websites & Domains → w3.msmr.co → Git**:
 
 | Feld | Wert |
 | --- | --- |
 | URL | `https://github.com/01msmr/w3stil.git` |
-| Verzweigung | `main` |
+| Verzweigung | `publish` |
 | Bereitstellungsmodus | automatisch |
 | Serverpfad | `/w3.msmr.co/repo` |
 | Zusätzliche Bereitstellungsaktion | `cp -f reduce.user.css reduce.user.js /w3.msmr.co/httpdocs/` |
