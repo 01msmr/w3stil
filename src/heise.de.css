@@ -43,9 +43,15 @@ body:has(article > a > time) {
   --hs-mono: ui-monospace, "SF Mono", "IBM Plex Mono", Menlo, monospace;
   --hs-size: 19px;
   --hs-lh: 1.35;
-  --hs-radius: 20px;
+  --hs-radius: 16px;
   --hs-inset: 1rem;
-  --hs-bleed: 10px;
+  /* Der Überstand der Zeilen entspricht der Polsterung der Inhaltskarte
+   * (24px). Damit fluchten die Tages-Chips exakt mit der Kopfleiste. */
+  --hs-bleed: 24px;
+
+  /* Breite der Kopfleiste, gespiegelt von heises max-w-276. Sie gibt jetzt
+   * auch die Breite der Zeilen-Container vor. */
+  --hs-shell: 69rem;
   --hs-row-h: 40.4px;
   --hs-head-color: #4f6584;
   --hs-head-size: 22px;
@@ -69,6 +75,29 @@ body:has(article > a > time) {
 body:has(article > a > time) div:has(> div > section article > a > time) {
   background: var(--hs-page) !important;
   box-shadow: none !important;
+}
+
+/* Die Kopfleiste läuft bei heise über die volle Fensterbreite. Sie wird auf
+ * die Breite der Inhaltsspalte begrenzt und bekommt dieselben Radien wie die
+ * Tages-Chips. expect: 1 */
+body:has(article > a > time) > div:first-of-type header {
+  max-width: var(--hs-shell) !important;
+  margin-inline: auto !important;
+  border-radius: var(--hs-radius) !important;
+  overflow: hidden !important;
+}
+
+/* Die Zeilen-Container nutzen dieselbe Breite wie die Kopfleiste — heise
+ * setzt sie sonst auf 762px, deutlich schmaler als die Karte. expect: 1 */
+div:has(> section article > a > time) {
+  max-width: var(--hs-shell) !important;
+}
+
+/* Feine Trennlinie zwischen den Zeilen: die Farbe des Seitengrunds, halb
+ * deckend. Nur zwischen Zeilen, nicht über der ersten — sonst zöge sie eine
+ * Kante quer durch den oberen Chip-Radius. expect: 20..400 */
+article:has(> a > time) + article:has(> a > time) {
+  border-top: 1px solid color-mix(in srgb, var(--hs-page) 50%, transparent) !important;
 }
 
 /* Die Section bleibt transparent — das Weiß tragen die Zeilen, damit der

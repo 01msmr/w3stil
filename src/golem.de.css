@@ -37,7 +37,7 @@ body:has(.ticker-list) {
   --gl-bleed: 10px;
 
   /* Eckenradius der Tages-Chips. */
-  --gl-radius: 20px;
+  --gl-radius: 16px;
 
   /* Akzentfarbe der angebundenen Werbe-/Service-Zeilen (Seminare,
    * Stellenmarkt, Newsletter, Archiv). */
@@ -163,12 +163,19 @@ body:has(.ticker-list) .go-content-header {
   display: none !important;
 }
 
-/* Keine Trennlinien — die Zeilen trennt der Weißraum. expect: 20..400 */
+/* expect: 20..400 */
 .ticker-list li {
   list-style: none !important;
   margin: 0 !important;
   padding: 0 !important;
   border: 0 !important;
+}
+
+/* Feine Trennlinie zwischen den Zeilen: die Farbe des Seitengrunds, halb
+ * deckend. Nur zwischen Zeilen, nicht über der ersten — sonst zöge sie eine
+ * Kante quer durch den oberen Chip-Radius. expect: 20..400 */
+.ticker-list li + li .go-ticker-teaser {
+  border-top: 1px solid color-mix(in srgb, var(--gl-page) 50%, transparent) !important;
 }
 
 /* Anker ist das <a>, nicht ein Textfragment darin — sonst treffen :hover und
@@ -187,7 +194,7 @@ body:has(.ticker-list) .go-content-header {
   gap: 1em !important;
   width: 100% !important;
   margin-inline: 0 !important;
-  padding: 0.38em var(--gl-bleed) !important;
+  padding: 0.5em var(--gl-bleed) !important;
   position: relative !important;
   background: none !important;
   color: var(--gl-fg) !important;
