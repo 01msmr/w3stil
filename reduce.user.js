@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name        reduce-heise-chips
 // @namespace   msmr.co
-// @version     0.1.1
-// @description Kürzt "heise" und "Magazin" aus den Ressort-Chips des Newstickers
+// @version     0.1.2
+// @description Kürzt Ressort-Chips und Tagesköpfe des Newstickers
 // @author      msmr
 // @license     MIT
 // @match       https://www.heise.de/newsticker*
@@ -21,6 +21,10 @@
  * Aus "heise security" wird "security", aus "Mac & i Magazin" wird "Mac & i".
  * "heise online" verschwindet ganz: es ist das Standard-Ressort des Tickers
  * und traegt dort keine Information.
+ *
+ * Die Tagesköpfe verlieren ihr "Heute –"/"Gestern –": das Datum samt
+ * Wochentag steht direkt daneben und sagt dasselbe. Ältere Tage kommen
+ * ohnehin ohne Präfix.
  * "heise+ exklusiv" bleibt unangetastet: das Plus hängt am Markennamen, ohne
  * ihn bliebe nur "exklusiv" übrig. Einwortige Chips ("bestenlisten", "WTF")
  * ändern sich nicht.
@@ -45,6 +49,14 @@
           return;
         }
         const kurz = t.replace(/^heise\s+/i, '').replace(/\s+Magazin$/i, '');
+        if (kurz !== t) el.textContent = kurz;
+      });
+
+    document
+      .querySelectorAll('section > div:first-child > h2')
+      .forEach((el) => {
+        const t = el.textContent;
+        const kurz = t.replace(/^\s*(heute|gestern)\s*[\u2013\u2014-]\s*/i, '');
         if (kurz !== t) el.textContent = kurz;
       });
   };
