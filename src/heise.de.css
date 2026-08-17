@@ -378,10 +378,13 @@ article:has(h3 + div [class*="bg-red-700"]) > a:focus-visible h3 + div > span {
   color: #fff !important;
 }
 
+/* Die Flamme bleibt auch im Hover rot. Sie steht im grauen Rand außerhalb der
+ * roten Zeilenfläche, hat selbst keinen Chip und verliert deshalb nichts an
+ * Lesbarkeit — anders als die Chips daneben, die mitfärben. */
 article:has(h3 + div [class*="bg-red-700"]) > a:hover h3 + div [class*="bg-red-700"],
 article:has(h3 + div [class*="bg-red-700"]) > a:focus-visible h3 + div [class*="bg-red-700"] {
   background: none !important;
-  color: #fff !important;
+  color: var(--hs-alert) !important;
 }
 
 /* Videobeitrag: heise setzt dafür ein Kamerasymbol direkt in die Meta-Zeile,
@@ -398,4 +401,14 @@ article h3 + div > img {
 
 article h3 + div > img[src*="video-camera-heiseblau-300"] {
   display: none !important;
+}
+
+/* Ist eine Zeile als Werbung gekennzeichnet, tritt auch ihre Fläche zurück:
+ * ein Schritt von Weiß in Richtung des Seitengrunds. Das Dimmen der Chips
+ * allein reichte nicht — die Zeile selbst blieb so hell wie jede andere.
+ * Die Fläche sitzt am <article>, die Hover-Füllung am <a> darin; sie
+ * überdeckt die Dämpfung also ohne Konflikt. expect: 0..60 */
+article:has(h3 + div [class*="bg-heiseblau"]),
+article:has(> a[href*="/bestenlisten/"]) {
+  background: color-mix(in oklab, var(--hs-card) 82%, var(--hs-page)) !important;
 }
