@@ -202,6 +202,15 @@ push  →  Action baut, committet reduce.user.css
       →  Stylus holt das Update über @updateURL
 ```
 
+Daraus folgt zweierlei für die Arbeit am Repo. Erstens: `reduce.user.css`
+**niemals von Hand bauen und committen** — die Action tut es nach jedem Push
+ohnehin, und zwar mit der dann korrekten Commit-Anzahl als `@version`; ein
+manueller Artefakt-Commit trägt eine bereits veraltete Nummer und kollidiert
+nur. Zweitens: die Action **committet auf `main`**, der eigene Stand ist also
+unmittelbar nach jedem Push einen Commit hinterher — vor dem nächsten Push
+`git pull` (bei bereits abgelehntem Push: Artefakt-Commit lokal verwerfen und
+auf `origin/main` rebasen, statt die Versionszeile von Hand zu mergen).
+
 Einrichtung in Plesk, unter **Websites & Domains → w3.msmr.co → Git**:
 
 | Feld | Wert |
