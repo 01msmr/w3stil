@@ -23,9 +23,11 @@
   --gl-mono: ui-monospace, "SF Mono", "IBM Plex Mono", Menlo, monospace;
   --gl-size: 17px;
   --gl-lh: 1.5;
-  /* Golems Original hat links/rechts keinen Einzug — die Zeile sitzt bündig
-   * an der Kante der weißen Karte. Das bleibt so. */
-  --gl-pad: 0px;
+  /* Der Einzug sitzt als margin AM CHIP, nicht als padding an der Zeile:
+   * die Zeile selbst reicht randlos bis an die Kante der weißen Karte, damit
+   * die Hover-Fläche direkt anschließt. Padding an der Zeile würde die Fläche
+   * mitverschieben. */
+  --gl-inset: 1rem;
 }
 
 /* Keine Trennlinien — die Zeilen trennt der Weißraum. expect: 20..400 */
@@ -43,7 +45,7 @@
   align-items: baseline !important;
   gap: 1em !important;
   width: 100% !important;
-  padding: 0.7em var(--gl-pad) !important;
+  padding: 0.7em 0 !important;
   margin: 0 !important;
   background: none !important;
   color: var(--gl-fg) !important;
@@ -63,6 +65,7 @@
  * fluchten die Titel deshalb auch ohne feste Spaltenbreite. expect: 20..400 */
 .go-ticker-teaser__datetime {
   flex: 0 0 auto !important;
+  margin-inline-start: var(--gl-inset) !important;
   border-radius: 4px !important;
   background: color-mix(in oklab, var(--gl-fg) 7%, var(--gl-card)) !important;
   padding: 0.25em 0.6em !important;
@@ -79,9 +82,11 @@
 }
 
 /* "Tipp", "International" — an den rechten Rand, nicht in den Textfluss. */
+/* Symmetrisch zum Chip: Abstand am Element, nicht an der Zeile. */
 .go-ticker-teaser__labels {
   flex: 0 0 auto !important;
   margin-inline-start: auto !important;
+  margin-inline-end: var(--gl-inset) !important;
   padding-inline-start: 1em !important;
   font-size: 0.72em !important;
   color: var(--gl-muted) !important;
@@ -109,11 +114,13 @@
   text-decoration: none !important;
 }
 
-/* Der Chip verliert beim Invertieren seine Fläche — Kontur statt Füllung,
- * sonst verschwindet die Uhrzeit im schwarzen Balken. */
+/* Der Chip invertiert mit: weiße Fläche, schwarze Ziffern. Muss nach der
+ * :hover *-Regel oben stehen und schlägt sie über die höhere Spezifität —
+ * sonst zöge das dortige background: none dem Chip die Fläche ab. */
 .go-ticker-teaser:hover .go-ticker-teaser__datetime,
 .go-ticker-teaser:focus-visible .go-ticker-teaser__datetime {
-  box-shadow: inset 0 0 0 1px currentColor !important;
+  background: var(--gl-card) !important;
+  color: var(--gl-fg) !important;
 }
 
 /* ── Seminare und Stellenmarkt ──────────────────────────────────────────
@@ -148,9 +155,13 @@ main > *:has(.go-teaser-block--highlight) {
   color: #8a8a8a !important;
 }
 
+/* 1rem statt var(--gl-inset): die Variable hängt an .ticker-list und reicht
+ * nicht in diesen Block hinein. Beide Werte müssen gleich bleiben, sonst
+ * fluchtet die Zeile nicht mit den Uhrzeit-Chips darüber. */
 main > *:has(.go-teaser-block--highlight)::before {
   content: "Seminare" !important;
   flex: 0 0 auto !important;
+  margin-inline-start: 1rem !important;
 }
 
 main > *:has(.go-teaser-block--highlight)::after {
