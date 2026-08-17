@@ -9,7 +9,7 @@
     "dev": "node build.mjs --serve",
     "check": "node tools/check.mjs",
     "lint": "stylelint \"src/**/*.css\"",
-    "deploy": "node build.mjs && cp dist/reduce.user.css ."
+    "deploy": "node build.mjs && cp dist/reduce.user.css \"${W3STIL_DEST:-.}\""
   },
   "devDependencies": {
     "playwright": "^1.49.0",

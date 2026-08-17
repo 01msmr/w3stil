@@ -171,35 +171,47 @@ Artefakt nicht neu baust.
 
 ## Veröffentlichen
 
-Der Server ist ein Klon dieses Repos; sein Dokumentenwurzelverzeichnis
-(`/w3.msmr.co/httpdocs`) ist das Arbeitsverzeichnis. Veröffentlicht wird per
-Pull, nicht aus der CI heraus — Node steht dort bereit, der Build braucht
-keine Abhängigkeiten.
+Der Klon liegt **außerhalb** des Dokumentenstamms, ausgeliefert wird nur die
+gebaute Datei. Auf dem Server (netcup/Plesk, Node ist dort vorhanden):
 
-```bash
-cd /w3.msmr.co/httpdocs
-git pull
-npm run deploy          # = node build.mjs && cp dist/reduce.user.css .
+```
+/w3.msmr.co/w3stil/            Klon — nicht im Web
+/w3.msmr.co/httpdocs/          Dokumentenstamm
+        └ reduce.user.css      das Artefakt
 ```
 
-`dist/` bleibt ignoriert; veröffentlicht wird die Kopie im Wurzelverzeichnis,
-damit die Adresse kurz bleibt: `https://w3.msmr.co/reduce.user.css`. Auch sie
-ist gitignored, der Pull bleibt also konfliktfrei.
+Einmalig:
+
+```bash
+cd /w3.msmr.co
+git clone https://github.com/01msmr/w3stil.git
+```
+
+Und für jede Aktualisierung:
+
+```bash
+cd /w3.msmr.co/w3stil
+git pull
+W3STIL_DEST=/w3.msmr.co/httpdocs npm run deploy
+```
+
+`npm install` entfällt — `build.mjs` hat keine Abhängigkeiten. `W3STIL_DEST`
+bestimmt das Ziel der Kopie; ohne die Variable landet sie neben `dist/`, was
+für lokale Tests genügt.
+
+Diese Trennung hat einen zweiten Vorteil: `.git/` liegt nicht im Web, die
+nginx-Sperre dafür erübrigt sich.
 
 Die GitHub-Action baut nur noch zur Kontrolle. Fällt sie rot aus, würde der
 Pull auf dem Server ebenfalls scheitern — sie braucht dafür weder SSH noch
 Secrets.
 
-### Der Server-Docroot ist ein Git-Klon
+### Node.js in Plesk
 
-Damit liegt `.git/` im Web. Sichtbar wäre unter anderem die vollständige
-Historie. Das Repo ist zwar öffentlich, trotzdem gehört das gesperrt:
-
-```nginx
-location ~ /\.(git|github) { deny all; return 404; }
-```
-
-Prüfen: `curl -sI https://w3.msmr.co/.git/config` muss 403 oder 404 liefern.
+Die Node-Anwendung der Domain gehört **deaktiviert**. w3stil ist keine
+Anwendung, sondern eine statische Datei; eine aktivierte Node-Anwendung ohne
+`app.js` schiebt nur Passenger zwischen Anfrage und Datei. Der Interpreter
+bleibt zum Bauen trotzdem nutzbar.
 
 ## Deploy per rsync (Alternative, derzeit ungenutzt)
 
