@@ -535,6 +535,39 @@ article h3 + div > img[src*="video-camera-heiseblau-300"] {
   display: none !important;
 }
 
+/* ── heise+ ─────────────────────────────────────────────────────────────
+ * Paid-Artikel markiert heise mit zwei Inline-Bildern (hell/dunkel) direkt
+ * im Titel. Beide verschwinden; stattdessen steht — wie bei golem — ein
+ * nacktes, fettes Plus in der Chip-Leiste, per order ganz innen rechts,
+ * direkt am Zeilenblock — hinter allen Chips (0) und Symbolen (-1).
+ * expect: 0..80 */
+article h3 > img[src*="heise_plus"] {
+  display: none !important;
+}
+
+/* expect: 0..40 */
+article h3:has(> img[src*="heise_plus"]) + div::before {
+  content: "+" !important;
+  order: 1 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  background: none !important;
+  color: var(--hs-muted) !important;
+  font-family: var(--hs-mono) !important;
+  font-weight: 700 !important;
+  font-size: var(--w3-plus-size) !important;
+  line-height: 1 !important;
+}
+
+/* Wie bei golem: ohne Fläche kann das Plus beim Hover nicht weiß werden —
+ * es wird stattdessen dunkler. */
+article a:hover h3:has(> img[src*="heise_plus"]) + div::before,
+article a:focus-visible h3:has(> img[src*="heise_plus"]) + div::before {
+  color: var(--hs-fg) !important;
+}
+
 /* Auch der Hover einer Werbezeile bleibt gedämpft: die Füllung mischt das
  * Marken-Blau zum Seitengrund hin, statt in voller Sättigung aufzutreten.
  * Sonst wäre ausgerechnet die Werbung der auffälligste Zustand der Liste.

@@ -32,6 +32,10 @@
   /* Deckung der Trennlinie zwischen den Zeilen. */
   --w3-divider-mix: 50%;
 
+  /* Größe des nackten Plus-Zeichens, das Paid-Artikel markiert (golem Plus,
+   * heise+) — deutlich größer als die Chips, ohne eigene Fläche. */
+  --w3-plus-size: 1.2em;
+
   /* Das Gelesen-Häkchen: Font Awesomes "check" (Free/Solid, CC BY 4.0) als
    * Maske, dazu seine Höhe relativ zur Chip-Schrift. */
   --w3-icon-check: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 448 512'%3E%3Cpath d='M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z'/%3E%3C/svg%3E");

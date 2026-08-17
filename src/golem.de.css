@@ -375,7 +375,7 @@ body:has(.ticker-list) .go-content-header {
   color: var(--gl-muted) !important;
   font-family: var(--gl-mono) !important;
   font-weight: 700 !important;
-  font-size: 1.2em !important;
+  font-size: var(--w3-plus-size) !important;
   line-height: 1 !important;
 }
 
