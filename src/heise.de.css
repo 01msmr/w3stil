@@ -332,29 +332,19 @@ article h3 + div [class*="border-teal-700"] {
   mask: var(--hs-icon-update) center / contain no-repeat !important;
 }
 
-/* Angebot ist Werbung: nur das heise-Zeichen aus dem Chip, ohne Fläche und
- * gedämpft — wie Alert und Update ein reines Symbol. Die Regel wird für den
- * Hover-Zustand wiederholt, weil die allgemeine Hover-Regel für Chips sonst
- * über die höhere Spezifität von :has() gewinnen und die Fläche zurückholen
- * würde. expect: 0..40 */
-article h3 + div [class*="bg-heiseblau"],
-article:has(> a > time) > a:hover h3 + div [class*="bg-heiseblau"],
-article:has(> a > time) > a:focus-visible h3 + div [class*="bg-heiseblau"] {
-  gap: 0 !important;
-  padding: 0 !important;
-  border: 0 !important;
-  background: none !important;
-  color: var(--hs-muted) !important;
+/* Angebot-Zeilen sind Werbung: alle ihre Chips werden gedämpft, der
+ * Angebot-Marker selbst wie das Ressort daneben. Das erfasst auch
+ * "heise academy" — es trägt keine eigene Klasse, erscheint aber
+ * ausschließlich in Angebot-Zeilen (2 von 2 geprüft). Der Preis: in diesen
+ * Zeilen tritt auch ein sachliches Ressort wie "iX Magazin" zurück, was
+ * angesichts des Werbecharakters der ganzen Zeile stimmig ist.
+ *
+ * Für den Hover wiederholt, weil die allgemeine Chip-Regel dort über die
+ * höhere Spezifität von :has() gewinnen würde. expect: 0..40 */
+article:has(h3 + div [class*="bg-heiseblau"]) h3 + div > span,
+article:has(h3 + div [class*="bg-heiseblau"]) > a:hover h3 + div > span,
+article:has(h3 + div [class*="bg-heiseblau"]) > a:focus-visible h3 + div > span {
   opacity: 0.45 !important;
-}
-
-article h3 + div [class*="bg-heiseblau"] > span {
-  display: none !important;
-}
-
-article h3 + div [class*="bg-heiseblau"] svg {
-  width: calc(var(--hs-size) * 0.85) !important;
-  height: calc(var(--hs-size) * 0.85) !important;
 }
 
 /* "bestenlisten" ebenso gedämpft: Kaufberatung, kein redaktioneller
@@ -392,4 +382,20 @@ article:has(h3 + div [class*="bg-red-700"]) > a:hover h3 + div [class*="bg-red-7
 article:has(h3 + div [class*="bg-red-700"]) > a:focus-visible h3 + div [class*="bg-red-700"] {
   background: none !important;
   color: #fff !important;
+}
+
+/* Videobeitrag: heise setzt dafür ein Kamerasymbol direkt in die Meta-Zeile,
+ * in zwei Fassungen für helles und dunkles Thema. Die dunkle entfällt, die
+ * helle steht als freies Symbol ganz vorn — order: -1 setzt sie vor alle
+ * Chips, also am weitesten vom Zeilenblock entfernt. expect: 0..40 */
+article h3 + div > img {
+  order: -1 !important;
+  flex: 0 0 auto !important;
+  width: calc(var(--hs-size) * 0.85) !important;
+  height: calc(var(--hs-size) * 0.85) !important;
+  margin: 0 !important;
+}
+
+article h3 + div > img[src*="video-camera-heiseblau-300"] {
+  display: none !important;
 }
