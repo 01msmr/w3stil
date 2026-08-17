@@ -1,0 +1,240 @@
+/* _reset.css — Basis, wird jeder Domain-Sektion vorangestellt.
+ *
+ * Prinzip: strukturell und semantisch selektieren, niemals über Hash-Klassen.
+ * Was hier steht, muss ein Redesign überleben. Alles Brüchige gehört in die
+ * jeweilige src/<domain>.css.
+ *
+ * Reihenfolge ist Absicht: erst Variablen, dann Layout aufbrechen, dann
+ * Ballast entfernen, zuletzt Typografie. Wer Typografie zuerst setzt, kämpft
+ * danach gegen sein eigenes CSS.
+ */
+
+:root {
+  --rr-width: 72ch;
+  --rr-size: 17px;
+  --rr-lh: 1.65;
+  --rr-fg: #16150f;
+  --rr-bg: #fbfaf7;
+  --rr-muted: #6b675c;
+  --rr-rule: #d8d4c8;
+  --rr-link: #1a4fa0;
+  --rr-mono: ui-monospace, "IBM Plex Mono", "SF Mono", Menlo, monospace;
+  --rr-text: ui-serif, "IBM Plex Serif", Georgia, serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --rr-fg: #e6e3da;
+    --rr-bg: #14140f;
+    --rr-muted: #8e8a7d;
+    --rr-rule: #33322a;
+    --rr-link: #8db4f0;
+  }
+}
+
+/* ── 1. Layout-Kontext auflösen ─────────────────────────────────────────
+ * Der häufigste Fehler ist, Sidebars auszublenden und sich zu wundern, dass
+ * die Spalte leer stehen bleibt: Die Breite kommt vom Grid-Container, nicht
+ * vom Kind. Also zuerst den Container einspaltig machen.
+ */
+
+body:has(main, article, [role="main"]) :where(div, section):has(> main, > article, > [role="main"]) {
+  display: block !important;
+  grid-template-columns: none !important;
+  grid-template-areas: none !important;
+  max-width: none !important;
+  width: auto !important;
+  padding-inline: 1rem !important;
+}
+
+main,
+article,
+[role="main"] {
+  display: block !important;
+  float: none !important;
+  width: auto !important;
+  max-width: var(--rr-width) !important;
+  margin-inline: auto !important;
+  padding-inline: 0 !important;
+  grid-area: auto !important;
+}
+
+/* ── 2. Ballast ─────────────────────────────────────────────────────────
+ * Semantik und ARIA zuerst; die Klassennamen-Muster sind Fallback und
+ * bewusst mit Wortgrenzen-Näherung, damit "related-articles" trifft,
+ * "unrelated" aber nicht.
+ */
+
+aside,
+[role="complementary"],
+[role="banner"] ~ [role="navigation"],
+[class*="sidebar" i],
+[id*="sidebar" i],
+[class*="related-" i],
+[class*="recommend" i],
+[class*="newsletter" i],
+[class*="promo-" i],
+[class*="paywall" i]:empty,
+[class*="social-share" i],
+[class*="share-bar" i],
+[aria-label*="Werbung" i],
+[aria-label*="advertisement" i],
+ins.adsbygoogle,
+iframe[src*="doubleclick"],
+iframe[src*="googlesyndication"] {
+  display: none !important;
+}
+
+/* Kommentarbereiche bleiben — nur eingeklappt statt entfernt, sonst
+ * verlierst du bei manchen Seiten den halben Wert der Seite. */
+:where([id*="comment" i], [class*="comment" i]):not(:has(article)) {
+  max-height: 60vh !important;
+  overflow-y: auto !important;
+}
+
+/* ── 3. Sticky/Fixed neutralisieren ─────────────────────────────────────
+ * Nicht ausblenden: Navigation soll erreichbar bleiben, nur nicht mitfahren.
+ * position:static schlägt auch inline gesetzte sticky-Werte, sofern die
+ * Seite kein !important am style-Attribut hat (dann rettet die User-Origin).
+ */
+
+:where(header, nav, [role="banner"], [role="navigation"], .sticky, [class*="sticky" i], [class*="fixed" i]) {
+  position: static !important;
+}
+
+body > div[style*="position: fixed"],
+body > div[style*="position:fixed"] {
+  position: static !important;
+}
+
+/* Scroll-Sperren, die Consent-Layer hinterlassen */
+html,
+body {
+  overflow: visible !important;
+  position: static !important;
+  height: auto !important;
+}
+
+/* ── 4. Ruhe ────────────────────────────────────────────────────────────*/
+
+*,
+*::before,
+*::after {
+  animation: none !important;
+  transition: none !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+  border-radius: 0 !important;
+  backdrop-filter: none !important;
+  filter: none !important;
+  scroll-behavior: auto !important;
+}
+
+/* ── 5. Typografie ──────────────────────────────────────────────────────*/
+
+html {
+  color-scheme: light dark;
+  background: var(--rr-bg) !important;
+}
+
+body {
+  background: var(--rr-bg) !important;
+  color: var(--rr-fg) !important;
+  font-family: var(--rr-text) !important;
+  font-size: var(--rr-size) !important;
+  line-height: var(--rr-lh) !important;
+  hyphens: auto;
+}
+
+:where(main, article, [role="main"]) :where(p, li, dd, blockquote, figcaption) {
+  color: var(--rr-fg) !important;
+  font-family: var(--rr-text) !important;
+  font-size: 1em !important;
+  line-height: var(--rr-lh) !important;
+}
+
+:where(h1, h2, h3, h4, h5, h6) {
+  font-family: var(--rr-text) !important;
+  font-weight: 600 !important;
+  line-height: 1.2 !important;
+  letter-spacing: -0.01em !important;
+  color: var(--rr-fg) !important;
+  text-wrap: balance;
+}
+
+h1 { font-size: 1.9em !important; margin-block: 1.2em 0.4em !important; }
+h2 { font-size: 1.4em !important; margin-block: 1.8em 0.4em !important; }
+h3 { font-size: 1.15em !important; margin-block: 1.5em 0.3em !important; }
+
+a:not([class]),
+:where(main, article, [role="main"]) a {
+  color: var(--rr-link) !important;
+  text-decoration-thickness: 1px !important;
+  text-underline-offset: 2px !important;
+}
+
+:where(main, article) :where(code, pre, kbd, samp) {
+  font-family: var(--rr-mono) !important;
+  font-size: 0.88em !important;
+}
+
+pre {
+  overflow-x: auto !important;
+  padding: 0.8em 1em !important;
+  border: 1px solid var(--rr-rule) !important;
+  background: color-mix(in oklab, var(--rr-bg) 92%, var(--rr-fg)) !important;
+}
+
+blockquote {
+  border-inline-start: 2px solid var(--rr-rule) !important;
+  padding-inline-start: 1em !important;
+  margin-inline: 0 !important;
+  color: var(--rr-muted) !important;
+}
+
+hr {
+  border: 0 !important;
+  border-top: 1px solid var(--rr-rule) !important;
+}
+
+:where(main, article) table {
+  border-collapse: collapse !important;
+  width: 100% !important;
+  font-size: 0.92em !important;
+}
+
+:where(main, article) :where(th, td) {
+  border: 1px solid var(--rr-rule) !important;
+  padding: 0.35em 0.6em !important;
+  text-align: start !important;
+}
+
+/* ── 6. Medien ──────────────────────────────────────────────────────────*/
+
+:where(main, article) :where(img, video, svg, iframe) {
+  max-width: 100% !important;
+  height: auto !important;
+  margin-inline: auto !important;
+  display: block !important;
+}
+
+figure {
+  margin-inline: 0 !important;
+}
+
+figcaption {
+  color: var(--rr-muted) !important;
+  font-size: 0.85em !important;
+  font-family: var(--rr-mono) !important;
+}
+
+/* ── 7. Optional, pro Domain freischalten ───────────────────────────────
+ * Der Holzhammer: alles ausblenden, was nicht den Hauptinhalt enthält.
+ * Wirkt Wunder und bricht regelmäßig Navigation. Deshalb hier nur als
+ * Vorlage — bei Bedarf in die jeweilige src/<domain>.css kopieren.
+ *
+ * body > *:not(:has(main, article, [role="main"])):not(script):not(style) {
+ *   display: none !important;
+ * }
+ */
+

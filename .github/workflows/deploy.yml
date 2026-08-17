@@ -1,0 +1,40 @@
+name: build & deploy
+
+on:
+  push:
+    branches: [main]
+    paths: ['src/**', 'build.mjs', '.github/workflows/deploy.yml']
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0          # build.mjs braucht die Commit-Historie für @version
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: build
+        run: node build.mjs
+
+      - name: verify version bumped
+        run: |
+          grep -m1 '@version' dist/reduce.user.css
+          test -s dist/reduce.user.css
+
+      - name: deploy
+        env:
+          SSH_KEY: ${{ secrets.DEPLOY_KEY }}
+          HOST: ${{ secrets.DEPLOY_HOST }}          # z.B. user@msmr.dev
+          DEST: ${{ secrets.DEPLOY_PATH }}          # z.B. /var/www/msmr.dev/w3stil/
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H "${HOST#*@}" >> ~/.ssh/known_hosts
+          rsync -avz --checksum -e "ssh -i ~/.ssh/id_ed25519" \
+            dist/reduce.user.css "$HOST:$DEST"

@@ -1,0 +1,28 @@
+/* heise.de — Beispiel-Sektion.
+ *
+ * Hier gehört nur hinein, was _reset.css nicht generisch lösen kann.
+ * Faustregel: taucht ein Selektor in der dritten Site-Datei auf,
+ * gehört er nach _reset.css.
+ *
+ * Prüfe Selektoren mit tools/probe.user.js, bevor du sie hier festschreibst.
+ */
+
+/* expect: 1 — der Artikelcontainer */
+.article-content {
+  max-width: var(--rr-width) !important;
+  margin-inline: auto !important;
+}
+
+/* Themen-Teaser und "Das könnte Sie auch interessieren" unter dem Artikel */
+.article-footer__meta,
+.a-tag-list,
+.recommendations {
+  display: none !important;
+}
+
+/* heise setzt Bildunterschriften sehr klein */
+.article-image__caption {
+  font-size: 0.85em !important;
+  color: var(--rr-muted) !important;
+}
+

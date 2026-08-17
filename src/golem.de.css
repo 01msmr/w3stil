@@ -1,0 +1,137 @@
+/* golem.de — Zeilenliste in voller Breite, einspaltige Artikelseite.
+ *
+ * Selektoren sind strukturell gewählt, weil die Klassennamen aus dem
+ * 2018er-Style nicht mehr verifizierbar sind. Mit probe gegenprüfen.
+ */
+
+:root {
+  --rr-bg: #fff;
+  --rr-fg: #000;
+  --rr-muted: #8a8a8a;
+  --rr-rule: #e4e4e4;
+  --rr-text: -apple-system, "Helvetica Neue", Arial, sans-serif;
+  --rr-size: 15px;
+  --rr-lh: 1.45;
+  --rr-width: 100%;
+  --gl-pad: 1.5rem;
+}
+
+html {
+  color-scheme: light !important;
+}
+
+/* Detailseite = genau ein <article>. Spart eine zweite Sektion. */
+body:has(article):not(:has(article ~ article)) {
+  --rr-width: 78ch;
+  --rr-size: 17px;
+  --rr-lh: 1.65;
+}
+
+/* ── Zeilenliste ────────────────────────────────────────────────────────
+ * Der Anker ist die Zeile, nicht ein Textfragment darin — sonst treffen
+ * :hover und :visited nur die Überschrift.
+ */
+
+:where(main, [role="main"]) li {
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border-bottom: 1px solid var(--rr-rule) !important;
+}
+
+:where(main, [role="main"]) li :where(img, picture, figure, p) {
+  display: none !important;
+}
+
+:where(main, [role="main"]) li a {
+  display: flex !important;
+  align-items: baseline !important;
+  gap: 0.9em !important;
+  width: 100% !important;
+  padding: 0.4em var(--gl-pad) !important;
+  margin: 0 !important;
+  background-color: var(--rr-bg) !important;
+  color: var(--rr-fg) !important;
+  font: 400 1em/var(--rr-lh) var(--rr-text) !important;
+  text-decoration: none !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+:where(main, [role="main"]) li :where(time, [class*="meta" i], [class*="date" i]) {
+  margin-inline-start: auto !important;
+  flex: 0 0 auto !important;
+  color: var(--rr-muted) !important;
+  font-family: var(--rr-mono) !important;
+  font-size: 0.8em !important;
+  background: none !important;
+  padding: 0 !important;
+}
+
+/* LVHA-Reihenfolge ist zwingend, sonst gewinnt visited über hover.
+ * :visited erlaubt nur Farbeigenschaften — "gedimmt" heißt hier grau. */
+:where(main, [role="main"]) li a:visited {
+  color: var(--rr-muted) !important;
+  background-color: var(--rr-bg) !important;
+}
+
+:where(main, [role="main"]) li a:hover,
+:where(main, [role="main"]) li a:focus-visible {
+  background-color: var(--rr-fg) !important;
+  color: var(--rr-bg) !important;
+  outline: none !important;
+}
+
+:where(main, [role="main"]) li a:hover * {
+  color: currentColor !important;
+  background: none !important;
+}
+
+/* ── Artikelseite ───────────────────────────────────────────────────────*/
+
+body:has(article) article {
+  max-width: var(--rr-width) !important;
+  margin-inline: auto !important;
+  padding-inline: var(--gl-pad) !important;
+}
+
+body:has(article) h1 {
+  font-size: 1.75em !important;
+  font-weight: 600 !important;
+  line-height: 1.15 !important;
+  margin-block: 0 0.6em !important;
+}
+
+body:has(article) :where(h2, h3) {
+  font-size: 1.1em !important;
+  font-weight: 600 !important;
+  background: none !important;
+  color: var(--rr-fg) !important;
+  border-top: 1px solid var(--rr-rule) !important;
+  margin-block: 2em 0.4em !important;
+  padding: 0.8em 0 0 !important;
+}
+
+body:has(article) article p {
+  margin-block: 0 1em !important;
+}
+
+body:has(article) article a {
+  color: var(--rr-fg) !important;
+  background: none !important;
+  padding: 0 !important;
+  text-decoration: underline !important;
+  text-decoration-color: var(--rr-muted) !important;
+  text-underline-offset: 2px !important;
+}
+
+body:has(article) article a:visited {
+  color: var(--rr-muted) !important;
+}
+
+body:has(article) article a:hover {
+  background-color: var(--rr-fg) !important;
+  color: var(--rr-bg) !important;
+  text-decoration-color: var(--rr-bg) !important;
+}

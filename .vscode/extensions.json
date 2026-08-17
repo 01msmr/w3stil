@@ -1,0 +1,7 @@
+{
+  "recommendations": [
+    "stylelint.vscode-stylelint",
+    "ms-playwright.playwright",
+    "editorconfig.editorconfig"
+  ]
+}

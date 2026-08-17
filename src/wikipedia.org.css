@@ -1,0 +1,43 @@
+/* wikipedia.org — matcht alle Sprachversionen, weil domain() Subdomains
+ * einschließt (de.wikipedia.org, en.wikipedia.org, …).
+ *
+ * Gutes Beispiel für strukturelle statt klassenbasierte Selektion: die
+ * Vector-2022-Klassen sind stabil genug, aber die ARIA-Rollen sind stabiler.
+ */
+
+/* expect: 1 */
+#content,
+.mw-body {
+  margin-inline: auto !important;
+  max-width: calc(var(--rr-width) + 8ch) !important;
+  border: 0 !important;
+}
+
+/* Seitenleisten links und rechts, Sprachliste, Werkzeuge */
+#mw-panel,
+#vector-toc,
+#vector-page-tools,
+.vector-column-start,
+.vector-column-end,
+.vector-sticky-pinned-container {
+  display: none !important;
+}
+
+/* Infoboxen einklappen statt entfernen — sie tragen oft die Kernfakten */
+.infobox {
+  float: none !important;
+  max-width: 100% !important;
+  margin-block: 1.5em !important;
+  font-size: 0.9em !important;
+}
+
+/* Bearbeiten-Links und Referenz-Hochzahlen entdramatisieren */
+.mw-editsection {
+  display: none !important;
+}
+
+.reference {
+  font-size: 0.75em !important;
+  color: var(--rr-muted) !important;
+}
+

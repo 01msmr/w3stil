@@ -1,0 +1,20 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "w3stil: dev (watch + serve)",
+      "type": "shell",
+      "command": "node build.mjs --serve",
+      "isBackground": true,
+      "problemMatcher": [],
+      "runOptions": { "runOn": "folderOpen" },
+      "presentation": { "reveal": "silent", "panel": "dedicated" }
+    },
+    {
+      "label": "w3stil: check selectors",
+      "type": "shell",
+      "command": "node tools/check.mjs",
+      "problemMatcher": []
+    }
+  ]
+}

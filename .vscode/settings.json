@@ -1,0 +1,9 @@
+{
+  "css.validate": false,
+  "stylelint.validate": ["css"],
+  "editor.codeActionsOnSave": { "source.fixAll.stylelint": "explicit" },
+  "files.associations": { "*.user.css": "css", "*.user.js": "javascript" },
+  "files.readonlyInclude": { "dist/**": true },
+  "search.exclude": { "dist/**": true, "node_modules/**": true },
+  "emmet.includeLanguages": { "css": "css" }
+}
