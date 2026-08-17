@@ -37,7 +37,24 @@ body:has(.ticker-list) {
   --gl-bleed: 10px;
 
   /* Eckenradius der Tages-Chips. */
-  --gl-radius: 12px;
+  --gl-radius: 20px;
+
+  /* Akzentfarbe der angebundenen Werbe-/Service-Zeilen (Seminare,
+   * Stellenmarkt, Newsletter, Archiv). */
+  --gl-accent: #1f7a3f;
+
+  /* Zeilenhöhe einer Artikelzeile. Angebundene Zeilen ohne Uhrzeit-Chip
+   * ziehen per min-height nach, damit der Rhythmus nicht bricht. */
+  --gl-row-h: 40.4px;
+
+  /* Wie weit eine angebundene Zeile hochgezogen wird, um am Tages-Chip zu
+   * haften: 32px Lücke der Rasterzeile plus 16px, die golems Wrapper unter
+   * der Liste stehen lässt. */
+  --gl-attach: 48px;
+
+  /* Tagesköpfe. */
+  --gl-head-color: #6f6f6f;
+  --gl-head-size: 22px;
 
   /* Wie weit der graue Grund über seine Kästen hinausreicht. Muss größer sein
    * als die Lücken zwischen golems Rasterzeilen, sonst blitzt die weiße Karte
@@ -94,7 +111,17 @@ body:has(.ticker-list) {
  * .go-grid--50-50 als Marker statt eines zweiten :has(): :has() darf nicht in
  * :has() verschachtelt werden, die Regel fiele sonst vollständig aus. Auf der
  * Ticker-Seite trägt allein der Highlight-Block diese Klasse. expect: 0..7 */
-main > *:has(.ticker-list):has(+ .go-grid--50-50) .ticker-list li:last-child .go-ticker-teaser {
+main > *:has(.ticker-list):has(+ .go-grid--50-50) .ticker-list li:last-child .go-ticker-teaser,
+main > *:has(.ticker-list):has(+ .go-col--full) .ticker-list li:last-child .go-ticker-teaser {
+  border-radius: 0 !important;
+}
+
+/* Und eine angebundene Zeile ist ihrerseits nur dann das Ende, wenn keine
+ * weitere folgt — hängen mehrere hintereinander, sind die vorderen innere
+ * Zeilen ohne Radien. expect: 0..4 */
+main > .go-grid--50-50:has(+ .go-col--full),
+main > .go-col--full:has(+ .go-grid--50-50),
+main > .go-col--full:has(+ .go-col--full) {
   border-radius: 0 !important;
 }
 
@@ -103,8 +130,8 @@ main > *:has(.ticker-list):has(+ .go-grid--50-50) .ticker-list li:last-child .go
  * Spaltenkante. expect: 2..14 */
 .go-col:has(.ticker-list) > h2 {
   background: none !important;
-  color: #6f6f6f !important;
-  font-size: 22px !important;
+  color: var(--gl-head-color) !important;
+  font-size: var(--gl-head-size) !important;
   font-weight: 700 !important;
   margin: 0 !important;
   padding: 1.7em 0 0.2em var(--gl-title-x) !important;
@@ -312,18 +339,18 @@ main > *:has(.go-teaser-block--highlight) {
   font-weight: 400 !important;
   font-size: var(--gl-size) !important;
   line-height: var(--gl-lh) !important;
-  color: #1f7a3f !important;
+  color: var(--gl-accent) !important;
 
   /* Wie eine Artikelzeile, nur grün: gleiche Fläche, gleiche Polsterung,
    * gleiche Höhe. Die min-height gleicht aus, dass hier der Uhrzeit-Chip
    * fehlt, der die Artikelzeilen ein paar Pixel höher macht. */
   background: var(--gl-card) !important;
-  min-height: 40.4px !important;
+  min-height: var(--gl-row-h) !important;
 
   /* Angehängt an den Tages-Chip darüber: der Abstand der Rasterzeile (32px)
    * plus die 16px, die golems Wrapper unter der Liste noch stehen lässt.
    * Deshalb trägt diese Zeile die unteren Radien des Chips. */
-  margin-top: -48px !important;
+  margin-top: calc(-1 * var(--gl-attach)) !important;
   margin-bottom: 0 !important;
   border-radius: 0 0 var(--gl-radius) var(--gl-radius) !important;
 
@@ -354,8 +381,8 @@ main > *:has(.go-teaser-block--highlight)::after {
 }
 
 main > *:has(.go-teaser-block--highlight):hover {
-  background: #1f7a3f !important;
-  color: #fff !important;
+  background: var(--gl-accent) !important;
+  color: var(--gl-card) !important;
 }
 
 /* Aus dem Fluss nehmen, sonst bliebe die Blockhöhe stehen. */
@@ -381,4 +408,104 @@ main > *:has(.go-teaser-block--highlight) .go-teaser-block--highlight:nth-of-typ
 
 main > *:has(.go-teaser-block--highlight):hover .go-teaser-block--highlight {
   visibility: visible !important;
+}
+
+
+/* ── Newsletter-Kasten und Archiv-Hinweis ───────────────────────────────
+ * Zwei weitere Blöcke, die die Liste unterbrechen: der Newsletter-Kasten
+ * ("Die Golem Newsletter") und der Archiv-Link am Seitenende. Beide werden
+ * wie die Highlight-Zeile zu einer angebundenen Schlusszeile des Tages-Chips
+ * darüber.
+ *
+ * Beide über :has(.go-button) gefasst — der Newsletter-Kasten trägt einen
+ * Abo-Knopf, der Archiv-Block besteht nur aus einem. Die Seitenüberschrift ist
+ * ebenfalls ein .go-col--full, hat aber keinen Knopf und bleibt unberührt.
+ * expect: 2 */
+main > .go-col--full:has(.go-button) {
+  display: flex !important;
+  align-items: center !important;
+  min-height: var(--gl-row-h) !important;
+  height: auto !important;
+  max-height: none !important;
+  padding: 0.38em var(--gl-bleed) !important;
+  width: calc(100% + 2 * var(--gl-bleed)) !important;
+  max-width: none !important;
+  margin: calc(-1 * var(--gl-attach)) 0 0 calc(-1 * var(--gl-bleed)) !important;
+  overflow: hidden !important;
+  background: var(--gl-card) !important;
+  border-radius: 0 0 var(--gl-radius) var(--gl-radius) !important;
+  box-shadow: none !important;
+  color: var(--gl-accent) !important;
+  font-weight: 400 !important;
+  font-size: var(--gl-size) !important;
+  line-height: var(--gl-lh) !important;
+  transition: none !important;
+}
+
+main > .go-col--full:has(.go-button):hover {
+  background: var(--gl-accent) !important;
+  color: var(--gl-card) !important;
+}
+
+/* display: contents löst die beiden Hüllen auf, ohne ihren Inhalt anzutasten. */
+.go-newsletter-box-container,
+.go-newsletter-box {
+  display: contents !important;
+}
+
+/* font-size: 0 an der Hülle schluckt die Leerzeichen zwischen den Spans —
+ * sonst klafft vor dem Doppelpunkt eine Lücke. Die Kinder holen die Größe
+ * zurück. */
+.go-newsletter-box__headline {
+  display: block !important;
+  margin: 0 !important;
+  padding-inline-start: var(--gl-title-x) !important;
+  font-size: 0 !important;
+  font-weight: 400 !important;
+  line-height: var(--gl-lh) !important;
+  color: inherit !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.go-newsletter-box__kicker,
+.go-newsletter-box__title {
+  display: inline !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: none !important;
+  color: inherit !important;
+  font-size: var(--gl-size) !important;
+  line-height: inherit !important;
+}
+
+/* Der Kicker steht in Versalien mit Laufweite; die trägt auch das letzte
+ * Zeichen und schöbe den Doppelpunkt sonst sichtbar weg. Das versteckte
+ * Doppelpunkt-Span von golem fliegt raus, sonst stünde er doppelt. */
+.go-newsletter-box__kicker::after {
+  content: ": " !important;
+  margin-inline-start: -0.12em !important;
+  font-size: var(--gl-size) !important;
+  letter-spacing: normal !important;
+}
+
+.go-newsletter-box .go-vh {
+  display: none !important;
+}
+
+/* Der Abo-Knopf passt nicht in eine Zeile; der Archiv-Link dagegen IST die
+ * Zeile und verliert nur sein Knopf-Aussehen. */
+.go-newsletter-box .go-button {
+  display: none !important;
+}
+
+main > .go-col--full > .go-button {
+  margin: 0 !important;
+  padding: 0 0 0 var(--gl-title-x) !important;
+  min-height: 0 !important;
+  border: 0 !important;
+  background: none !important;
+  color: inherit !important;
+  font: inherit !important;
 }
