@@ -196,7 +196,12 @@ body:has(.ticker-list) .go-content-header {
   margin-inline: 0 !important;
   padding: 0.5em var(--gl-bleed) !important;
   position: relative !important;
-  background: none !important;
+
+  /* Deckend, nicht transparent — sonst kann :visited die Fläche nicht
+   * absetzen: Chrome verbietet dort jede Änderung der Deckkraft, weil sich
+   * darüber die Historie auslesen ließe. Optisch macht es keinen
+   * Unterschied, die Liste darunter ist ohnehin weiß. */
+  background-color: var(--gl-card) !important;
   color: var(--gl-fg) !important;
   font-weight: 400 !important;
   font-size: var(--gl-size) !important;

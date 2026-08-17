@@ -138,7 +138,11 @@ article:has(> a > time) > a {
   width: 100% !important;
   padding: 0.38em var(--hs-bleed) !important;
   margin: 0 !important;
-  background: none !important;
+
+  /* Deckend, nicht transparent — sonst kann :visited die Fläche nicht
+   * absetzen: Chrome verbietet dort jede Änderung der Deckkraft. Optisch
+   * unverändert, die Zeile darunter ist ohnehin weiß. */
+  background-color: var(--hs-card) !important;
   color: var(--hs-fg) !important;
   font-weight: 400 !important;
   font-size: var(--hs-size) !important;
