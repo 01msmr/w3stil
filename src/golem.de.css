@@ -260,31 +260,37 @@ body:has(.ticker-list) .go-content-header {
   font-size: 0.74em !important;
   letter-spacing: 0.03em !important;
 
-  /* Anker und Stapelkontext für das Häkchen dahinter: ohne eigenen z-index
-   * fiele das Pseudo-Element mit z-index -1 HINTER die Chipfläche und wäre
-   * nie zu sehen. */
+  /* Anker und Stapelkontext für das Häkchen: der eigene z-index isoliert
+   * dessen mix-blend-mode auf den Chip — sonst blendete es gegen alles, was
+   * unter dem Chip liegt. */
   position: relative !important;
   z-index: 0 !important;
 }
 
-/* Das Gelesen-Häkchen, deckungsgleich HINTER den Ziffern. Es ist immer da —
+/* Das Gelesen-Häkchen, deckungsgleich ÜBER den Ziffern. Es ist immer da —
  * content darf unter :visited nicht wechseln, ebensowenig Deckkraft oder
- * Alpha. Was wechseln darf, ist die Farbe: ungelesen trägt das Häkchen die
- * Chipfarbe und ist unsichtbar, gelesen tauchen umgekehrt die Ziffern in die
- * Chipfarbe ab und das Häkchen tritt schwarz hervor (Regeln bei den
- * :visited-Zuständen unten).
+ * Alpha. Was wechseln darf, ist die Farbe: ungelesen ist das Häkchen weiß,
+ * gelesen schwarz (Regeln bei den :visited-Zuständen unten).
+ *
+ * Sichtbar und unsichtbar macht es mix-blend-mode: darken — der Modus selbst
+ * ist konstant und braucht :visited nicht. Weiß ist niemals dunkler als der
+ * Untergrund, darken lässt also überall den Untergrund stehen: das weiße
+ * Häkchen ist unsichtbar, ohne transparent zu sein. Schwarz gewinnt überall
+ * und zeichnet den vollen Check ÜBER die Ziffern. Hinter den Ziffern (mit
+ * z-index -1) ging das schief: die getarnten, aber deckenden Ziffern bissen
+ * ihre Strichformen aus dem Check heraus.
  *
  * Die Form ist Font Awesomes "check" (Free/Solid, CC BY 4.0) als
  * eingebetteter SVG-Pfad in einer CSS-Maske — kein Webfont, kein externer
  * Request. Gefärbt wird die Maske über background-color, das ebenfalls auf
- * der :visited-Whitelist steht; die Maske selbst bleibt in allen Zuständen
- * gleich. */
+ * der :visited-Whitelist steht; Maske und Blendmodus bleiben in allen
+ * Zuständen gleich. */
 .go-ticker-teaser__datetime::before {
   content: "" !important;
   position: absolute !important;
   inset: 0 !important;
-  z-index: -1 !important;
-  background-color: var(--gl-chip) !important;
+  mix-blend-mode: darken !important;
+  background-color: var(--gl-card) !important;
   mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 448 512'%3E%3Cpath d='M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z'/%3E%3C/svg%3E") center / auto 1.2em no-repeat !important;
 }
 
