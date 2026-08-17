@@ -19,15 +19,29 @@
   --gl-fg: #000;
   --gl-card: #fff;
   --gl-muted: #8a8a8a;
-  --gl-text: -apple-system, "Helvetica Neue", Arial, sans-serif;
   --gl-mono: ui-monospace, "SF Mono", "IBM Plex Mono", Menlo, monospace;
-  --gl-size: 17px;
-  --gl-lh: 1.5;
-  /* Der Einzug sitzt als margin AM CHIP, nicht als padding an der Zeile:
-   * die Zeile selbst reicht randlos bis an die Kante der weißen Karte, damit
-   * die Hover-Fläche direkt anschließt. Padding an der Zeile würde die Fläche
-   * mitverschieben. */
+  --gl-size: 19px;
+  --gl-lh: 1.35;
+
+  /* Nur als Mischgrundlage für die Hinweis-Chips, die auf der grauen Fläche
+   * neben der Karte stehen — die Seitenfläche selbst wird nicht angefasst. */
+  --gl-page: #e8e8e8;
+
+  /* Einzug des Chips — als margin am Chip, nicht als padding an der Zeile. */
   --gl-inset: 1rem;
+
+  /* Überstand der Zeile über ihren Kasten hinaus. Muss exakt dem weißen
+   * box-shadow von main entsprechen (zwei Schatten, je 10px Spread): golems
+   * weiße Karte reicht optisch 10px weiter als ihr Kasten, sonst bliebe
+   * links und rechts neben der Hover-Fläche ein weißer Streifen stehen. */
+  --gl-bleed: 10px;
+}
+
+/* golem klemmt die Spalte mit overflow: hidden ab. Ohne das hier wird der
+ * Überstand der Hover-Fläche abgeschnitten und die Hinweise im grauen Rand
+ * bleiben unsichtbar. Betrifft nur die Spalte, die die Ticker-Liste enthält. */
+.go-col:has(.ticker-list) {
+  overflow: visible !important;
 }
 
 /* Keine Trennlinien — die Zeilen trennt der Weißraum. expect: 20..400 */
@@ -39,21 +53,31 @@
 }
 
 /* Anker ist das <a>, nicht ein Textfragment darin — sonst treffen :hover und
- * :visited nur einen Teil der Zeile. expect: 20..400 */
+ * :visited nur einen Teil der Zeile.
+ *
+ * Schriftart bleibt golems eigene (Space Grotesk) — nur Größe, Zeilenhöhe und
+ * Gewicht werden gesetzt. Deshalb kein font-Kurzform-Wert: die verlangt eine
+ * Familie und würde die geerbte überschreiben.
+ *
+ * overflow bleibt sichtbar, sonst schnitte die Zeile die Hinweise ab, die
+ * links außerhalb im grauen Rand stehen. Das Kürzen langer Titel übernimmt
+ * .go-ticker-teaser__content. expect: 20..400 */
 .go-ticker-teaser {
   display: flex !important;
-  align-items: baseline !important;
+  align-items: center !important;
   gap: 1em !important;
-  width: 100% !important;
-  padding: 0.7em 0 !important;
-  margin: 0 !important;
+  width: calc(100% + 2 * var(--gl-bleed)) !important;
+  margin-inline: calc(-1 * var(--gl-bleed)) !important;
+  padding: 0.3em var(--gl-bleed) !important;
+  position: relative !important;
   background: none !important;
   color: var(--gl-fg) !important;
-  font: 400 var(--gl-size) / var(--gl-lh) var(--gl-text) !important;
+  font-weight: 400 !important;
+  font-size: var(--gl-size) !important;
+  line-height: var(--gl-lh) !important;
   text-decoration: none !important;
   white-space: nowrap !important;
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
+  overflow: visible !important;
 }
 
 /* Uhrzeit-Icon und Plus-Badge tragen in einer Zeilenliste nichts bei. */
@@ -76,20 +100,58 @@
   letter-spacing: 0.03em !important;
 }
 
+/* Übernimmt das Kürzen langer Titel, seit die Zeile selbst nicht mehr klemmt. */
 .go-ticker-teaser__content {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
   overflow: hidden !important;
   text-overflow: ellipsis !important;
+  white-space: nowrap !important;
 }
 
-/* "Tipp", "International" — an den rechten Rand, nicht in den Textfluss. */
-/* Symmetrisch zum Chip: Abstand am Element, nicht an der Zeile. */
+/* "Tipp", "International": links neben der Zeile im grauen Rand, senkrecht
+ * mittig, in Größe und Schrift wie der Uhrzeit-Chip. Absolut positioniert,
+ * damit sie den Titel nicht kürzen und beim Invertieren der Zeile nicht
+ * mitfärben — sie stehen außerhalb der Fläche. expect: 5..200 */
 .go-ticker-teaser__labels {
-  flex: 0 0 auto !important;
-  margin-inline-start: auto !important;
-  margin-inline-end: var(--gl-inset) !important;
-  padding-inline-start: 1em !important;
-  font-size: 0.72em !important;
+  position: absolute !important;
+  right: 100% !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.4em !important;
+  margin: 0 0.8rem 0 0 !important;
+  padding: 0 !important;
+  flex: none !important;
+  white-space: nowrap !important;
+  background: none !important;
+}
+
+/* Jeder Hinweis wird zum Chip wie die Uhrzeit — nur eine Spur dunkler als die
+ * graue Seitenfläche, sonst verschwände er darin. golem liefert sie mit
+ * eigenem Rahmen und eigener Fläche aus, beides wird ersetzt. */
+.go-ticker-teaser__labels > * {
+  border: 0 !important;
+  border-radius: 4px !important;
+  background: color-mix(in oklab, var(--gl-fg) 12%, var(--gl-page)) !important;
+  padding: 0.25em 0.6em !important;
   color: var(--gl-muted) !important;
+  font-family: var(--gl-mono) !important;
+  font-variant-numeric: tabular-nums !important;
+  font-size: 0.74em !important;
+  letter-spacing: 0.03em !important;
+  line-height: var(--gl-lh) !important;
+}
+
+/* Beim Hover der Zeile wird die Schrift der Hinweise weiß. Damit sie lesbar
+ * bleibt, kippt die Chipfläche mit ins Dunkle — weiß auf hellem Grau wäre
+ * nicht zu entziffern. Die Chips liegen außerhalb der Zeilenfläche, sie folgen
+ * ihr also bewusst, statt von ihr überdeckt zu werden. */
+.go-ticker-teaser:hover .go-ticker-teaser__labels > *,
+.go-ticker-teaser:focus-visible .go-ticker-teaser__labels > * {
+  background: var(--gl-fg) !important;
+  color: var(--gl-card) !important;
 }
 
 /* LVHA-Reihenfolge ist zwingend, sonst gewinnt visited über hover.
