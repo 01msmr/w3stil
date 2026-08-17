@@ -351,6 +351,15 @@ body:has(.ticker-list) .go-content-header {
   color: var(--gl-muted) !important;
 }
 
+/* Gelesene Zeilen bekommen zusätzlich eine leicht abgesetzte Fläche.
+ * background-color ist eine der wenigen Eigenschaften, die :visited
+ * überhaupt erlaubt — Größe, Schrift oder Deckkraft wären dort wirkungslos.
+ * Prüfen lässt sich das nur mit dem Auge: getComputedStyle liefert für
+ * besuchte Links absichtlich die Werte des unbesuchten Zustands. */
+.go-ticker-teaser:visited {
+  background-color: color-mix(in oklab, var(--gl-card) 88%, var(--gl-page)) !important;
+}
+
 .go-ticker-teaser:hover,
 .go-ticker-teaser:focus-visible {
   background: var(--gl-fg) !important;
