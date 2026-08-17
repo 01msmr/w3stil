@@ -345,12 +345,10 @@ body:has(.ticker-list) .go-content-header {
 }
 
 /* LVHA-Reihenfolge ist zwingend, sonst gewinnt visited über hover.
- * :visited erlaubt nur Farbeigenschaften — "gedimmt" heißt hier grau. */
-.go-ticker-teaser:visited,
-.go-ticker-teaser:visited .go-ticker-teaser__content {
-  color: var(--gl-muted) !important;
-}
-
+ *
+ * Gelesene Zeilen erkennt man ausschließlich an der Fläche — die Schrift
+ * bleibt unverändert. Ursprünglich war es umgekehrt (graue Schrift, weiße
+ * Fläche); seit die Fläche das Signal trägt, wären beide zusammen doppelt. */
 /* Gelesene Zeilen bekommen zusätzlich eine leicht abgesetzte Fläche.
  * background-color ist eine der wenigen Eigenschaften, die :visited
  * überhaupt erlaubt — Größe, Schrift oder Deckkraft wären dort wirkungslos.

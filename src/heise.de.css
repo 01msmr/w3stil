@@ -225,12 +225,11 @@ article h3 + div > div {
 
 /* ── Zustände ───────────────────────────────────────────────────────────*/
 
-/* LVHA-Reihenfolge: visited vor hover, sonst gewinnt visited. */
-article:has(> a > time) > a:visited,
-article:has(> a > time) > a:visited h3 {
-  color: var(--hs-muted) !important;
-}
-
+/* LVHA-Reihenfolge: visited vor hover, sonst gewinnt visited.
+ *
+ * Gelesene Zeilen erkennt man ausschließlich an der Fläche — die Schrift
+ * bleibt unverändert. Zwei Signale für denselben Zustand wären eines zu viel.
+ */
 /* Gelesene Zeilen setzen auch ihre Fläche ab — dieselbe Mischung wie bei
  * golem, damit sich beide Domains gleich verhalten.
  *
