@@ -1,39 +1,373 @@
-/* heise.de — verifiziert am 2026-08-17 gegen einen /news/-Artikel im
- * eingeloggten Chrome (Consent-Cookie gesetzt).
+/* @no-reset
  *
- * Hier gehört nur hinein, was _reset.css nicht generisch lösen kann.
- * Faustregel: taucht ein Selektor in der dritten Site-Datei auf,
- * gehört er nach _reset.css.
+ * heise.de — Portierung des golem.de-Aufbaus auf den Newsticker.
+ * Gleiches Layout, gleiche Maße und Abstände; abweichen dürfen nur die Farben,
+ * die aus heises eigener Palette stammen (live ausgelesen):
  *
- * Struktur-Notiz: heise hat KEIN <main> und kein [role="main"]. Der Artikel
- * ist article.article-layout; daneben stehen drei winzige article.ho-text
- * (unter 60 Zeichen). Die Greifer aus _reset.css hängen deshalb hier allein
- * am <article>-Element — fällt das weg, greift die ganze Datei ins Leere.
- * Werbung, Newsletter-Kasten und Empfehlungen liegen in <aside> und werden
- * bereits von _reset.css entfernt.
+ *   Fläche  #e8edf0   Text     #242b33   gedämpft #4f6584
+ *   Blau    #14315b   Petrol   #00706b
+ *
+ * Signalrot bleibt bewusst ungenutzt.
+ *
+ * Verifiziert am 2026-08-17 live gegen /newsticker/ im eingeloggten Chrome.
+ *
+ * Struktur (heise liefert Tailwind-Utilities aus — die sind NICHT haltbar,
+ * deshalb hängt hier alles an Elementen und Beziehungen):
+ *
+ *   section                       eine Section je Tag
+ *     └ div:first-child           klebender Tageskopf
+ *     └ article > a               eine Zeile
+ *         ├ time                  Uhrzeit
+ *         └ div > h3              Titel
+ *              + div              Ressort-Chips und Kommentarzähler
+ *     └ div (weitere)             Anzeigenblöcke zwischen den Zeilen
+ *
+ * @no-reset, weil _reset.css Seitenhintergrund und Schrift der ganzen Seite
+ * setzt — hier soll wie bei golem nur der Listenbereich anders aussehen.
  */
 
-/* expect: 1 — der Artikelcontainer */
-.article-content {
-  max-width: var(--rr-width) !important;
-  margin-inline: auto !important;
+body:has(article > a > time) {
+  --hs-fg: #242b33;
+  --hs-card: #fff;
+  --hs-muted: #4f6584;
+  --hs-page: #e8edf0;
+
+  /* Marken-Blau: Füllung der Hover-Zeile. Bei golem ist das Schwarz. */
+  --hs-blue: #14315b;
+
+  /* Anzeigenzeilen. Entspricht dem Grün bei golem; Petrol steht in heises
+   * Palette und ist weit genug vom Blau entfernt, um als eigene Kategorie
+   * lesbar zu sein. */
+  --hs-accent: #00706b;
+
+  --hs-mono: ui-monospace, "SF Mono", "IBM Plex Mono", Menlo, monospace;
+  --hs-size: 19px;
+  --hs-lh: 1.35;
+  --hs-radius: 20px;
+  --hs-inset: 1rem;
+  --hs-bleed: 10px;
+  --hs-row-h: 40.4px;
+  --hs-head-color: #4f6584;
+  --hs-head-size: 22px;
+  --hs-hover-delay: 0.2s;
+
+  /* heises red-700 — nur für Alert-Zeilen, sonst bleibt Signalrot ungenutzt. */
+  --hs-alert: oklch(0.505 0.213 27.518);
+
+  /* Zwei Pfeile im Kreis, als Maske für den Update-Marker. */
+  --hs-icon-update: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><path d='M463 192a16 16 0 0 1-16 16H319a16 16 0 0 1-11-27l40-40a144 144 0 0 0-236 51 16 16 0 1 1-30-11 176 176 0 0 1 289-61l38-38a16 16 0 0 1 27 11zM49 320a16 16 0 0 1 16-16h128a16 16 0 0 1 11 27l-40 40a144 144 0 0 0 236-51 16 16 0 1 1 30 11 176 176 0 0 1-289 61l-38 38a16 16 0 0 1-27-11z'/></svg>");
+
+  /* X-Position des Titels: Chip-Einzug + Chipbreite + Abstand, gemessen bei
+   * 19px Zeilenschrift. Wie bei golem ein fester Wert — CSS kann die Breite
+   * des Uhrzeit-Chips nicht auslesen. */
+  --hs-title-x: 96px;
 }
 
-/* Themenschlagworte unter dem Artikel und die Folgen-Liste.
- * expect: 1 */
-.article-footer__topics,
-.topics--follow {
+/* Die weiße Inhaltskarte wird zur grauen Fläche, auf der die Tages-Chips
+ * liegen. Gefasst über ihre Beziehung zur Liste, nicht über ihre
+ * Utility-Klassen. expect: 1 */
+body:has(article > a > time) div:has(> div > section article > a > time) {
+  background: var(--hs-page) !important;
+  box-shadow: none !important;
+}
+
+/* Die Section bleibt transparent — das Weiß tragen die Zeilen, damit der
+ * Tageskopf im Grund stehen kann. expect: 1..14 */
+section:has(article > a > time) {
+  background: none !important;
+}
+
+/* Tageskopf: nicht mehr klebend, ohne Fläche, fett, linksbündig mit den
+ * Titeln. expect: 1..14 */
+section:has(article > a > time) > div:first-child {
+  position: static !important;
+  background: none !important;
+  color: var(--hs-head-color) !important;
+  font-size: var(--hs-head-size) !important;
+  font-weight: 700 !important;
+  margin: 0 !important;
+  padding: 1.7em 0 0.2em var(--hs-title-x) !important;
+}
+
+/* ── Zeilen ─────────────────────────────────────────────────────────────
+ * expect: 20..200
+ */
+article:has(> a > time) {
+  margin: 0 !important;
+  width: calc(100% + 2 * var(--hs-bleed)) !important;
+  margin-inline: calc(-1 * var(--hs-bleed)) !important;
+  background: var(--hs-card) !important;
+}
+
+/* Anker ist das <a>, damit :hover und :visited die ganze Zeile treffen.
+ * expect: 20..200 */
+article:has(> a > time) > a {
+  display: flex !important;
+  align-items: center !important;
+  gap: 1em !important;
+  position: relative !important;
+  width: 100% !important;
+  padding: 0.38em var(--hs-bleed) !important;
+  margin: 0 !important;
+  background: none !important;
+  color: var(--hs-fg) !important;
+  font-weight: 400 !important;
+  font-size: var(--hs-size) !important;
+  line-height: var(--hs-lh) !important;
+  text-decoration: none !important;
+  white-space: nowrap !important;
+  overflow: visible !important;
+  transition: none !important;
+}
+
+/* Uhrzeit als Chip. heise setzt dem <time> eine feste Breite — die muss weg,
+ * sonst sitzt der Chip in einem zu breiten Kasten. expect: 20..200 */
+article > a > time {
+  flex: 0 0 auto !important;
+  width: auto !important;
+  margin-inline-start: var(--hs-inset) !important;
+  border-radius: 4px !important;
+  background: color-mix(in oklab, var(--hs-fg) 7%, var(--hs-card)) !important;
+  padding: 0.25em 0.6em !important;
+  color: var(--hs-muted) !important;
+  font-family: var(--hs-mono) !important;
+  font-variant-numeric: tabular-nums !important;
+  font-size: 0.74em !important;
+  letter-spacing: 0.03em !important;
+  transition: background-color 0.25s ease, color 0.25s ease !important;
+}
+
+/* Der Block zwischen Uhrzeit und Meta-Zeile trägt den Titel. */
+article > a > time + div {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  display: block !important;
+}
+
+article h3 {
+  margin: 0 !important;
+  font-size: 1em !important;
+  font-weight: 400 !important;
+  line-height: var(--hs-lh) !important;
+  color: inherit !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+/* Ressort-Chips nach links in den Grund, senkrecht mittig — wie bei golem.
+ * expect: 20..200 */
+article h3 + div {
+  position: absolute !important;
+  right: 100% !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.4em !important;
+  flex: none !important;
+  margin: 0 0.8rem 0 0 !important;
+  padding: 0 !important;
+  white-space: nowrap !important;
+  background: none !important;
+}
+
+article h3 + div > span {
+  border: 0 !important;
+  border-radius: 4px !important;
+  background: color-mix(in oklab, var(--hs-fg) 12%, var(--hs-page)) !important;
+  padding: 0.25em 0.6em !important;
+  color: var(--hs-muted) !important;
+  font-family: var(--hs-mono) !important;
+  font-size: 0.74em !important;
+  letter-spacing: 0.03em !important;
+  line-height: var(--hs-lh) !important;
+  text-transform: uppercase !important;
+  transition: background-color 0.25s ease, color 0.25s ease !important;
+}
+
+/* Kommentarzähler entfällt — die Zahl trägt beim Überfliegen nichts bei.
+ * heise liefert sie als zwei <img> für hell und dunkel plus sr-only-Text;
+ * eine Outline-Sprechblase ließe sich daraus nur mit einem eigenen Icon
+ * bauen, deshalb bleibt die Gruppe ausgeblendet. expect: 20..200 */
+article h3 + div > div {
   display: none !important;
 }
 
-/* "Das könnte Sie auch interessieren" — liegt zwar in <aside>, trägt die
- * Klasse aber auch an anderer Stelle. expect: 1 */
-.recommendations {
+/* ── Zustände ───────────────────────────────────────────────────────────*/
+
+/* LVHA-Reihenfolge: visited vor hover, sonst gewinnt visited. */
+article:has(> a > time) > a:visited,
+article:has(> a > time) > a:visited h3 {
+  color: var(--hs-muted) !important;
+}
+
+article:has(> a > time) > a:hover,
+article:has(> a > time) > a:focus-visible {
+  background: var(--hs-blue) !important;
+  color: var(--hs-card) !important;
+  text-decoration: none !important;
+  outline: none !important;
+}
+
+article:has(> a > time) > a:hover *,
+article:has(> a > time) > a:focus-visible * {
+  color: currentColor !important;
+  background: none !important;
+  text-decoration: none !important;
+}
+
+article:has(> a > time) > a:hover > time,
+article:has(> a > time) > a:focus-visible > time {
+  background: var(--hs-card) !important;
+  color: var(--hs-fg) !important;
+}
+
+article:has(> a > time) > a:hover h3 + div > span,
+article:has(> a > time) > a:focus-visible h3 + div > span {
+  background: var(--hs-blue) !important;
+  color: var(--hs-card) !important;
+}
+
+/* ── Tages-Chip ─────────────────────────────────────────────────────────
+ * Erste und letzte Zeile eines Tages tragen die Radien. overflow: hidden
+ * ist hier nötig, weil heises Zeilen eigene Hintergründe mitbringen; die
+ * Ressort-Chips liegen außerhalb und dürfen nicht klemmen — deshalb sitzt
+ * das overflow an der Zeile, nicht an der Section. expect: 1..14
+ */
+section:has(article > a > time) > article:first-of-type,
+section:has(article > a > time) > article:first-of-type > a {
+  border-radius: var(--hs-radius) var(--hs-radius) 0 0 !important;
+}
+
+section:has(article > a > time) > :last-child,
+section:has(article > a > time) > :last-child > a {
+  border-radius: 0 0 var(--hs-radius) var(--hs-radius) !important;
+}
+
+/* ── Aufräumen ──────────────────────────────────────────────────────────
+ * Nur die Objekte ZWISCHEN den Tages-Containern verschwinden, die nicht das
+ * Datum sind: Seitenüberschrift, Themenfilter, Anzeigenblöcke, der
+ * dekorative Balken. Kopfleiste und Footer bleiben unangetastet.
+ */
+
+/* Seitenüberschrift "Newsticker" und die Leiste mit "Alle Themen /
+ * Meine Themen / Zeitraum". Sections und die nav zum Blättern bleiben.
+ * expect: 2 */
+div:has(> section article > a > time) > :is(h1, div) {
   display: none !important;
 }
 
-/* heise setzt Bildunterschriften sehr klein. expect: 1..12 */
-figure figcaption {
-  font-size: 0.85em !important;
-  color: var(--rr-muted) !important;
+/* Anzeigenblöcke zwischen den Zeilen.
+ *
+ * Sie tragen eine Höhe aus einer eigenen Custom Property und lassen sich aus
+ * Autoren-Kontext nicht umformen — ein Test mit height: 40px !important blieb
+ * wirkungslos. Als UserCSS läuft die Regel in der User-Origin und setzt sich
+ * durch; verifizieren ließ sich das hier nicht. Deshalb kein Umbau zu einer
+ * Anzeige-Zeile wie bei golem, sondern schlicht raus: dort steckt Werbung,
+ * kein Inhalt, den man aufklappen wollte. expect: 0..20 */
+section:has(article > a > time) > div:not(:first-child) {
+  display: none !important;
+}
+
+/* Der dekorative Balken unter dem Tageskopf. expect: 1..14 */
+section:has(article > a > time) > div:first-child > div {
+  display: none !important;
+}
+
+/* ── Marker-Chips ───────────────────────────────────────────────────────
+ * heise setzt neben dem Ressort weitere Marker. Sie tragen keine eigenen
+ * semantischen Klassen, sondern Utility-Klassen mit dem Farbnamen darin —
+ * bg-red-700 (Alert), border-teal-700 (Update), bg-heiseblau (Angebot).
+ * Das ist der einzige Anker, den heise anbietet; er beschreibt zwar die
+ * Farbe statt der Bedeutung, ist aber stabiler als die Position im Markup.
+ * Bricht er weg, verlieren die Zeilen nur die Sonderbehandlung, nicht ihre
+ * Lesbarkeit.
+ */
+
+/* Alles einzeilig — sonst rutschen mehrere Marker untereinander. */
+article h3 + div {
+  flex-wrap: nowrap !important;
+}
+
+article h3 + div > span svg {
+  display: inline-block !important;
+  flex: 0 0 auto !important;
+}
+
+/* Alert: nur die Flamme, ohne Fläche, und immer rot — sie ist das einzige
+ * Signal, das im Ruhezustand Farbe tragen darf. expect: 0..40 */
+article h3 + div [class*="bg-red-700"] {
+  gap: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: none !important;
+  color: var(--hs-alert) !important;
+}
+
+article h3 + div [class*="bg-red-700"] > span {
+  display: none !important;
+}
+
+article h3 + div [class*="bg-red-700"] svg {
+  width: calc(var(--hs-size) * 0.85) !important;
+  height: calc(var(--hs-size) * 0.85) !important;
+}
+
+/* Update: heise liefert dafür kein Symbol, nur das Wort. Der Kreis aus zwei
+ * Pfeilen kommt deshalb als CSS-Maske — die Fläche ist das Symbol, kein Chip.
+ * font-size: 0 schluckt den Text, die Maße stehen deshalb in em der
+ * Zeilenschrift statt in em des Elements. expect: 0..40 */
+article h3 + div [class*="border-teal-700"] {
+  width: calc(var(--hs-size) * 0.85) !important;
+  height: calc(var(--hs-size) * 0.85) !important;
+  flex: 0 0 auto !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  font-size: 0 !important;
+  color: var(--hs-muted) !important;
+  background: currentColor !important;
+  -webkit-mask: var(--hs-icon-update) center / contain no-repeat !important;
+  mask: var(--hs-icon-update) center / contain no-repeat !important;
+}
+
+/* Angebot ist Werbung — gedämpft, damit es nicht mit dem Ressort konkurriert. */
+article h3 + div [class*="bg-heiseblau"] {
+  opacity: 0.45 !important;
+}
+
+/* "bestenlisten" ebenso: Kaufberatung, kein redaktioneller Ticker-Inhalt.
+ * Das Ressort trägt keine eigene Klasse, wohl aber die Ziel-URL — deshalb
+ * hängt die Regel am href und nicht am Text des Chips, den CSS nicht lesen
+ * kann. expect: 0..40 */
+article:has(> a[href*="/bestenlisten/"]) h3 + div > span {
+  opacity: 0.45 !important;
+}
+
+/* Eine Alert-Zeile färbt sich beim Überfahren vollständig rot — Zeile,
+ * Uhrzeit und die Chips davor. Die Flamme wird dabei weiß, sonst verschwände
+ * sie in der Fläche. expect: 0..40 */
+article:has(h3 + div [class*="bg-red-700"]) > a:hover,
+article:has(h3 + div [class*="bg-red-700"]) > a:focus-visible {
+  background: var(--hs-alert) !important;
+  color: #fff !important;
+}
+
+article:has(h3 + div [class*="bg-red-700"]) > a:hover > time,
+article:has(h3 + div [class*="bg-red-700"]) > a:focus-visible > time {
+  background: #fff !important;
+  color: var(--hs-alert) !important;
+}
+
+article:has(h3 + div [class*="bg-red-700"]) > a:hover h3 + div > span,
+article:has(h3 + div [class*="bg-red-700"]) > a:focus-visible h3 + div > span {
+  background: var(--hs-alert) !important;
+  color: #fff !important;
+}
+
+article:has(h3 + div [class*="bg-red-700"]) > a:hover h3 + div [class*="bg-red-700"],
+article:has(h3 + div [class*="bg-red-700"]) > a:focus-visible h3 + div [class*="bg-red-700"] {
+  background: none !important;
+  color: #fff !important;
 }
