@@ -52,6 +52,11 @@ body:has(.ticker-list) {
    * der Liste stehen lässt. */
   --gl-attach: 48px;
 
+  /* Verzögerung, bevor eine Werbezeile auf Hover reagiert. Nur beim Betreten:
+   * ein Cursor, der bloß vorbeizieht, soll sie nicht aufklappen. Verlassen
+   * wirkt sofort. */
+  --gl-hover-delay: 0.2s;
+
   /* Tagesköpfe. */
   --gl-head-color: #6f6f6f;
   --gl-head-size: 22px;
@@ -450,7 +455,7 @@ main > .go-col--full:has(.go-button) {
   font-weight: 400 !important;
   font-size: var(--gl-size) !important;
   line-height: var(--gl-lh) !important;
-  transition: none !important;
+  transition: background-color 0s, color 0s !important;
 }
 
 main > .go-col--full:has(.go-button):hover {
@@ -519,4 +524,19 @@ main > .go-col--full > .go-button {
   background: none !important;
   color: inherit !important;
   font: inherit !important;
+}
+
+
+/* Hover-Verzögerung der Werbezeilen. Dauer 0s, nur der Delay zählt: die Zeile
+ * schaltet weiterhin hart um, aber erst, wenn der Cursor 0.2s auf ihr steht.
+ * Der Delay steht in der :hover-Regel, die Grundregel bleibt bei 0s — deshalb
+ * wirkt das Verlassen ohne Verzögerung. */
+main > *:has(.go-teaser-block--highlight) .go-teaser-block--highlight {
+  transition: visibility 0s !important;
+}
+
+main > *:has(.go-teaser-block--highlight):hover,
+main > *:has(.go-teaser-block--highlight):hover .go-teaser-block--highlight,
+main > .go-col--full:has(.go-button):hover {
+  transition-delay: var(--gl-hover-delay) !important;
 }
