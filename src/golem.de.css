@@ -366,6 +366,7 @@ body:has(.ticker-list) .go-content-header {
  * gegen Weiß gegengeprüft. */
 .go-ticker-teaser:visited {
   background-color: color-mix(in oklab, var(--gl-card) 60%, var(--gl-page)) !important;
+  color: var(--gl-muted) !important;
 }
 
 .go-ticker-teaser:hover,
@@ -381,6 +382,19 @@ body:has(.ticker-list) .go-content-header {
   color: currentColor !important;
   background: none !important;
   text-decoration: none !important;
+}
+
+/* Gelesene Zeilen invertieren beim Überfahren nicht bis ins Schwarz: die
+ * Fläche bleibt heller als bei ungelesenen, die Schrift dafür etwas dunkler
+ * als Weiß. Der Zustand "gelesen" bleibt so auch im Hover ablesbar, statt
+ * dort mit den ungelesenen Zeilen zu verschmelzen.
+ *
+ * Muss nach der allgemeinen :hover-Regel stehen — gleiche Spezifität würde
+ * sonst der Reihenfolge nach verlieren. */
+.go-ticker-teaser:visited:hover,
+.go-ticker-teaser:visited:focus-visible {
+  background-color: color-mix(in oklab, var(--gl-fg) 55%, var(--gl-page)) !important;
+  color: color-mix(in oklab, var(--gl-card) 85%, var(--gl-fg)) !important;
 }
 
 /* Der Chip invertiert mit: weiße Fläche, schwarze Ziffern. Muss nach der

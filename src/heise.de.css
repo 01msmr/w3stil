@@ -246,6 +246,7 @@ article h3 + div > div {
  * absichtlich die Werte des unbesuchten Zustands. expect: 20..400 */
 article:has(> a > time) > a:visited {
   background-color: color-mix(in oklab, var(--hs-card) 60%, var(--hs-page)) !important;
+  color: var(--hs-muted) !important;
 }
 
 article:has(> a > time) > a:hover,
@@ -273,6 +274,15 @@ article:has(> a > time) > a:hover h3 + div > span,
 article:has(> a > time) > a:focus-visible h3 + div > span {
   background: var(--hs-blue) !important;
   color: var(--hs-card) !important;
+}
+
+/* Gelesene Zeilen bleiben auch im Hover erkennbar: hellere Fläche als bei
+ * ungelesenen, dafür etwas dunklere Schrift als Weiß. Nach der allgemeinen
+ * Hover-Regel, sonst verlöre sie bei gleicher Spezifität der Reihenfolge nach. */
+article:has(> a > time) > a:visited:hover,
+article:has(> a > time) > a:visited:focus-visible {
+  background-color: color-mix(in oklab, var(--hs-blue) 55%, var(--hs-page)) !important;
+  color: color-mix(in oklab, var(--hs-card) 85%, var(--hs-fg)) !important;
 }
 
 /* ── Tages-Chip ─────────────────────────────────────────────────────────
