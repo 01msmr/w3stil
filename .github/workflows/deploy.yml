@@ -29,8 +29,8 @@ jobs:
       - name: deploy
         env:
           SSH_KEY: ${{ secrets.DEPLOY_KEY }}
-          HOST: ${{ secrets.DEPLOY_HOST }}          # z.B. user@msmr.dev
-          DEST: ${{ secrets.DEPLOY_PATH }}          # z.B. /var/www/msmr.dev/w3stil/
+          HOST: ${{ secrets.DEPLOY_HOST }}          # z.B. deploy@msmr.co   
+          DEST: ${{ secrets.DEPLOY_PATH }}          # z.B. /var/www/w3.msmr.co/
         run: |
           mkdir -p ~/.ssh
           echo "$SSH_KEY" > ~/.ssh/id_ed25519

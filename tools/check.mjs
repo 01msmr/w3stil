@@ -58,7 +58,7 @@ function extract(css) {
 }
 
 const UA =
-  'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126 Safari/537.36 w3stil-check/1.0 (+https://msmr.dev/w3stil)';
+  'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126 Safari/537.36 w3stil-check/1.0 (+https://w3.msmr.co)';
 
 const browser = await chromium.launch();
 

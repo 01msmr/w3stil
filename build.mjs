@@ -29,7 +29,7 @@ const META = {
   description: 'Reduziertes Lese-Layout für häufig besuchte Seiten',
   author: 'msmr',
   license: 'MIT',
-  updateURL: 'https://msmr.dev/w3stil/reduce.user.css',
+  updateURL: 'https://w3.msmr.co/reduce.user.css',
 };
 
 /**

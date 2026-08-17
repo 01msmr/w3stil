@@ -39,7 +39,7 @@ Commit erzeugt also dieselbe.
 
 ### Mit eigenem Server
 
-`@updateURL` in `build.mjs` (Objekt `META`) auf die eigene Adresse anpassen,
+`@updateURL` in `build.mjs` (Objekt `META`) zeigt auf `https://w3.msmr.co/reduce.user.css`;
 die drei Deploy-Secrets setzen (siehe unten) und pushen. Ab dann installierst
 du einmal von dieser Adresse, und Stylus holt Updates selbstständig.
 
@@ -177,8 +177,8 @@ Artefakt nicht neu baust.
 | Secret | Beispiel |
 | --- | --- |
 | `DEPLOY_KEY` | privater SSH-Key (ed25519) |
-| `DEPLOY_HOST` | `deploy@msmr.dev` |
-| `DEPLOY_PATH` | `/var/www/msmr.dev/w3stil/` |
+| `DEPLOY_HOST` | `deploy@msmr.co` |
+| `DEPLOY_PATH` | `/var/www/w3.msmr.co/` |
 
 `fetch-depth: 0` im Checkout ist nötig, sonst kann `build.mjs` keine Version aus
 der Historie ableiten.
@@ -202,7 +202,7 @@ Traefik/Docker, als Label am statischen Backend:
 - "traefik.http.middlewares.usercss.headers.customresponseheaders.Cache-Control=public, max-age=300"
 ```
 
-Prüfen: `curl -sI https://msmr.dev/w3stil/reduce.user.css | grep -i content-type`
+Prüfen: `curl -sI https://w3.msmr.co/reduce.user.css | grep -i content-type`
 muss `text/css` liefern — bei `text/plain` zeigt Stylus keinen
 Installationsdialog, sondern der Browser rendert Quelltext.
 
