@@ -281,6 +281,22 @@ body:has(.ticker-list) .go-content-header {
   line-height: var(--gl-lh) !important;
 }
 
+/* Feste Reihenfolge der Hinweise, unabhängig davon, wie golem sie ausliefert:
+ * "International" steht immer außen, "Tipp" innen bündig am Zeilenblock.
+ * order verschiebt nur die Position im Flex-Fluss — Abstände und Größen
+ * bleiben unberührt. Alles Übrige landet dazwischen. */
+.go-ticker-teaser__labels > * {
+  order: 1 !important;
+}
+
+.go-ticker-teaser__labels > .go-label--outlined {
+  order: 0 !important;
+}
+
+.go-ticker-teaser__labels > .go-label--update {
+  order: 2 !important;
+}
+
 /* Beim Hover der Zeile wird die Schrift der Hinweise weiß. Damit sie lesbar
  * bleibt, kippt die Chipfläche mit ins Dunkle — weiß auf hellem Grau wäre
  * nicht zu entziffern. Die Chips liegen außerhalb der Zeilenfläche, sie folgen
