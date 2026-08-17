@@ -108,7 +108,7 @@ div:has(> section article > a > time) {
  * deckend. Nur zwischen Zeilen, nicht über der ersten — sonst zöge sie eine
  * Kante quer durch den oberen Chip-Radius. expect: 20..400 */
 article:has(> a > time) + article:has(> a > time) {
-  border-top: 1px solid color-mix(in srgb, var(--hs-page) var(--w3-divider-mix), transparent) !important;
+  border-top: var(--w3-divider-w) solid color-mix(in srgb, var(--hs-page) var(--w3-divider-mix), transparent) !important;
 }
 
 /* Die Section bleibt transparent — das Weiß tragen die Zeilen, damit der

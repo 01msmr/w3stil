@@ -29,8 +29,9 @@
   --w3-chip-mix: 7%;
   --w3-label-mix: 12%;
 
-  /* Deckung der Trennlinie zwischen den Zeilen. */
+  /* Trennlinie zwischen den Zeilen: Deckung und Stärke. */
   --w3-divider-mix: 25%;
+  --w3-divider-w: 2px;
 
   /* Schriftgröße der kleinen Chips (Uhrzeit, Ressort/Hinweise): Faktor
    * relativ zur ZEILENschrift — einheitenlos aus demselben Grund wie

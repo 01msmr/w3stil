@@ -179,7 +179,7 @@ body:has(.ticker-list) .go-content-header {
  * deckend. Nur zwischen Zeilen, nicht über der ersten — sonst zöge sie eine
  * Kante quer durch den oberen Chip-Radius. expect: 20..400 */
 .ticker-list li + li .go-ticker-teaser {
-  border-top: 1px solid color-mix(in srgb, var(--gl-page) var(--w3-divider-mix), transparent) !important;
+  border-top: var(--w3-divider-w) solid color-mix(in srgb, var(--gl-page) var(--w3-divider-mix), transparent) !important;
 }
 
 /* Anker ist das <a>, nicht ein Textfragment darin — sonst treffen :hover und
