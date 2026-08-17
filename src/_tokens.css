@@ -1,0 +1,39 @@
+/* _tokens.css — domainübergreifende Konstanten.
+ *
+ * Der Build stellt diese Datei JEDER Sektion voran, auch solchen mit
+ * @no-reset: reine Custom Properties auf :root, sie verändern nichts, solange
+ * eine Site-Datei sie nicht benutzt.
+ *
+ * Zweck ist Einheitlichkeit: golem und heise teilen sich die Zustands-Logik
+ * (Gelesen-Fläche, Gelesen-Häkchen, Chip-Mischungen), unterscheiden sich aber
+ * in der Palette. Hier stehen deshalb nur Verhältnisse und das Icon — eine
+ * Änderung passiert an genau einer Stelle und wirkt auf beide Domains gleich.
+ */
+
+:root {
+  /* Weißanteil der Fläche gelesener Zeilen. Muss unter 88% bleiben — darüber
+   * ist der Unterschied zum Kartenweiß nicht mehr zu sehen (gemessen bei
+   * golems #e8e8e8-Grund: 88% ≈ drei RGB-Stufen unter Weiß). */
+  --w3-read-card: 75%;
+
+  /* Farbanteil (Schwarz bzw. Marken-Blau) der Hover-Fläche gelesener Zeilen —
+   * deutlich heller als der volle Hover, damit „gelesen" auch unter dem
+   * Cursor ablesbar bleibt. */
+  --w3-read-hover: 45%;
+
+  /* Weißanteil der Schrift auf der Gelesen-Hover-Fläche. */
+  --w3-read-hover-text: 85%;
+
+  /* Anteil der Textfarbe in der Fläche des Uhrzeit-Chips bzw. der
+   * Hinweis-Chips auf dem Seitengrund. */
+  --w3-chip-mix: 7%;
+  --w3-label-mix: 12%;
+
+  /* Deckung der Trennlinie zwischen den Zeilen. */
+  --w3-divider-mix: 50%;
+
+  /* Das Gelesen-Häkchen: Font Awesomes "check" (Free/Solid, CC BY 4.0) als
+   * Maske, dazu seine Höhe relativ zur Chip-Schrift. */
+  --w3-icon-check: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 448 512'%3E%3Cpath d='M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z'/%3E%3C/svg%3E");
+  --w3-check-size: 2.04em;
+}

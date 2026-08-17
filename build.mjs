@@ -3,7 +3,8 @@
  * build.mjs — erzeugt dist/reduce.user.css aus src/
  *
  * Ein Artefakt, eine @updateURL. Jede Datei src/<domain>.css wird zu einer
- * @-moz-document-Sektion; src/_reset.css wird jeder Sektion vorangestellt.
+ * @-moz-document-Sektion; src/_tokens.css (domainübergreifende Konstanten)
+ * wird JEDER Sektion vorangestellt, src/_reset.css nur denen ohne @no-reset.
  *
  *   node build.mjs            einmalig bauen
  *   node build.mjs --watch    bei Änderungen in src/ neu bauen
@@ -94,6 +95,7 @@ function indent(css) {
 
 export async function build() {
   const reset = await readFile(join(SRC, '_reset.css'), 'utf8');
+  const tokens = await readFile(join(SRC, '_tokens.css'), 'utf8');
   const files = (await readdir(SRC))
     .filter((f) => f.endsWith('.css') && !f.startsWith('_'))
     .sort();
@@ -119,8 +121,9 @@ export async function build() {
 
     const body = [
       `/* ---- ${domain}${bare ? ' (ohne _reset) ' : ' '}---- */`,
-      bare ? '' : clean(reset),
-      siteCss ? `${bare ? '' : '\n'}/* site */\n${siteCss}` : '',
+      clean(tokens),
+      bare ? '' : `\n${clean(reset)}`,
+      siteCss ? `\n/* site */\n${siteCss}` : '',
     ]
       .filter(Boolean)
       .join('\n');

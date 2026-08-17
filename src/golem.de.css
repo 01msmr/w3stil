@@ -22,7 +22,7 @@ body:has(.ticker-list) {
 
   /* Fläche des Uhrzeit-Chips — zugleich Tarnfarbe für Häkchen und Ziffern:
    * was diese Farbe trägt, verschwindet im Chip. */
-  --gl-chip: color-mix(in oklab, var(--gl-fg) 7%, var(--gl-card));
+  --gl-chip: color-mix(in oklab, var(--gl-fg) var(--w3-chip-mix), var(--gl-card));
   --gl-mono: ui-monospace, "SF Mono", "IBM Plex Mono", Menlo, monospace;
   --gl-size: 19px;
   --gl-lh: 1.35;
@@ -179,7 +179,7 @@ body:has(.ticker-list) .go-content-header {
  * deckend. Nur zwischen Zeilen, nicht über der ersten — sonst zöge sie eine
  * Kante quer durch den oberen Chip-Radius. expect: 20..400 */
 .ticker-list li + li .go-ticker-teaser {
-  border-top: 1px solid color-mix(in srgb, var(--gl-page) 50%, transparent) !important;
+  border-top: 1px solid color-mix(in srgb, var(--gl-page) var(--w3-divider-mix), transparent) !important;
 }
 
 /* Anker ist das <a>, nicht ein Textfragment darin — sonst treffen :hover und
@@ -270,13 +270,15 @@ body:has(.ticker-list) .go-content-header {
 /* Das Gelesen-Häkchen, deckungsgleich ÜBER den Ziffern. Es ist immer da —
  * content darf unter :visited nicht wechseln, ebensowenig Deckkraft oder
  * Alpha. Was wechseln darf, ist die Farbe: ungelesen ist das Häkchen weiß,
- * gelesen schwarz (Regeln bei den :visited-Zuständen unten).
+ * gelesen gedimmt wie die Zeilenschrift (Regeln bei den :visited-Zuständen
+ * unten).
  *
  * Sichtbar und unsichtbar macht es mix-blend-mode: darken — der Modus selbst
  * ist konstant und braucht :visited nicht. Weiß ist niemals dunkler als der
  * Untergrund, darken lässt also überall den Untergrund stehen: das weiße
- * Häkchen ist unsichtbar, ohne transparent zu sein. Schwarz gewinnt überall
- * und zeichnet den vollen Check ÜBER die Ziffern. Hinter den Ziffern (mit
+ * Häkchen ist unsichtbar, ohne transparent zu sein. Die gedimmte Farbe ist
+ * überall dunkler als Chipfläche und getarnte Ziffern, gewinnt also und
+ * zeichnet den vollen Check ÜBER die Ziffern. Hinter den Ziffern (mit
  * z-index -1) ging das schief: die getarnten, aber deckenden Ziffern bissen
  * ihre Strichformen aus dem Check heraus.
  *
@@ -291,7 +293,7 @@ body:has(.ticker-list) .go-content-header {
   inset: 0 !important;
   mix-blend-mode: darken !important;
   background-color: var(--gl-card) !important;
-  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 448 512'%3E%3Cpath d='M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z'/%3E%3C/svg%3E") center / auto 2.04em no-repeat !important;
+  mask: var(--w3-icon-check) center / auto var(--w3-check-size) no-repeat !important;
 }
 
 /* Übernimmt das Kürzen langer Titel, seit die Zeile selbst nicht mehr klemmt. */
@@ -328,7 +330,7 @@ body:has(.ticker-list) .go-content-header {
 .go-ticker-teaser__labels > * {
   border: 0 !important;
   border-radius: 4px !important;
-  background: color-mix(in oklab, var(--gl-fg) 12%, var(--gl-page)) !important;
+  background: color-mix(in oklab, var(--gl-fg) var(--w3-label-mix), var(--gl-page)) !important;
   padding: 0.25em 0.6em !important;
   color: var(--gl-muted) !important;
   font-family: var(--gl-mono) !important;
@@ -405,12 +407,10 @@ body:has(.ticker-list) .go-content-header {
  * Prüfen lässt sich das nur mit dem Auge: getComputedStyle liefert für
  * besuchte Links absichtlich die Werte des unbesuchten Zustands.
  *
- * Der Anteil muss deutlich unter 88% liegen: golems Seitengrund ist mit
- * #e8e8e8 nah an Weiß, eine 88%-Mischung verschiebt die Fläche um rund drei
- * RGB-Stufen auf #fcfcfc und ist damit nicht zu sehen. Mit einem Testkasten
- * gegen Weiß gegengeprüft. */
+ * Der Anteil (--w3-read-card, in _tokens.css) ist bewusst nur ein Hauch —
+ * seit das Häkchen den Zustand trägt, darf die Fläche leise sein. */
 .go-ticker-teaser:visited {
-  background-color: color-mix(in oklab, var(--gl-card) 60%, var(--gl-page)) !important;
+  background-color: color-mix(in oklab, var(--gl-card) var(--w3-read-card), var(--gl-page)) !important;
   color: var(--gl-muted) !important;
 }
 
@@ -424,7 +424,7 @@ body:has(.ticker-list) .go-content-header {
 }
 
 .go-ticker-teaser:visited .go-ticker-teaser__datetime::before {
-  background-color: var(--gl-fg) !important;
+  background-color: var(--gl-muted) !important;
 }
 
 .go-ticker-teaser:hover,
@@ -451,8 +451,8 @@ body:has(.ticker-list) .go-content-header {
  * sonst der Reihenfolge nach verlieren. */
 .go-ticker-teaser:visited:hover,
 .go-ticker-teaser:visited:focus-visible {
-  background-color: color-mix(in oklab, var(--gl-fg) 55%, var(--gl-page)) !important;
-  color: color-mix(in oklab, var(--gl-card) 85%, var(--gl-fg)) !important;
+  background-color: color-mix(in oklab, var(--gl-fg) var(--w3-read-hover), var(--gl-page)) !important;
+  color: color-mix(in oklab, var(--gl-card) var(--w3-read-hover-text), var(--gl-fg)) !important;
 }
 
 /* Der Chip invertiert mit: weiße Fläche, schwarze Ziffern. Muss nach der
