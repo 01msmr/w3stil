@@ -36,6 +36,13 @@ body:has(article > a > time) {
    * Zeilen, wie bei golem. */
   --hs-chip: color-mix(in oklab, var(--hs-fg) var(--w3-chip-mix), var(--hs-card));
 
+  /* Schrift UND Häkchen gelesener Zeilen: heller als --hs-muted, zum
+   * Seitengrund hin gemischt — gelesen darf deutlich zurücktreten. Eine
+   * Farbe für beide, damit Häkchen und Zeilentext nicht auseinanderlaufen.
+   * Muss dunkler bleiben als die Chipfläche, sonst verliert der
+   * darken-Blend des Häkchens (siehe dort). */
+  --hs-read: color-mix(in oklab, var(--hs-muted) 75%, var(--hs-page));
+
   /* Marken-Blau: Füllung der Hover-Zeile. Bei golem ist das Schwarz. */
   --hs-blue: #14315b;
 
@@ -273,7 +280,7 @@ article h3 + div > div {
  * absichtlich die Werte des unbesuchten Zustands. expect: 20..400 */
 article:has(> a > time) > a:visited {
   background-color: color-mix(in oklab, var(--hs-card) var(--w3-read-card), var(--hs-page)) !important;
-  color: var(--hs-muted) !important;
+  color: var(--hs-read) !important;
 }
 
 /* Der Farbtausch im Uhrzeit-Chip gelesener Zeilen: Ziffern tauchen in die
@@ -285,7 +292,7 @@ article:has(> a > time) > a:visited > time {
 }
 
 article:has(> a > time) > a:visited > time::before {
-  background-color: var(--hs-muted) !important;
+  background-color: var(--hs-read) !important;
 }
 
 article:has(> a > time) > a:hover,

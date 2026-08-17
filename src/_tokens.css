@@ -19,7 +19,7 @@
   /* Farbanteil (Schwarz bzw. Marken-Blau) der Hover-Fläche gelesener Zeilen —
    * deutlich heller als der volle Hover, damit „gelesen" auch unter dem
    * Cursor ablesbar bleibt. */
-  --w3-read-hover: 45%;
+  --w3-read-hover: 40%;
 
   /* Weißanteil der Schrift auf der Gelesen-Hover-Fläche. */
   --w3-read-hover-text: 85%;
