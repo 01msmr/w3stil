@@ -13,17 +13,44 @@ tools/check.mjs       prüft, ob die Selektoren noch matchen (Playwright)
 
 ## Einrichten
 
+Der Build braucht keine Abhängigkeiten — `node build.mjs` genügt. `npm install`
+wird erst für `tools/check.mjs` und Stylelint gebraucht.
+
 ```bash
-npm install
-npx playwright install chromium     # nur für tools/check.mjs
-node build.mjs
+node build.mjs            # erzeugt dist/reduce.user.css
 ```
 
-Stylus installieren, dann `https://msmr.dev/w3stil/reduce.user.css` im Browser
-öffnen — Stylus fängt `.user.css`-URLs ab und zeigt einen Installationsdialog.
-Danach zieht es Updates selbstständig über `@updateURL`. Einmal pro Rechner.
+`dist/` ist gitignored: nach jedem Clone einmal bauen.
 
-`@updateURL` in `build.mjs` (Objekt `META`) auf die eigene Adresse anpassen.
+### Ohne eigenen Server benutzen
+
+```bash
+npm run dev               # baut bei jeder Änderung neu, serviert auf :8787
+```
+
+Dann `http://localhost:8787/reduce.user.css` im Browser öffnen. Stylus fängt
+`.user.css`-URLs ab und zeigt einen Installationsdialog. Der Style bleibt
+danach auch gespeichert, wenn der Server aus ist — nur Updates brauchen ihn.
+
+**Neue Fassung einspielen:** dieselbe URL erneut öffnen und im Dialog
+überschreiben. *Check for updates* allein reicht nicht, solange sich `@version`
+nicht geändert hat — die Version kommt aus der Commit-Anzahl, ein Rebuild ohne
+Commit erzeugt also dieselbe.
+
+### Mit eigenem Server
+
+`@updateURL` in `build.mjs` (Objekt `META`) auf die eigene Adresse anpassen,
+die drei Deploy-Secrets setzen (siehe unten) und pushen. Ab dann installierst
+du einmal von dieser Adresse, und Stylus holt Updates selbstständig.
+
+### Was danach anders aussieht
+
+| Seite | Zustand |
+|---|---|
+| `golem.de/ticker/` | vollständig umgebaut |
+| `heise.de/newsticker?timeFrame=last-7-days` | vollständig umgebaut |
+| `de.wikipedia.org` | nur mit Skin **Vector 2022** (Einstellungen → Aussehen) |
+| Artikelseiten beider Portale | noch unverändert |
 
 ## Entwickeln
 
