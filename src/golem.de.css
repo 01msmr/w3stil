@@ -15,7 +15,7 @@
  * + span.go-ticker-teaser__labels.
  */
 
-.ticker-list {
+body:has(.ticker-list) {
   --gl-fg: #000;
   --gl-card: #fff;
   --gl-muted: #8a8a8a;
@@ -35,13 +35,68 @@
    * weiße Karte reicht optisch 10px weiter als ihr Kasten, sonst bliebe
    * links und rechts neben der Hover-Fläche ein weißer Streifen stehen. */
   --gl-bleed: 10px;
+
+  /* Eckenradius der Tages-Chips. */
+  --gl-radius: 12px;
+
+  /* Wie weit der graue Grund über seine Kästen hinausreicht. Muss größer sein
+   * als die Lücken zwischen golems Rasterzeilen, sonst blitzt die weiße Karte
+   * zwischen den Blöcken durch. 24px reichen gemessen; der Überstand landet
+   * ohnehin auf gleichfarbigem Grund und fällt nicht auf. */
+  --gl-spread: 24px;
+
+  /* X-Position, an der der Artikeltitel beginnt: Chip-Einzug + Chipbreite +
+   * Abstand. Fester Wert, weil CSS die Breite des Uhrzeit-Chips nicht
+   * auslesen kann — gemessen bei 19px Zeilenschrift. Ändert sich --gl-size
+   * oder die Chip-Polsterung, muss dieser Wert nachgezogen werden; sonst
+   * fluchten Tagesköpfe und Highlight-Zeile nicht mehr mit den Titeln. */
+  --gl-title-x: 96px;
 }
 
 /* golem klemmt die Spalte mit overflow: hidden ab. Ohne das hier wird der
  * Überstand der Hover-Fläche abgeschnitten und die Hinweise im grauen Rand
- * bleiben unsichtbar. Betrifft nur die Spalte, die die Ticker-Liste enthält. */
+ * bleiben unsichtbar. Betrifft nur die Spalte, die die Ticker-Liste enthält.
+ *
+ * Die Spalte bekommt außerdem den grauen Grund, auf dem die Tages-Chips
+ * liegen. Der box-shadow verlängert ihn um dieselben 10px nach außen, mit
+ * denen auch die Zeilen übergreifen — sonst bliebe golems weiße Karte an den
+ * Rändern sichtbar. expect: 1 */
 .go-col:has(.ticker-list) {
   overflow: visible !important;
+  background: var(--gl-page) !important;
+  box-shadow: 0 0 0 var(--gl-spread) var(--gl-page) !important;
+}
+
+/* Ein Tag samt seiner Zeilen ist ein Chip: weiße Fläche mit 12px Radius auf
+ * dem grauen Grund der Spalte. expect: 2..14 */
+.ticker-list {
+  background: var(--gl-card) !important;
+  border-radius: var(--gl-radius) !important;
+  width: calc(100% + 2 * var(--gl-bleed)) !important;
+  margin-inline: calc(-1 * var(--gl-bleed)) !important;
+  padding: 0 !important;
+}
+
+/* Erste und letzte Zeile tragen den Radius, nicht die Liste per overflow:
+ * hidden — das würde die Hinweise abschneiden, die links außerhalb stehen. */
+.ticker-list li:first-child .go-ticker-teaser {
+  border-radius: var(--gl-radius) var(--gl-radius) 0 0 !important;
+}
+
+.ticker-list li:last-child .go-ticker-teaser {
+  border-radius: 0 0 var(--gl-radius) var(--gl-radius) !important;
+}
+
+/* Tagesköpfe stehen im grauen Grund zwischen den Chips: keine eigene Fläche,
+ * gedämpftes Grau, und linksbündig mit den Artikeltiteln statt mit der
+ * Spaltenkante. expect: 2..14 */
+.go-col:has(.ticker-list) > h2 {
+  background: none !important;
+  color: #6f6f6f !important;
+  font-size: 22px !important;
+  font-weight: 700 !important;
+  margin: 0 !important;
+  padding: 1.7em 0 0.2em var(--gl-title-x) !important;
 }
 
 /* Seitenüberschrift "Newsticker: Artikel der letzten 7 Tage" — sie sagt nichts,
@@ -76,8 +131,8 @@ body:has(.ticker-list) .go-content-header {
   display: flex !important;
   align-items: center !important;
   gap: 1em !important;
-  width: calc(100% + 2 * var(--gl-bleed)) !important;
-  margin-inline: calc(-1 * var(--gl-bleed)) !important;
+  width: 100% !important;
+  margin-inline: 0 !important;
   padding: 0.3em var(--gl-bleed) !important;
   position: relative !important;
   background: none !important;
@@ -231,32 +286,46 @@ body:has(.ticker-list) .go-content-header {
  */
 main > *:has(.go-teaser-block--highlight) {
   display: flex !important;
-  align-items: baseline !important;
-  gap: 3em !important;
+  align-items: center !important;
+  gap: 0 !important;
   position: relative !important;
   height: auto !important;
   min-height: 0 !important;
   max-height: none !important;
   margin: 0 !important;
-  padding: 0.7em 0 !important;
+  padding: 0.3em 0 !important;
   overflow: visible !important;
   grid-template-columns: none !important;
-  font: 400 17px/1.5 -apple-system, "Helvetica Neue", Arial, sans-serif !important;
-  color: #8a8a8a !important;
+
+  /* Maße wie eine Ticker-Zeile, damit sie sich in den Rhythmus einfügt.
+   * Grün als Schriftfarbe kennzeichnet sie als das, was sie ist: Werbung,
+   * nicht Redaktion — ohne dass sie laut wird. Ohne Übergang, wie die Zeilen. */
+  font-weight: 400 !important;
+  font-size: 19px !important;
+  line-height: 1.35 !important;
+  color: #1f7a3f !important;
+  background: var(--gl-page) !important;
+  box-shadow: 0 0 0 var(--gl-spread) var(--gl-page) !important;
+  width: calc(100% + 2 * var(--gl-bleed)) !important;
+  margin-inline: calc(-1 * var(--gl-bleed)) !important;
+  transition: none !important;
 }
 
 /* 1rem statt var(--gl-inset): die Variable hängt an .ticker-list und reicht
  * nicht in diesen Block hinein. Beide Werte müssen gleich bleiben, sonst
  * fluchtet die Zeile nicht mit den Uhrzeit-Chips darüber. */
+/* Erste Beschriftung linksbündig mit den Artikeltiteln, die zweite exakt bei
+ * halber Breite — die flex-basis rechnet den Einzug wieder heraus. */
 main > *:has(.go-teaser-block--highlight)::before {
   content: "Seminare" !important;
-  flex: 0 0 auto !important;
-  margin-inline-start: 1rem !important;
+  margin-inline-start: var(--gl-title-x) !important;
+  flex: 0 0 calc(50% - var(--gl-title-x)) !important;
 }
 
 main > *:has(.go-teaser-block--highlight)::after {
   content: "Stellenmarkt" !important;
   flex: 0 0 auto !important;
+  margin: 0 !important;
 }
 
 main > *:has(.go-teaser-block--highlight):hover {
