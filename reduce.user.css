@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name        reduce
 @namespace   msmr.dev
-@version     0.1.39
+@version     0.1.43
 @description Reduziertes Lese-Layout für häufig besuchte Seiten
 @author      msmr
 @license     MIT
@@ -17,6 +17,8 @@
     --gl-fg: #000;
     --gl-card: #fff;
     --gl-muted: #8a8a8a;
+
+    --gl-chip: color-mix(in oklab, var(--gl-fg) 7%, var(--gl-card));
     --gl-mono: ui-monospace, "SF Mono", "IBM Plex Mono", Menlo, monospace;
     --gl-size: 19px;
     --gl-lh: 1.35;
@@ -137,22 +139,38 @@
     transition: none !important;
   }
 
-  .go-ticker-teaser__datetime,
   .go-ticker-teaser__labels > * {
     transition: background-color 0.25s ease, color 0.25s ease !important;
+  }
+
+  .go-ticker-teaser__datetime,
+  .go-ticker-teaser__datetime::before {
+    transition: none !important;
   }
 
   .go-ticker-teaser__datetime {
     flex: 0 0 auto !important;
     margin-inline-start: var(--gl-inset) !important;
     border-radius: 4px !important;
-    background: color-mix(in oklab, var(--gl-fg) 7%, var(--gl-card)) !important;
+    background: var(--gl-chip) !important;
     padding: 0.25em 0.6em !important;
     color: var(--gl-muted) !important;
     font-family: var(--gl-mono) !important;
     font-variant-numeric: tabular-nums !important;
     font-size: 0.74em !important;
     letter-spacing: 0.03em !important;
+
+    position: relative !important;
+    z-index: 0 !important;
+  }
+
+  .go-ticker-teaser__datetime::before {
+    content: "" !important;
+    position: absolute !important;
+    inset: 0 !important;
+    z-index: -1 !important;
+    background-color: var(--gl-chip) !important;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 448 512'%3E%3Cpath d='M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z'/%3E%3C/svg%3E") center / auto 1.2em no-repeat !important;
   }
 
   .go-ticker-teaser__content {
@@ -234,6 +252,14 @@
     color: var(--gl-muted) !important;
   }
 
+  .go-ticker-teaser:visited .go-ticker-teaser__datetime {
+    color: var(--gl-chip) !important;
+  }
+
+  .go-ticker-teaser:visited .go-ticker-teaser__datetime::before {
+    background-color: var(--gl-fg) !important;
+  }
+
   .go-ticker-teaser:hover,
   .go-ticker-teaser:focus-visible {
     background: var(--gl-fg) !important;
@@ -259,6 +285,11 @@
   .go-ticker-teaser:focus-visible .go-ticker-teaser__datetime {
     background: var(--gl-card) !important;
     color: var(--gl-fg) !important;
+  }
+
+  .go-ticker-teaser:hover .go-ticker-teaser__datetime::before,
+  .go-ticker-teaser:focus-visible .go-ticker-teaser__datetime::before {
+    background-color: var(--gl-card) !important;
   }
 
   main > *:has(.go-teaser-block--highlight) {
