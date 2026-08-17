@@ -352,7 +352,21 @@ article:has(h3 + div [class*="bg-heiseblau"]) > a:focus-visible h3 + div > span 
  * dort gilt wieder voller Kontrast auf blauer Fläche. */
 article:has(h3 + div [class*="bg-heiseblau"]) > a:not(:hover):not(:focus-visible),
 article:has(> a[href*="/bestenlisten/"]) > a:not(:hover):not(:focus-visible) {
-  color: color-mix(in oklab, var(--hs-fg) 55%, var(--hs-page)) !important;
+  color: color-mix(in oklab, var(--hs-fg) 40%, var(--hs-page)) !important;
+}
+
+/* Besuchte Werbezeilen ausdrücklich noch einmal: die allgemeine
+ * :visited-Regel weiter oben setzt --hs-muted und ist dunkler als diese
+ * Dämpfung. Ohne diese Wiederholung sah eine Werbezeile nach dem ersten
+ * Besuch kräftiger aus als vorher — genau verkehrt herum. Selektoren mit
+ * :visited lassen sich per JavaScript nicht prüfen, matches(':visited')
+ * liefert aus Datenschutzgründen immer false; nachgewiesen wurde es über
+ * die gemessene Textfarbe. */
+article:has(h3 + div [class*="bg-heiseblau"]) > a:visited,
+article:has(h3 + div [class*="bg-heiseblau"]) > a:visited h3,
+article:has(> a[href*="/bestenlisten/"]) > a:visited,
+article:has(> a[href*="/bestenlisten/"]) > a:visited h3 {
+  color: color-mix(in oklab, var(--hs-fg) 40%, var(--hs-page)) !important;
 }
 
 /* "bestenlisten" ebenso gedämpft: Kaufberatung, kein redaktioneller
