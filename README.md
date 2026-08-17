@@ -52,6 +52,25 @@ Wie die Datei dorthin kommt, steht unter [Veröffentlichen](#veröffentlichen).
 | `de.wikipedia.org` | nur mit Skin **Vector 2022** (Einstellungen → Aussehen) |
 | Artikelseiten beider Portale | noch unverändert |
 
+
+## Userscript: Chip-Kürzung auf heise
+
+Ein optionaler zweiter Baustein neben dem Style: `reduce.user.js` kürzt im
+heise-Ticker die Ressort-Chips um „heise" und „Magazin" — aus „heise security"
+wird „security", aus „Mac & i Magazin" wird „Mac & i". Das kann nur
+JavaScript: die Chips sind nackte Text-Spans ohne unterscheidbare Attribute,
+CSS kann Text weder umschreiben noch nach Inhalt selektieren (kein
+`:contains()`; auch die Artikel-URLs korrelieren nicht mit dem Ressort).
+
+Installation: Tampermonkey oder Violentmonkey installieren, dann
+`https://w3.msmr.co/reduce.user.js` öffnen — der Manager zeigt den
+Installationsdialog. Updates laufen über die `@updateURL` im Skript.
+
+Die Version im Skript wird von Hand gepflegt — es ist statisch und ändert
+sich nur, wenn heise das Chip-Markup umbaut. Kein Build, keine Action: die
+Datei liegt als Quelle im Repo-Root, Plesk kopiert sie unverändert (siehe
+[Veröffentlichen](#veröffentlichen)).
+
 ## Entwickeln
 
 ```bash
@@ -198,7 +217,7 @@ erreichbar — weder im PATH noch unter `/opt/plesk/node`. Die Action legt
 ```
 push  →  Action baut, committet reduce.user.css
       →  Webhook  →  Plesk pullt, stellt nach /w3.msmr.co/repo bereit
-      →  Bereitstellungsaktion kopiert eine Datei nach httpdocs
+      →  Bereitstellungsaktion kopiert zwei Dateien nach httpdocs
       →  Stylus holt das Update über @updateURL
 ```
 
@@ -219,15 +238,15 @@ Einrichtung in Plesk, unter **Websites & Domains → w3.msmr.co → Git**:
 | Verzweigung | `main` |
 | Bereitstellungsmodus | automatisch |
 | Serverpfad | `/w3.msmr.co/repo` |
-| Zusätzliche Bereitstellungsaktion | `cp -f reduce.user.css /w3.msmr.co/httpdocs/reduce.user.css` |
+| Zusätzliche Bereitstellungsaktion | `cp -f reduce.user.css reduce.user.js /w3.msmr.co/httpdocs/` |
 
 Die Webhook-URL aus dem Plesk-Dialog gehört bei GitHub unter *Settings →
 Webhooks*, Content type `application/json`, nur das Push-Ereignis.
 
 Entscheidend ist der **Serverpfad außerhalb des Dokumentenstamms**. Stünde er
 auf `httpdocs`, kopierte Plesk das gesamte Repo ins Web — samt `src/`,
-`package-lock.json` und allem, was künftig dazukommt. So landet dort nur die
-eine Datei, und es gibt keine Ausschlussregel, die jemand pflegen müsste.
+`package-lock.json` und allem, was künftig dazukommt. So landen dort nur die
+zwei Dateien, und es gibt keine Ausschlussregel, die jemand pflegen müsste.
 
 Das Verzeichnis muss vor der ersten Bereitstellung existieren, sonst bricht
 Plesk mit `fatal: this operation must be run in a work tree` ab.

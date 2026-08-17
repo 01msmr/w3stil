@@ -26,7 +26,7 @@ const OUT = join(ROOT, 'dist', 'reduce.user.css');
 
 const META = {
   name: 'reduce',
-  namespace: 'msmr.dev',
+  namespace: 'msmr.co',
   description: 'Reduziertes Lese-Layout für häufig besuchte Seiten',
   author: 'msmr',
   license: 'MIT',
