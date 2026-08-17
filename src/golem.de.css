@@ -56,11 +56,6 @@ body:has(.ticker-list) {
   --gl-head-color: #6f6f6f;
   --gl-head-size: 22px;
 
-  /* Wie weit der graue Grund über seine Kästen hinausreicht. Muss größer sein
-   * als die Lücken zwischen golems Rasterzeilen, sonst blitzt die weiße Karte
-   * zwischen den Blöcken durch. 24px reichen gemessen; der Überstand landet
-   * ohnehin auf gleichfarbigem Grund und fällt nicht auf. */
-  --gl-spread: 24px;
 
   /* X-Position, an der der Artikeltitel beginnt: Chip-Einzug + Chipbreite +
    * Abstand. Fester Wert, weil CSS die Breite des Uhrzeit-Chips nicht
@@ -80,8 +75,16 @@ body:has(.ticker-list) {
  * Rändern sichtbar. expect: 1 */
 .go-col:has(.ticker-list) {
   overflow: visible !important;
+}
+
+/* Die graue Fläche wird EINMAL an main gesetzt, nicht als Hof an jeden Block.
+ * Höfe aus box-shadow haben sich gegenseitig überlagert: jeder Block zeichnet
+ * nach seinen Vorgängern, sein Hof legte sich also über den Nachbarn und
+ * tönte dessen weiße Fläche grau. Golems eigener weißer box-shadow an main
+ * muss dabei weichen, sonst bliebe außen ein weißer Rand stehen. expect: 1 */
+body:has(.ticker-list) main {
   background: var(--gl-page) !important;
-  box-shadow: 0 0 0 var(--gl-spread) var(--gl-page) !important;
+  box-shadow: none !important;
 }
 
 /* Ein Tag samt seiner Zeilen ist ein Chip: weiße Fläche mit 12px Radius auf
@@ -114,6 +117,14 @@ body:has(.ticker-list) {
 main > *:has(.ticker-list):has(+ .go-grid--50-50) .ticker-list li:last-child .go-ticker-teaser,
 main > *:has(.ticker-list):has(+ .go-col--full) .ticker-list li:last-child .go-ticker-teaser {
   border-radius: 0 !important;
+}
+
+/* Auch die Liste selbst gibt ihre unteren Radien ab. Ohne das kerbt ihre
+ * eigene abgerundete Fläche die Naht ein, obwohl die letzte Artikelzeile
+ * bereits eckig ist — der Grund biss sichtbar in das Weiß. */
+main > *:has(.ticker-list):has(+ .go-grid--50-50) .ticker-list,
+main > *:has(.ticker-list):has(+ .go-col--full) .ticker-list {
+  border-radius: var(--gl-radius) var(--gl-radius) 0 0 !important;
 }
 
 /* Und eine angebundene Zeile ist ihrerseits nur dann das Ende, wenn keine
