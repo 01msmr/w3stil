@@ -95,6 +95,16 @@ body:has(.ticker-list) .go-content-header {
   display: none !important;
 }
 
+/* Ein Übergang für alle drei Flächen, sonst laufen sie auseinander: golem
+ * animiert an den Hinweis-Chips nur background-color mit 0.1s, die Schriftfarbe
+ * springt ohne Übergang. Beide Eigenschaften ausdrücklich nennen und dieselbe,
+ * ruhigere Dauer geben. */
+.go-ticker-teaser,
+.go-ticker-teaser__datetime,
+.go-ticker-teaser__labels > * {
+  transition: background-color 0.25s ease, color 0.25s ease !important;
+}
+
 /* Uhrzeit als Chip. Alle Zeiten sind fünf Zeichen breit, mit tabular-nums
  * fluchten die Titel deshalb auch ohne feste Spaltenbreite. expect: 20..400 */
 .go-ticker-teaser__datetime {
