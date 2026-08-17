@@ -108,10 +108,19 @@ export async function build() {
     const domain = file.replace(/\.css$/, '');
     const site = await readFile(join(SRC, file), 'utf8');
     const siteCss = clean(site);
+
+    /* Opt-out: eine Site-Datei, die @no-reset deklariert, bekommt _reset.css
+     * NICHT vorangestellt. Gedacht für Seiten, an denen ausdrücklich nur ein
+     * Ausschnitt verändert werden soll — _reset greift ins Grundlayout ein
+     * (Seitenhintergrund, Schrift, aside ausblenden) und lässt sich aus der
+     * Site-Datei heraus nicht zurücknehmen, weil !important in derselben
+     * Kaskadenschicht nicht rückgängig zu machen ist. */
+    const bare = /^\s*\/\*\s*@no-reset\b/.test(site);
+
     const body = [
-      `/* ---- ${domain} ---- */`,
-      clean(reset),
-      siteCss ? `\n/* site */\n${siteCss}` : '',
+      `/* ---- ${domain}${bare ? ' (ohne _reset) ' : ' '}---- */`,
+      bare ? '' : clean(reset),
+      siteCss ? `${bare ? '' : '\n'}/* site */\n${siteCss}` : '',
     ]
       .filter(Boolean)
       .join('\n');
@@ -171,6 +180,8 @@ if (isMain) {
       res.writeHead(200, {
         'Content-Type': 'text/css; charset=utf-8',
         'Cache-Control': 'no-store',
+        // erlaubt, den Dev-Stand aus einer beliebigen Seite heraus zu testen
+        'Access-Control-Allow-Origin': '*',
       });
       res.end(await readFile(OUT, 'utf8'));
     }).listen(port, () => {

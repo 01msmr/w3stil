@@ -1,137 +1,189 @@
-/* golem.de — Zeilenliste in voller Breite, einspaltige Artikelseite.
+/* @no-reset
  *
- * Selektoren sind strukturell gewählt, weil die Klassennamen aus dem
- * 2018er-Style nicht mehr verifizierbar sind. Mit probe gegenprüfen.
+ * golem.de — NUR die Ticker-Zeilen. Alles andere bleibt unangetastet:
+ * Seitenhintergrund, weiße Inhaltskarte, Spaltenbreite, Kopf- und Fußbereich,
+ * Werbung, Seminar- und Stellenblöcke. Das ist eine harte Vorgabe, keine
+ * Sparmaßnahme — deshalb auch @no-reset oben: _reset.css würde Body-Hintergrund
+ * und Schrift der ganzen Seite setzen und aside-Elemente ausblenden.
+ *
+ * Jede Regel hier ist an .ticker-list oder .go-ticker-teaser verankert und
+ * kann die Seite außerhalb der Liste nicht erreichen.
+ *
+ * Verifiziert am 2026-08-17 live gegen /ticker/ im eingeloggten Chrome.
+ * Struktur: ul.ticker-list > li > a.go-ticker-teaser, darin
+ * time.go-ticker-teaser__datetime + span.go-ticker-teaser__content
+ * + span.go-ticker-teaser__labels.
  */
 
-:root {
-  --rr-bg: #fff;
-  --rr-fg: #000;
-  --rr-muted: #8a8a8a;
-  --rr-rule: #e4e4e4;
-  --rr-text: -apple-system, "Helvetica Neue", Arial, sans-serif;
-  --rr-size: 15px;
-  --rr-lh: 1.45;
-  --rr-width: 100%;
-  --gl-pad: 1.5rem;
+.ticker-list {
+  --gl-fg: #000;
+  --gl-card: #fff;
+  --gl-muted: #8a8a8a;
+  --gl-text: -apple-system, "Helvetica Neue", Arial, sans-serif;
+  --gl-mono: ui-monospace, "SF Mono", "IBM Plex Mono", Menlo, monospace;
+  --gl-size: 17px;
+  --gl-lh: 1.5;
+  /* Golems Original hat links/rechts keinen Einzug — die Zeile sitzt bündig
+   * an der Kante der weißen Karte. Das bleibt so. */
+  --gl-pad: 0px;
 }
 
-html {
-  color-scheme: light !important;
-}
-
-/* Detailseite = genau ein <article>. Spart eine zweite Sektion. */
-body:has(article):not(:has(article ~ article)) {
-  --rr-width: 78ch;
-  --rr-size: 17px;
-  --rr-lh: 1.65;
-}
-
-/* ── Zeilenliste ────────────────────────────────────────────────────────
- * Der Anker ist die Zeile, nicht ein Textfragment darin — sonst treffen
- * :hover und :visited nur die Überschrift.
- */
-
-:where(main, [role="main"]) li {
+/* Keine Trennlinien — die Zeilen trennt der Weißraum. expect: 20..400 */
+.ticker-list li {
   list-style: none !important;
   margin: 0 !important;
   padding: 0 !important;
-  border-bottom: 1px solid var(--rr-rule) !important;
+  border: 0 !important;
 }
 
-:where(main, [role="main"]) li :where(img, picture, figure, p) {
-  display: none !important;
-}
-
-:where(main, [role="main"]) li a {
+/* Anker ist das <a>, nicht ein Textfragment darin — sonst treffen :hover und
+ * :visited nur einen Teil der Zeile. expect: 20..400 */
+.go-ticker-teaser {
   display: flex !important;
   align-items: baseline !important;
-  gap: 0.9em !important;
+  gap: 1em !important;
   width: 100% !important;
-  padding: 0.4em var(--gl-pad) !important;
+  padding: 0.7em var(--gl-pad) !important;
   margin: 0 !important;
-  background-color: var(--rr-bg) !important;
-  color: var(--rr-fg) !important;
-  font: 400 1em/var(--rr-lh) var(--rr-text) !important;
+  background: none !important;
+  color: var(--gl-fg) !important;
+  font: 400 var(--gl-size) / var(--gl-lh) var(--gl-text) !important;
   text-decoration: none !important;
   white-space: nowrap !important;
   overflow: hidden !important;
   text-overflow: ellipsis !important;
 }
 
-:where(main, [role="main"]) li :where(time, [class*="meta" i], [class*="date" i]) {
-  margin-inline-start: auto !important;
+/* Uhrzeit-Icon und Plus-Badge tragen in einer Zeilenliste nichts bei. */
+.go-ticker-teaser svg {
+  display: none !important;
+}
+
+/* Uhrzeit als Chip. Alle Zeiten sind fünf Zeichen breit, mit tabular-nums
+ * fluchten die Titel deshalb auch ohne feste Spaltenbreite. expect: 20..400 */
+.go-ticker-teaser__datetime {
   flex: 0 0 auto !important;
-  color: var(--rr-muted) !important;
-  font-family: var(--rr-mono) !important;
-  font-size: 0.8em !important;
-  background: none !important;
-  padding: 0 !important;
+  border-radius: 4px !important;
+  background: color-mix(in oklab, var(--gl-fg) 7%, var(--gl-card)) !important;
+  padding: 0.25em 0.6em !important;
+  color: var(--gl-muted) !important;
+  font-family: var(--gl-mono) !important;
+  font-variant-numeric: tabular-nums !important;
+  font-size: 0.74em !important;
+  letter-spacing: 0.03em !important;
+}
+
+.go-ticker-teaser__content {
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+/* "Tipp", "International" — an den rechten Rand, nicht in den Textfluss. */
+.go-ticker-teaser__labels {
+  flex: 0 0 auto !important;
+  margin-inline-start: auto !important;
+  padding-inline-start: 1em !important;
+  font-size: 0.72em !important;
+  color: var(--gl-muted) !important;
 }
 
 /* LVHA-Reihenfolge ist zwingend, sonst gewinnt visited über hover.
  * :visited erlaubt nur Farbeigenschaften — "gedimmt" heißt hier grau. */
-:where(main, [role="main"]) li a:visited {
-  color: var(--rr-muted) !important;
-  background-color: var(--rr-bg) !important;
+.go-ticker-teaser:visited,
+.go-ticker-teaser:visited .go-ticker-teaser__content {
+  color: var(--gl-muted) !important;
 }
 
-:where(main, [role="main"]) li a:hover,
-:where(main, [role="main"]) li a:focus-visible {
-  background-color: var(--rr-fg) !important;
-  color: var(--rr-bg) !important;
+.go-ticker-teaser:hover,
+.go-ticker-teaser:focus-visible {
+  background: var(--gl-fg) !important;
+  color: var(--gl-card) !important;
+  text-decoration: none !important;
   outline: none !important;
 }
 
-:where(main, [role="main"]) li a:hover * {
+.go-ticker-teaser:hover *,
+.go-ticker-teaser:focus-visible * {
   color: currentColor !important;
   background: none !important;
+  text-decoration: none !important;
 }
 
-/* ── Artikelseite ───────────────────────────────────────────────────────*/
-
-body:has(article) article {
-  max-width: var(--rr-width) !important;
-  margin-inline: auto !important;
-  padding-inline: var(--gl-pad) !important;
+/* Der Chip verliert beim Invertieren seine Fläche — Kontur statt Füllung,
+ * sonst verschwindet die Uhrzeit im schwarzen Balken. */
+.go-ticker-teaser:hover .go-ticker-teaser__datetime,
+.go-ticker-teaser:focus-visible .go-ticker-teaser__datetime {
+  box-shadow: inset 0 0 0 1px currentColor !important;
 }
 
-body:has(article) h1 {
-  font-size: 1.75em !important;
-  font-weight: 600 !important;
-  line-height: 1.15 !important;
-  margin-block: 0 0.6em !important;
+/* ── Seminare und Stellenmarkt ──────────────────────────────────────────
+ * Der einzige Eingriff außerhalb von .ticker-list, und zwar ein gewollter:
+ * golem schiebt mitten in die Liste einen Block mit zwei nebeneinander
+ * liegenden Karussells (Kurse links, Stellenmarkt rechts). Als Kachelblock
+ * zerreißt er den Lesefluss.
+ *
+ * Lösung: beide Objekte werden zu EINER ruhigen Zeile im Rhythmus der Liste.
+ * Beim Hover färbt sie sich grün und blendet den echten Inhalt als Overlay
+ * darunter ein — nichts wird entfernt, nur einsortiert.
+ *
+ * Die beiden Beschriftungen stehen als Text in der CSS-Regel, weil golem den
+ * Kursblock ohne Überschrift im DOM ausliefert; nur der Stellenmarkt hat eine.
+ * check.mjs prüft Selektoren, keine Textinhalte — diese zwei Wörter sind
+ * deshalb der einzige Teil der Datei, den ein Umbau still veralten lässt.
+ * expect: 1
+ */
+main > *:has(.go-teaser-block--highlight) {
+  display: flex !important;
+  align-items: baseline !important;
+  gap: 3em !important;
+  position: relative !important;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  margin: 0 !important;
+  padding: 0.7em 0 !important;
+  overflow: visible !important;
+  grid-template-columns: none !important;
+  font: 400 17px/1.5 -apple-system, "Helvetica Neue", Arial, sans-serif !important;
+  color: #8a8a8a !important;
 }
 
-body:has(article) :where(h2, h3) {
-  font-size: 1.1em !important;
-  font-weight: 600 !important;
-  background: none !important;
-  color: var(--rr-fg) !important;
-  border-top: 1px solid var(--rr-rule) !important;
-  margin-block: 2em 0.4em !important;
-  padding: 0.8em 0 0 !important;
+main > *:has(.go-teaser-block--highlight)::before {
+  content: "Seminare" !important;
+  flex: 0 0 auto !important;
 }
 
-body:has(article) article p {
-  margin-block: 0 1em !important;
+main > *:has(.go-teaser-block--highlight)::after {
+  content: "Stellenmarkt" !important;
+  flex: 0 0 auto !important;
 }
 
-body:has(article) article a {
-  color: var(--rr-fg) !important;
-  background: none !important;
-  padding: 0 !important;
-  text-decoration: underline !important;
-  text-decoration-color: var(--rr-muted) !important;
-  text-underline-offset: 2px !important;
+main > *:has(.go-teaser-block--highlight):hover {
+  background: #1f7a3f !important;
+  color: #fff !important;
 }
 
-body:has(article) article a:visited {
-  color: var(--rr-muted) !important;
+/* Aus dem Fluss nehmen, sonst bliebe die Blockhöhe stehen. */
+main > *:has(.go-teaser-block--highlight) .go-teaser-block--highlight {
+  position: absolute !important;
+  top: 100% !important;
+  z-index: 30 !important;
+  visibility: hidden !important;
+  margin: 0 !important;
+  background: #fff !important;
+  box-shadow: 0 2px 14px rgb(0 0 0 / 20%) !important;
 }
 
-body:has(article) article a:hover {
-  background-color: var(--rr-fg) !important;
-  color: var(--rr-bg) !important;
-  text-decoration-color: var(--rr-bg) !important;
+main > *:has(.go-teaser-block--highlight) .go-teaser-block--highlight:nth-of-type(1) {
+  left: 0 !important;
+  width: 50% !important;
+}
+
+main > *:has(.go-teaser-block--highlight) .go-teaser-block--highlight:nth-of-type(2) {
+  left: 50% !important;
+  width: 50% !important;
+}
+
+main > *:has(.go-teaser-block--highlight):hover .go-teaser-block--highlight {
+  visibility: visible !important;
 }

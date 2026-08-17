@@ -38,11 +38,33 @@ Stylus-Editor prototypen — aber siehe unten.
 
 Neue Seite aufnehmen:
 
-1. `tools/probe.user.js` in Violentmonkey installieren, per `Ctrl+Alt+P` öffnen.
+1. `tools/probe.user.js` auf der Zielseite ausführen — siehe unten.
 2. Content-Root, Layout-Kontext und Sidebars ablesen; mit *Alt+Klick-Picker*
    einzelne Elemente prüfen. Der Balken zeigt die geschätzte Haltbarkeit.
 3. *CSS-Entwurf* → kopieren → als `src/<domain>.css` speichern, überarbeiten.
 4. `node build.mjs`, prüfen, committen.
+
+### probe ausführen
+
+**Eine Erweiterung genügt: Stylus.** `probe` braucht keine zweite, obwohl die
+Datei auf `.user.js` endet — sie läuft als DevTools-Snippet.
+
+1. Zielseite öffnen, `F12` → **Sources** → **Snippets** → *New snippet*.
+2. Inhalt von `tools/probe.user.js` einfügen, einmalig speichern (`Ctrl+S`).
+3. `Ctrl+Enter` führt es aus, das Overlay erscheint. Danach auf jeder Seite
+   erneut `Ctrl+Enter` — das Snippet bleibt gespeichert, überlebt aber keinen
+   Reload.
+
+Das Skript ist dafür gebaut: der `GM_`-Menübefehl wird nur registriert, wenn ein
+Userscript-Manager ihn anbietet, das Tastenkürzel `Ctrl+Alt+P` und der
+Kopieren-Knopf funktionieren auch ohne. Einzige Einschränkung ohne Manager:
+auf `http://`-Seiten schlägt das Kopieren fehl, weil `navigator.clipboard` einen
+Secure Context verlangt — dann den Entwurf aus dem Overlay markieren und
+von Hand kopieren.
+
+Wer das Snippet nach jedem Reload nicht neu auslösen mag, installiert
+[Violentmonkey](https://violentmonkey.github.io/) und lässt es deaktiviert,
+bis eine Domain dazukommt. Dieselbe Datei, unverändert, in beiden Wegen.
 
 ## Konventionen
 

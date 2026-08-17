@@ -1,10 +1,16 @@
-/* heise.de — Beispiel-Sektion.
+/* heise.de — verifiziert am 2026-08-17 gegen einen /news/-Artikel im
+ * eingeloggten Chrome (Consent-Cookie gesetzt).
  *
  * Hier gehört nur hinein, was _reset.css nicht generisch lösen kann.
  * Faustregel: taucht ein Selektor in der dritten Site-Datei auf,
  * gehört er nach _reset.css.
  *
- * Prüfe Selektoren mit tools/probe.user.js, bevor du sie hier festschreibst.
+ * Struktur-Notiz: heise hat KEIN <main> und kein [role="main"]. Der Artikel
+ * ist article.article-layout; daneben stehen drei winzige article.ho-text
+ * (unter 60 Zeichen). Die Greifer aus _reset.css hängen deshalb hier allein
+ * am <article>-Element — fällt das weg, greift die ganze Datei ins Leere.
+ * Werbung, Newsletter-Kasten und Empfehlungen liegen in <aside> und werden
+ * bereits von _reset.css entfernt.
  */
 
 /* expect: 1 — der Artikelcontainer */
@@ -13,16 +19,21 @@
   margin-inline: auto !important;
 }
 
-/* Themen-Teaser und "Das könnte Sie auch interessieren" unter dem Artikel */
-.article-footer__meta,
-.a-tag-list,
+/* Themenschlagworte unter dem Artikel und die Folgen-Liste.
+ * expect: 1 */
+.article-footer__topics,
+.topics--follow {
+  display: none !important;
+}
+
+/* "Das könnte Sie auch interessieren" — liegt zwar in <aside>, trägt die
+ * Klasse aber auch an anderer Stelle. expect: 1 */
 .recommendations {
   display: none !important;
 }
 
-/* heise setzt Bildunterschriften sehr klein */
-.article-image__caption {
+/* heise setzt Bildunterschriften sehr klein. expect: 1..12 */
+figure figcaption {
   font-size: 0.85em !important;
   color: var(--rr-muted) !important;
 }
-

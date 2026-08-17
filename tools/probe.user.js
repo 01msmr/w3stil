@@ -11,9 +11,13 @@
 // ==/UserScript==
 
 /* Entwicklungswerkzeug, gehört NICHT ins Auslieferungsartefakt.
- * In Violentmonkey installieren und standardmäßig deaktiviert lassen.
  *
- * Öffnen:  Menübefehl "reduce · probe"  oder  Ctrl+Alt+P
+ * Standardweg ohne zweite Erweiterung: als DevTools-Snippet ausführen
+ * (F12 → Sources → Snippets → einfügen → Ctrl+Enter). Der UserScript-Kopf
+ * oben schadet dabei nicht, er ist nur ein Kommentar.
+ *
+ * Öffnen:  Ctrl+Alt+P  (oder Menübefehl "reduce · probe", falls doch ein
+ *          Userscript-Manager installiert ist)
  * Picker:  Alt+Klick auf ein Element    (schlägt Selektoren dafür vor)
  */
 
