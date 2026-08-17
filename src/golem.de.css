@@ -297,6 +297,36 @@ body:has(.ticker-list) .go-content-header {
   order: 2 !important;
 }
 
+/* Golem-Plus-Artikel bekommen ein fettes Plus. golem markiert sie mit einem
+ * <svg> direkt in den Labels — geprüft: 14 von 172 Zeilen, immer mit dem Titel
+ * "Golem Plus Artikel". Die Grafik selbst bleibt ausgeblendet.
+ *
+ * Das Plus ist ein Pseudo-Element der Label-Leiste und damit selbst ein
+ * Flex-Element, kann also per order zwischen "International" (0) und "Tipp" (2)
+ * einsortiert werden. Ohne Chipfläche, dafür deutlich größer als die Chips.
+ * expect: 0..40 */
+.go-ticker-teaser__labels:has(svg)::before {
+  content: "+" !important;
+  order: 1 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  background: none !important;
+  color: var(--gl-muted) !important;
+  font-family: var(--gl-mono) !important;
+  font-weight: 700 !important;
+  font-size: 1.2em !important;
+  line-height: 1 !important;
+}
+
+/* Ohne Fläche kann das Plus beim Invertieren nicht weiß werden — es würde im
+ * Grau verschwinden. Es wird stattdessen dunkler. */
+.go-ticker-teaser:hover .go-ticker-teaser__labels:has(svg)::before,
+.go-ticker-teaser:focus-visible .go-ticker-teaser__labels:has(svg)::before {
+  color: var(--gl-fg) !important;
+}
+
 /* Beim Hover der Zeile wird die Schrift der Hinweise weiß. Damit sie lesbar
  * bleibt, kippt die Chipfläche mit ins Dunkle — weiß auf hellem Grau wäre
  * nicht zu entziffern. Die Chips liegen außerhalb der Zeilenfläche, sie folgen
