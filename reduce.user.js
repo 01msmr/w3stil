@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        reduce-heise-chips
 // @namespace   msmr.co
-// @version     0.1.0
+// @version     0.1.1
 // @description Kürzt "heise" und "Magazin" aus den Ressort-Chips des Newstickers
 // @author      msmr
 // @license     MIT
@@ -19,6 +19,8 @@
  * geprüft am 2026-08-18 über alle 280 Zeilen des Tickers).
  *
  * Aus "heise security" wird "security", aus "Mac & i Magazin" wird "Mac & i".
+ * "heise online" verschwindet ganz: es ist das Standard-Ressort des Tickers
+ * und traegt dort keine Information.
  * "heise+ exklusiv" bleibt unangetastet: das Plus hängt am Markennamen, ohne
  * ihn bliebe nur "exklusiv" übrig. Einwortige Chips ("bestenlisten", "WTF")
  * ändern sich nicht.
@@ -38,6 +40,10 @@
       .querySelectorAll('article h3 + div > span.whitespace-nowrap')
       .forEach((el) => {
         const t = el.textContent;
+        if (/^heise\s+online$/i.test(t.trim())) {
+          el.remove();
+          return;
+        }
         const kurz = t.replace(/^heise\s+/i, '').replace(/\s+Magazin$/i, '');
         if (kurz !== t) el.textContent = kurz;
       });
