@@ -8,7 +8,8 @@
     "build": "node build.mjs",
     "dev": "node build.mjs --serve",
     "check": "node tools/check.mjs",
-    "lint": "stylelint \"src/**/*.css\""
+    "lint": "stylelint \"src/**/*.css\"",
+    "deploy": "node build.mjs && cp dist/reduce.user.css ."
   },
   "devDependencies": {
     "playwright": "^1.49.0",

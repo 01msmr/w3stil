@@ -1,13 +1,22 @@
-name: build & deploy
+name: build
+
+# Veröffentlicht wird per Pull auf dem Server, nicht aus dieser Action heraus:
+# das Dokumentenwurzelverzeichnis von w3.msmr.co ist ein Klon dieses Repos, dort
+# läuft nach jedem Pull `npm run publish` (siehe README). Node steht auf dem
+# Server bereit, der Build hat keine Abhängigkeiten.
+#
+# Diese Action prüft deshalb nur, ob main baubar bleibt — kein SSH, keine
+# Secrets. Fällt sie rot aus, würde der Pull auf dem Server ebenfalls scheitern.
 
 on:
   push:
     branches: [main]
-    paths: ['src/**', 'build.mjs', '.github/workflows/deploy.yml']
+    paths: ['src/**', 'build.mjs', 'package.json', '.github/workflows/deploy.yml']
+  pull_request:
   workflow_dispatch:
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -21,20 +30,8 @@ jobs:
       - name: build
         run: node build.mjs
 
-      - name: verify version bumped
+      - name: verify
         run: |
           grep -m1 '@version' dist/reduce.user.css
+          grep -c '^@-moz-document' dist/reduce.user.css
           test -s dist/reduce.user.css
-
-      - name: deploy
-        env:
-          SSH_KEY: ${{ secrets.DEPLOY_KEY }}
-          HOST: ${{ secrets.DEPLOY_HOST }}          # z.B. deploy@msmr.co   
-          DEST: ${{ secrets.DEPLOY_PATH }}          # z.B. /var/www/w3.msmr.co/
-        run: |
-          mkdir -p ~/.ssh
-          echo "$SSH_KEY" > ~/.ssh/id_ed25519
-          chmod 600 ~/.ssh/id_ed25519
-          ssh-keyscan -H "${HOST#*@}" >> ~/.ssh/known_hosts
-          rsync -avz --checksum -e "ssh -i ~/.ssh/id_ed25519" \
-            dist/reduce.user.css "$HOST:$DEST"

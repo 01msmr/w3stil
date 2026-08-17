@@ -169,7 +169,39 @@ Weil `@version` aus dem Commit-Zeitstempel kommt, ist die Korrektur automatisch
 neuer als die kaputte Fassung. Ein `git revert` allein reicht nicht, wenn du das
 Artefakt nicht neu baust.
 
-## Deploy
+## Veröffentlichen
+
+Der Server ist ein Klon dieses Repos; sein Dokumentenwurzelverzeichnis
+(`/w3.msmr.co/httpdocs`) ist das Arbeitsverzeichnis. Veröffentlicht wird per
+Pull, nicht aus der CI heraus — Node steht dort bereit, der Build braucht
+keine Abhängigkeiten.
+
+```bash
+cd /w3.msmr.co/httpdocs
+git pull
+npm run deploy          # = node build.mjs && cp dist/reduce.user.css .
+```
+
+`dist/` bleibt ignoriert; veröffentlicht wird die Kopie im Wurzelverzeichnis,
+damit die Adresse kurz bleibt: `https://w3.msmr.co/reduce.user.css`. Auch sie
+ist gitignored, der Pull bleibt also konfliktfrei.
+
+Die GitHub-Action baut nur noch zur Kontrolle. Fällt sie rot aus, würde der
+Pull auf dem Server ebenfalls scheitern — sie braucht dafür weder SSH noch
+Secrets.
+
+### Der Server-Docroot ist ein Git-Klon
+
+Damit liegt `.git/` im Web. Sichtbar wäre unter anderem die vollständige
+Historie. Das Repo ist zwar öffentlich, trotzdem gehört das gesperrt:
+
+```nginx
+location ~ /\.(git|github) { deny all; return 404; }
+```
+
+Prüfen: `curl -sI https://w3.msmr.co/.git/config` muss 403 oder 404 liefern.
+
+## Deploy per rsync (Alternative, derzeit ungenutzt)
 
 `.github/workflows/deploy.yml` baut bei Push auf `main` und rsynct
 `dist/reduce.user.css` auf den Server. Benötigte Secrets:
