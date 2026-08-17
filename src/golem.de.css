@@ -95,11 +95,19 @@ body:has(.ticker-list) .go-content-header {
   display: none !important;
 }
 
-/* Ein Übergang für alle drei Flächen, sonst laufen sie auseinander: golem
- * animiert an den Hinweis-Chips nur background-color mit 0.1s, die Schriftfarbe
- * springt ohne Übergang. Beide Eigenschaften ausdrücklich nennen und dieselbe,
- * ruhigere Dauer geben. */
+/* Die Zeile selbst schaltet hart um — golem legt dort ein transition: all, das
+ * ausdrücklich abgeschaltet werden muss, sonst blendet die schwarze Fläche ein.
+ * Gilt auch für den Titel, der sonst seine Farbe nachzieht. */
 .go-ticker-teaser,
+.go-ticker-teaser__content,
+.go-ticker-teaser__labels {
+  transition: none !important;
+}
+
+/* Nur die beiden Chips laufen weich — und beide gleich: golem animiert an den
+ * Hinweis-Chips lediglich background-color mit 0.1s, die Schriftfarbe springt
+ * ohne Übergang, weshalb Fläche und Schrift auseinanderliefen. Beide
+ * Eigenschaften ausdrücklich nennen, gleiche Dauer. */
 .go-ticker-teaser__datetime,
 .go-ticker-teaser__labels > * {
   transition: background-color 0.25s ease, color 0.25s ease !important;
