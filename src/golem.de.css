@@ -87,6 +87,17 @@ body:has(.ticker-list) {
   border-radius: 0 0 var(--gl-radius) var(--gl-radius) !important;
 }
 
+/* Folgt der Tagesliste die Highlight-Zeile, hängt diese sich an den Chip an
+ * und ist dann dessen einziges Ende — die letzte Artikelzeile gibt ihre
+ * unteren Radien deshalb ab.
+ *
+ * .go-grid--50-50 als Marker statt eines zweiten :has(): :has() darf nicht in
+ * :has() verschachtelt werden, die Regel fiele sonst vollständig aus. Auf der
+ * Ticker-Seite trägt allein der Highlight-Block diese Klasse. expect: 0..7 */
+main > *:has(.ticker-list):has(+ .go-grid--50-50) .ticker-list li:last-child .go-ticker-teaser {
+  border-radius: 0 !important;
+}
+
 /* Tagesköpfe stehen im grauen Grund zwischen den Chips: keine eigene Fläche,
  * gedämpftes Grau, und linksbündig mit den Artikeltiteln statt mit der
  * Spaltenkante. expect: 2..14 */
@@ -133,7 +144,7 @@ body:has(.ticker-list) .go-content-header {
   gap: 1em !important;
   width: 100% !important;
   margin-inline: 0 !important;
-  padding: 0.3em var(--gl-bleed) !important;
+  padding: 0.38em var(--gl-bleed) !important;
   position: relative !important;
   background: none !important;
   color: var(--gl-fg) !important;
@@ -290,10 +301,8 @@ main > *:has(.go-teaser-block--highlight) {
   gap: 0 !important;
   position: relative !important;
   height: auto !important;
-  min-height: 0 !important;
   max-height: none !important;
-  margin: 0 !important;
-  padding: 0.3em 0 !important;
+  padding: 0.38em var(--gl-bleed) !important;
   overflow: visible !important;
   grid-template-columns: none !important;
 
@@ -301,13 +310,29 @@ main > *:has(.go-teaser-block--highlight) {
    * Grün als Schriftfarbe kennzeichnet sie als das, was sie ist: Werbung,
    * nicht Redaktion — ohne dass sie laut wird. Ohne Übergang, wie die Zeilen. */
   font-weight: 400 !important;
-  font-size: 19px !important;
-  line-height: 1.35 !important;
+  font-size: var(--gl-size) !important;
+  line-height: var(--gl-lh) !important;
   color: #1f7a3f !important;
-  background: var(--gl-page) !important;
-  box-shadow: 0 0 0 var(--gl-spread) var(--gl-page) !important;
+
+  /* Wie eine Artikelzeile, nur grün: gleiche Fläche, gleiche Polsterung,
+   * gleiche Höhe. Die min-height gleicht aus, dass hier der Uhrzeit-Chip
+   * fehlt, der die Artikelzeilen ein paar Pixel höher macht. */
+  background: var(--gl-card) !important;
+  min-height: 40.4px !important;
+
+  /* Angehängt an den Tages-Chip darüber: der Abstand der Rasterzeile (32px)
+   * plus die 16px, die golems Wrapper unter der Liste noch stehen lässt.
+   * Deshalb trägt diese Zeile die unteren Radien des Chips. */
+  margin-top: -48px !important;
+  margin-bottom: 0 !important;
+  border-radius: 0 0 var(--gl-radius) var(--gl-radius) !important;
+
+  /* max-width muss fallen: der Block ist selbst ein .go-grid und wäre sonst
+   * auf 1000px gedeckelt — er bliebe 20px schmaler als die Tages-Chips. */
   width: calc(100% + 2 * var(--gl-bleed)) !important;
+  max-width: none !important;
   margin-inline: calc(-1 * var(--gl-bleed)) !important;
+  box-shadow: none !important;
   transition: none !important;
 }
 
