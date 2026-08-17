@@ -332,16 +332,38 @@ article h3 + div [class*="border-teal-700"] {
   mask: var(--hs-icon-update) center / contain no-repeat !important;
 }
 
-/* Angebot ist Werbung — gedämpft, damit es nicht mit dem Ressort konkurriert. */
-article h3 + div [class*="bg-heiseblau"] {
+/* Angebot ist Werbung: nur das heise-Zeichen aus dem Chip, ohne Fläche und
+ * gedämpft — wie Alert und Update ein reines Symbol. Die Regel wird für den
+ * Hover-Zustand wiederholt, weil die allgemeine Hover-Regel für Chips sonst
+ * über die höhere Spezifität von :has() gewinnen und die Fläche zurückholen
+ * würde. expect: 0..40 */
+article h3 + div [class*="bg-heiseblau"],
+article:has(> a > time) > a:hover h3 + div [class*="bg-heiseblau"],
+article:has(> a > time) > a:focus-visible h3 + div [class*="bg-heiseblau"] {
+  gap: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: none !important;
+  color: var(--hs-muted) !important;
   opacity: 0.45 !important;
 }
 
-/* "bestenlisten" ebenso: Kaufberatung, kein redaktioneller Ticker-Inhalt.
- * Das Ressort trägt keine eigene Klasse, wohl aber die Ziel-URL — deshalb
- * hängt die Regel am href und nicht am Text des Chips, den CSS nicht lesen
- * kann. expect: 0..40 */
-article:has(> a[href*="/bestenlisten/"]) h3 + div > span {
+article h3 + div [class*="bg-heiseblau"] > span {
+  display: none !important;
+}
+
+article h3 + div [class*="bg-heiseblau"] svg {
+  width: calc(var(--hs-size) * 0.85) !important;
+  height: calc(var(--hs-size) * 0.85) !important;
+}
+
+/* "bestenlisten" ebenso gedämpft: Kaufberatung, kein redaktioneller
+ * Ticker-Inhalt. Das Ressort trägt keine eigene Klasse, wohl aber die
+ * Ziel-URL — deshalb hängt die Regel am href und nicht am Text des Chips,
+ * den CSS nicht lesen kann. Ebenfalls in beiden Zuständen. expect: 0..40 */
+article:has(> a[href*="/bestenlisten/"]) h3 + div > span,
+article:has(> a[href*="/bestenlisten/"]) > a:hover h3 + div > span,
+article:has(> a[href*="/bestenlisten/"]) > a:focus-visible h3 + div > span {
   opacity: 0.45 !important;
 }
 
