@@ -421,9 +421,11 @@ article:has(> a[href*="/bestenlisten/"]) > a:hover,
 article:has(> a[href*="/bestenlisten/"]) > a:focus-visible {
   background: color-mix(in oklab, var(--hs-blue) 42%, var(--hs-page)) !important;
 
-  /* Weiß wäre auf der blassen Fläche zu kontrastarm — die Schrift bleibt
-   * dunkel und gedämpft. */
-  color: color-mix(in oklab, var(--hs-fg) 78%, var(--hs-page)) !important;
+  /* Schrift bleibt weiß wie in jeder anderen Hover-Zeile. Der Kontrast liegt
+   * damit bei etwa 2.3:1 und unter der WCAG-Schwelle von 4.5:1 — bewusst so
+   * entschieden. Wer ihn heben will, ändert eine Zahl: den Blau-Anteil der
+   * Füllung oben. */
+  color: var(--hs-card) !important;
 }
 
 article:has(h3 + div [class*="bg-heiseblau"]) > a:hover > time,
@@ -432,4 +434,13 @@ article:has(> a[href*="/bestenlisten/"]) > a:hover > time,
 article:has(> a[href*="/bestenlisten/"]) > a:focus-visible > time {
   background: var(--hs-card) !important;
   color: var(--hs-muted) !important;
+}
+
+/* In Werbezeilen tritt auch der Uhrzeit-Chip zurück — Fläche wie Ziffern.
+ * Über opacity statt eigener Farbwerte, damit es in beiden Zuständen greift
+ * und nicht bei jeder Änderung der Hover-Farben nachgezogen werden muss.
+ * expect: 0..60 */
+article:has(h3 + div [class*="bg-heiseblau"]) > a > time,
+article:has(> a[href*="/bestenlisten/"]) > a > time {
+  opacity: 0.4 !important;
 }
