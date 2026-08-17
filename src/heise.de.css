@@ -231,6 +231,20 @@ article:has(> a > time) > a:visited h3 {
   color: var(--hs-muted) !important;
 }
 
+/* Gelesene Zeilen setzen auch ihre Fläche ab — dieselbe Mischung wie bei
+ * golem, damit sich beide Domains gleich verhalten.
+ *
+ * Die Fläche muss am <a> sitzen, nicht am <article>: :visited greift nur auf
+ * dem Link selbst. Und der Anteil darf nicht zu hoch sein — heises Grund ist
+ * mit #e8edf0 nah an Weiß, bei 88% wäre der Unterschied unsichtbar. Genau
+ * dieser Fehler steckte zuerst in der golem-Fassung.
+ *
+ * Prüfbar nur mit dem Auge: getComputedStyle liefert für besuchte Links
+ * absichtlich die Werte des unbesuchten Zustands. expect: 20..400 */
+article:has(> a > time) > a:visited {
+  background-color: color-mix(in oklab, var(--hs-card) 60%, var(--hs-page)) !important;
+}
+
 article:has(> a > time) > a:hover,
 article:has(> a > time) > a:focus-visible {
   background: var(--hs-blue) !important;
