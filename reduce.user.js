@@ -1,11 +1,12 @@
 // ==UserScript==
-// @name        reduce-heise-chips
+// @name        reduce-ticker
 // @namespace   msmr.co
-// @version     0.1.2
-// @description Kürzt Ressort-Chips und Tagesköpfe des Newstickers
+// @version     0.2.0
+// @description Kürzt Ressort-Chips und formatiert Tagesköpfe der Newsticker
 // @author      msmr
 // @license     MIT
 // @match       https://www.heise.de/newsticker*
+// @match       https://www.golem.de/ticker*
 // @run-at      document-idle
 // @grant       none
 // @updateURL   https://w3.msmr.co/reduce.user.js
@@ -22,9 +23,10 @@
  * "heise online" verschwindet ganz: es ist das Standard-Ressort des Tickers
  * und traegt dort keine Information.
  *
- * Die Tagesköpfe verlieren ihr "Heute –"/"Gestern –": das Datum samt
- * Wochentag steht direkt daneben und sagt dasselbe. Ältere Tage kommen
- * ohnehin ohne Präfix.
+ * Die Tagesköpfe verlieren ihr "Heute –"/"Gestern –" (das Datum daneben
+ * sagt dasselbe) und werden auf beiden Seiten einheitlich als
+ * "Montag, den 17. August 2026" ausgeschrieben. Nach dem Umformen matcht
+ * das Datums-Muster nicht mehr — der MutationObserver läuft leer durch.
  * "heise+ exklusiv" bleibt unangetastet: das Plus hängt am Markennamen, ohne
  * ihn bliebe nur "exklusiv" übrig. Einwortige Chips ("bestenlisten", "WTF")
  * ändern sich nicht.
@@ -38,6 +40,9 @@
 
 (() => {
   'use strict';
+
+  const MONATE = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli',
+    'August', 'September', 'Oktober', 'November', 'Dezember'];
 
   const trim = () => {
     document
@@ -53,10 +58,14 @@
       });
 
     document
-      .querySelectorAll('section > div:first-child > h2')
+      .querySelectorAll('section > div:first-child > h2, .go-col:has(.ticker-list) > h2')
       .forEach((el) => {
         const t = el.textContent;
-        const kurz = t.replace(/^\s*(heute|gestern)\s*[\u2013\u2014-]\s*/i, '');
+        let kurz = t.replace(/^\s*(heute|gestern)\s*[\u2013\u2014-]\s*/i, '');
+        kurz = kurz.replace(
+          /^(\S+),\s*(?:den\s+)?(\d{1,2})\.(\d{1,2})\.(\d{4})\s*$/,
+          (_, wd, d, m, y) => wd + ', den ' + (+d) + '. ' + MONATE[+m - 1] + ' ' + y
+        );
         if (kurz !== t) el.textContent = kurz;
       });
   };

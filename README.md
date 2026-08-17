@@ -53,11 +53,13 @@ Wie die Datei dorthin kommt, steht unter [Veröffentlichen](#veröffentlichen).
 | Artikelseiten beider Portale | noch unverändert |
 
 
-## Userscript: Chip-Kürzung auf heise
+## Userscript: Text-Kürzungen im Ticker
 
 Ein optionaler zweiter Baustein neben dem Style: `reduce.user.js` kürzt im
 heise-Ticker die Ressort-Chips um „heise" und „Magazin" — aus „heise security"
-wird „security", aus „Mac & i Magazin" wird „Mac & i". Das kann nur
+wird „security", aus „Mac & i Magazin" wird „Mac & i"; „heise online" entfällt
+ganz. Auf heise und golem formatiert es außerdem die Tagesköpfe einheitlich zu
+„Montag, den 17. August 2026". Das kann nur
 JavaScript: die Chips sind nackte Text-Spans ohne unterscheidbare Attribute,
 CSS kann Text weder umschreiben noch nach Inhalt selektieren (kein
 `:contains()`; auch die Artikel-URLs korrelieren nicht mit dem Ressort).
