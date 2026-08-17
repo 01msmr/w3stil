@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name        reduce
 @namespace   msmr.dev
-@version     0.1.50
+@version     0.1.52
 @description Reduziertes Lese-Layout für häufig besuchte Seiten
 @author      msmr
 @license     MIT
@@ -12,13 +12,30 @@
 
 @-moz-document domain("golem.de") {
   /* ---- golem.de (ohne _reset) ---- */
+  :root {
+
+    --w3-read-card: 75%;
+
+    --w3-read-hover: 45%;
+
+    --w3-read-hover-text: 85%;
+
+    --w3-chip-mix: 7%;
+    --w3-label-mix: 12%;
+
+    --w3-divider-mix: 50%;
+
+    --w3-icon-check: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 448 512'%3E%3Cpath d='M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z'/%3E%3C/svg%3E");
+    --w3-check-size: 2.04em;
+  }
+
   /* site */
   body:has(.ticker-list) {
     --gl-fg: #000;
     --gl-card: #fff;
     --gl-muted: #8a8a8a;
 
-    --gl-chip: color-mix(in oklab, var(--gl-fg) 7%, var(--gl-card));
+    --gl-chip: color-mix(in oklab, var(--gl-fg) var(--w3-chip-mix), var(--gl-card));
     --gl-mono: ui-monospace, "SF Mono", "IBM Plex Mono", Menlo, monospace;
     --gl-size: 19px;
     --gl-lh: 1.35;
@@ -107,7 +124,7 @@
   }
 
   .ticker-list li + li .go-ticker-teaser {
-    border-top: 1px solid color-mix(in srgb, var(--gl-page) 50%, transparent) !important;
+    border-top: 1px solid color-mix(in srgb, var(--gl-page) var(--w3-divider-mix), transparent) !important;
   }
 
   .go-ticker-teaser {
@@ -170,7 +187,7 @@
     inset: 0 !important;
     mix-blend-mode: darken !important;
     background-color: var(--gl-card) !important;
-    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 448 512'%3E%3Cpath d='M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z'/%3E%3C/svg%3E") center / auto 2.04em no-repeat !important;
+    mask: var(--w3-icon-check) center / auto var(--w3-check-size) no-repeat !important;
   }
 
   .go-ticker-teaser__content {
@@ -199,7 +216,7 @@
   .go-ticker-teaser__labels > * {
     border: 0 !important;
     border-radius: 4px !important;
-    background: color-mix(in oklab, var(--gl-fg) 12%, var(--gl-page)) !important;
+    background: color-mix(in oklab, var(--gl-fg) var(--w3-label-mix), var(--gl-page)) !important;
     padding: 0.25em 0.6em !important;
     color: var(--gl-muted) !important;
     font-family: var(--gl-mono) !important;
@@ -248,7 +265,7 @@
   }
 
   .go-ticker-teaser:visited {
-    background-color: color-mix(in oklab, var(--gl-card) 60%, var(--gl-page)) !important;
+    background-color: color-mix(in oklab, var(--gl-card) var(--w3-read-card), var(--gl-page)) !important;
     color: var(--gl-muted) !important;
   }
 
@@ -257,7 +274,7 @@
   }
 
   .go-ticker-teaser:visited .go-ticker-teaser__datetime::before {
-    background-color: var(--gl-fg) !important;
+    background-color: var(--gl-muted) !important;
   }
 
   .go-ticker-teaser:hover,
@@ -277,8 +294,8 @@
 
   .go-ticker-teaser:visited:hover,
   .go-ticker-teaser:visited:focus-visible {
-    background-color: color-mix(in oklab, var(--gl-fg) 55%, var(--gl-page)) !important;
-    color: color-mix(in oklab, var(--gl-card) 85%, var(--gl-fg)) !important;
+    background-color: color-mix(in oklab, var(--gl-fg) var(--w3-read-hover), var(--gl-page)) !important;
+    color: color-mix(in oklab, var(--gl-card) var(--w3-read-hover-text), var(--gl-fg)) !important;
   }
 
   .go-ticker-teaser:hover .go-ticker-teaser__datetime,
@@ -456,12 +473,31 @@
 
 @-moz-document domain("heise.de") {
   /* ---- heise.de (ohne _reset) ---- */
+  :root {
+
+    --w3-read-card: 75%;
+
+    --w3-read-hover: 45%;
+
+    --w3-read-hover-text: 85%;
+
+    --w3-chip-mix: 7%;
+    --w3-label-mix: 12%;
+
+    --w3-divider-mix: 50%;
+
+    --w3-icon-check: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 448 512'%3E%3Cpath d='M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z'/%3E%3C/svg%3E");
+    --w3-check-size: 2.04em;
+  }
+
   /* site */
   body:has(article > a > time) {
     --hs-fg: #242b33;
     --hs-card: #fff;
     --hs-muted: #4f6584;
     --hs-page: #e8edf0;
+
+    --hs-chip: color-mix(in oklab, var(--hs-fg) var(--w3-chip-mix), var(--hs-card));
 
     --hs-blue: #14315b;
 
@@ -505,7 +541,7 @@
   }
 
   article:has(> a > time) + article:has(> a > time) {
-    border-top: 1px solid color-mix(in srgb, var(--hs-page) 50%, transparent) !important;
+    border-top: 1px solid color-mix(in srgb, var(--hs-page) var(--w3-divider-mix), transparent) !important;
   }
 
   section:has(article > a > time) {
@@ -554,14 +590,25 @@
     width: auto !important;
     margin-inline-start: var(--hs-inset) !important;
     border-radius: 4px !important;
-    background: color-mix(in oklab, var(--hs-fg) 7%, var(--hs-card)) !important;
+    background: var(--hs-chip) !important;
     padding: 0.25em 0.6em !important;
     color: var(--hs-muted) !important;
     font-family: var(--hs-mono) !important;
     font-variant-numeric: tabular-nums !important;
     font-size: 0.74em !important;
     letter-spacing: 0.03em !important;
-    transition: background-color 0.25s ease, color 0.25s ease !important;
+    transition: none !important;
+    position: relative !important;
+    z-index: 0 !important;
+  }
+
+  article > a > time::before {
+    content: "" !important;
+    position: absolute !important;
+    inset: 0 !important;
+    mix-blend-mode: darken !important;
+    background-color: var(--hs-card) !important;
+    mask: var(--w3-icon-check) center / auto var(--w3-check-size) no-repeat !important;
   }
 
   article > a > time + div {
@@ -599,7 +646,7 @@
   article h3 + div > span {
     border: 0 !important;
     border-radius: 4px !important;
-    background: color-mix(in oklab, var(--hs-fg) 12%, var(--hs-page)) !important;
+    background: color-mix(in oklab, var(--hs-fg) var(--w3-label-mix), var(--hs-page)) !important;
     padding: 0.25em 0.6em !important;
     color: var(--hs-muted) !important;
     font-family: var(--hs-mono) !important;
@@ -615,8 +662,16 @@
   }
 
   article:has(> a > time) > a:visited {
-    background-color: color-mix(in oklab, var(--hs-card) 60%, var(--hs-page)) !important;
+    background-color: color-mix(in oklab, var(--hs-card) var(--w3-read-card), var(--hs-page)) !important;
     color: var(--hs-muted) !important;
+  }
+
+  article:has(> a > time) > a:visited > time {
+    color: var(--hs-chip) !important;
+  }
+
+  article:has(> a > time) > a:visited > time::before {
+    background-color: var(--hs-muted) !important;
   }
 
   article:has(> a > time) > a:hover,
@@ -640,6 +695,11 @@
     color: var(--hs-fg) !important;
   }
 
+  article:has(> a > time) > a:hover > time::before,
+  article:has(> a > time) > a:focus-visible > time::before {
+    background-color: var(--hs-card) !important;
+  }
+
   article:has(> a > time) > a:hover h3 + div > span,
   article:has(> a > time) > a:focus-visible h3 + div > span {
     background: var(--hs-blue) !important;
@@ -648,8 +708,8 @@
 
   article:has(> a > time) > a:visited:hover,
   article:has(> a > time) > a:visited:focus-visible {
-    background-color: color-mix(in oklab, var(--hs-blue) 55%, var(--hs-page)) !important;
-    color: color-mix(in oklab, var(--hs-card) 85%, var(--hs-fg)) !important;
+    background-color: color-mix(in oklab, var(--hs-blue) var(--w3-read-hover), var(--hs-page)) !important;
+    color: color-mix(in oklab, var(--hs-card) var(--w3-read-hover-text), var(--hs-fg)) !important;
   }
 
   section:has(article > a > time) > article:first-of-type,
@@ -799,6 +859,23 @@
 
 @-moz-document domain("wikipedia.org") {
   /* ---- wikipedia.org ---- */
+  :root {
+
+    --w3-read-card: 75%;
+
+    --w3-read-hover: 45%;
+
+    --w3-read-hover-text: 85%;
+
+    --w3-chip-mix: 7%;
+    --w3-label-mix: 12%;
+
+    --w3-divider-mix: 50%;
+
+    --w3-icon-check: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 448 512'%3E%3Cpath d='M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z'/%3E%3C/svg%3E");
+    --w3-check-size: 2.04em;
+  }
+
   :root {
     --rr-width: 72ch;
     --rr-size: 17px;
