@@ -44,6 +44,16 @@
   overflow: visible !important;
 }
 
+/* Seitenüberschrift "Newsticker: Artikel der letzten 7 Tage" — sie sagt nichts,
+ * was die Liste darunter nicht selbst zeigt. Über body:has(.ticker-list) an die
+ * Ticker-Seite gebunden, damit auf keiner anderen golem-Seite eine Überschrift
+ * verschwindet: der Header trägt dort dieselbe Klasse.
+ * Der ganze <header>, nicht nur die <h1> — sonst bliebe seine Höhe stehen.
+ * expect: 1 */
+body:has(.ticker-list) .go-content-header {
+  display: none !important;
+}
+
 /* Keine Trennlinien — die Zeilen trennt der Weißraum. expect: 20..400 */
 .ticker-list li {
   list-style: none !important;
