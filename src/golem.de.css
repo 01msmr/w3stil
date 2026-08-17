@@ -376,12 +376,9 @@ main > *:has(.go-teaser-block--highlight) {
   max-width: none !important;
   margin-inline: calc(-1 * var(--gl-bleed)) !important;
   box-shadow: none !important;
-  transition: none !important;
+  transition: background-color 0s, color 0s !important;
 }
 
-/* 1rem statt var(--gl-inset): die Variable hängt an .ticker-list und reicht
- * nicht in diesen Block hinein. Beide Werte müssen gleich bleiben, sonst
- * fluchtet die Zeile nicht mit den Uhrzeit-Chips darüber. */
 /* Erste Beschriftung linksbündig mit den Artikeltiteln, die zweite exakt bei
  * halber Breite — die flex-basis rechnet den Einzug wieder heraus. */
 main > *:has(.go-teaser-block--highlight)::before {
