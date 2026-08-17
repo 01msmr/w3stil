@@ -19,6 +19,10 @@ body:has(.ticker-list) {
   --gl-fg: #000;
   --gl-card: #fff;
   --gl-muted: #8a8a8a;
+
+  /* Fläche des Uhrzeit-Chips — zugleich Tarnfarbe für Häkchen und Ziffern:
+   * was diese Farbe trägt, verschwindet im Chip. */
+  --gl-chip: color-mix(in oklab, var(--gl-fg) 7%, var(--gl-card));
   --gl-mono: ui-monospace, "SF Mono", "IBM Plex Mono", Menlo, monospace;
   --gl-size: 19px;
   --gl-lh: 1.35;
@@ -225,13 +229,21 @@ body:has(.ticker-list) .go-content-header {
   transition: none !important;
 }
 
-/* Nur die beiden Chips laufen weich — und beide gleich: golem animiert an den
- * Hinweis-Chips lediglich background-color mit 0.1s, die Schriftfarbe springt
- * ohne Übergang, weshalb Fläche und Schrift auseinanderliefen. Beide
- * Eigenschaften ausdrücklich nennen, gleiche Dauer. */
-.go-ticker-teaser__datetime,
+/* Nur die Hinweis-Chips laufen weich: golem animiert dort lediglich
+ * background-color mit 0.1s, die Schriftfarbe springt ohne Übergang, weshalb
+ * Fläche und Schrift auseinanderliefen. Beide Eigenschaften ausdrücklich
+ * nennen, gleiche Dauer. */
 .go-ticker-teaser__labels > * {
   transition: background-color 0.25s ease, color 0.25s ease !important;
+}
+
+/* Der Uhrzeit-Chip und das Gelesen-Häkchen darin schalten dagegen hart, wie
+ * die Zeile selbst — ausdrücklich ohne Überblendung. Weich ginge ohnehin nur
+ * halb: unter :visited wirken allein Farbeigenschaften, eine Transition ließe
+ * sich für gelesene Zeilen nicht gezielt steuern. */
+.go-ticker-teaser__datetime,
+.go-ticker-teaser__datetime::before {
+  transition: none !important;
 }
 
 /* Uhrzeit als Chip. Alle Zeiten sind fünf Zeichen breit, mit tabular-nums
@@ -240,13 +252,40 @@ body:has(.ticker-list) .go-content-header {
   flex: 0 0 auto !important;
   margin-inline-start: var(--gl-inset) !important;
   border-radius: 4px !important;
-  background: color-mix(in oklab, var(--gl-fg) 7%, var(--gl-card)) !important;
+  background: var(--gl-chip) !important;
   padding: 0.25em 0.6em !important;
   color: var(--gl-muted) !important;
   font-family: var(--gl-mono) !important;
   font-variant-numeric: tabular-nums !important;
   font-size: 0.74em !important;
   letter-spacing: 0.03em !important;
+
+  /* Anker und Stapelkontext für das Häkchen dahinter: ohne eigenen z-index
+   * fiele das Pseudo-Element mit z-index -1 HINTER die Chipfläche und wäre
+   * nie zu sehen. */
+  position: relative !important;
+  z-index: 0 !important;
+}
+
+/* Das Gelesen-Häkchen, deckungsgleich HINTER den Ziffern. Es ist immer da —
+ * content darf unter :visited nicht wechseln, ebensowenig Deckkraft oder
+ * Alpha. Was wechseln darf, ist die Farbe: ungelesen trägt das Häkchen die
+ * Chipfarbe und ist unsichtbar, gelesen tauchen umgekehrt die Ziffern in die
+ * Chipfarbe ab und das Häkchen tritt schwarz hervor (Regeln bei den
+ * :visited-Zuständen unten).
+ *
+ * Die Form ist Font Awesomes "check" (Free/Solid, CC BY 4.0) als
+ * eingebetteter SVG-Pfad in einer CSS-Maske — kein Webfont, kein externer
+ * Request. Gefärbt wird die Maske über background-color, das ebenfalls auf
+ * der :visited-Whitelist steht; die Maske selbst bleibt in allen Zuständen
+ * gleich. */
+.go-ticker-teaser__datetime::before {
+  content: "" !important;
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: -1 !important;
+  background-color: var(--gl-chip) !important;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 448 512'%3E%3Cpath d='M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z'/%3E%3C/svg%3E") center / auto 1.2em no-repeat !important;
 }
 
 /* Übernimmt das Kürzen langer Titel, seit die Zeile selbst nicht mehr klemmt. */
@@ -351,9 +390,9 @@ body:has(.ticker-list) .go-content-header {
 
 /* LVHA-Reihenfolge ist zwingend, sonst gewinnt visited über hover.
  *
- * Gelesene Zeilen erkennt man ausschließlich an der Fläche — die Schrift
- * bleibt unverändert. Ursprünglich war es umgekehrt (graue Schrift, weiße
- * Fläche); seit die Fläche das Signal trägt, wären beide zusammen doppelt. */
+ * Gelesene Zeilen erkennt man an zweierlei: an der leicht abgesetzten Fläche
+ * und am Häkchen, das im Uhrzeit-Chip die Ziffern ersetzt (Farbtausch, Regeln
+ * weiter unten). Die Schrift der Zeile selbst bleibt unverändert. */
 /* Gelesene Zeilen bekommen zusätzlich eine leicht abgesetzte Fläche.
  * background-color ist eine der wenigen Eigenschaften, die :visited
  * überhaupt erlaubt — Größe, Schrift oder Deckkraft wären dort wirkungslos.
@@ -367,6 +406,19 @@ body:has(.ticker-list) .go-content-header {
 .go-ticker-teaser:visited {
   background-color: color-mix(in oklab, var(--gl-card) 60%, var(--gl-page)) !important;
   color: var(--gl-muted) !important;
+}
+
+/* Der Farbtausch im Uhrzeit-Chip: gelesene Zeilen zeigen statt der Uhrzeit
+ * das Häkchen. Beides sind reine color-Wechsel — die einzige Sorte Änderung,
+ * die :visited an Nachfahren erlaubt (der heise-Teil färbt so seit jeher
+ * h3-Titel). Beim Hover kehrt die Uhrzeit zurück: die Hover-Regeln unten
+ * gewinnen bei gleicher Spezifität über die Reihenfolge. */
+.go-ticker-teaser:visited .go-ticker-teaser__datetime {
+  color: var(--gl-chip) !important;
+}
+
+.go-ticker-teaser:visited .go-ticker-teaser__datetime::before {
+  background-color: var(--gl-fg) !important;
 }
 
 .go-ticker-teaser:hover,
@@ -404,6 +456,15 @@ body:has(.ticker-list) .go-content-header {
 .go-ticker-teaser:focus-visible .go-ticker-teaser__datetime {
   background: var(--gl-card) !important;
   color: var(--gl-fg) !important;
+}
+
+/* Im Hover ist die Chipfläche weiß — das Häkchen tarnt sich entsprechend
+ * weiß und die Uhrzeit ist wieder lesbar, auch auf gelesenen Zeilen. Muss
+ * nach der :visited-Häkchen-Regel stehen, um sie bei gleicher Spezifität
+ * zu schlagen. */
+.go-ticker-teaser:hover .go-ticker-teaser__datetime::before,
+.go-ticker-teaser:focus-visible .go-ticker-teaser__datetime::before {
+  background-color: var(--gl-card) !important;
 }
 
 /* ── Seminare und Stellenmarkt ──────────────────────────────────────────
