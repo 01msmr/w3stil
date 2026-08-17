@@ -1,22 +1,23 @@
-name: build
+name: build & publish
 
-# Veröffentlicht wird per Pull auf dem Server, nicht aus dieser Action heraus:
-# das Dokumentenwurzelverzeichnis von w3.msmr.co ist ein Klon dieses Repos, dort
-# läuft nach jedem Pull `npm run publish` (siehe README). Node steht auf dem
-# Server bereit, der Build hat keine Abhängigkeiten.
+# Veröffentlicht wird über das Repo selbst: diese Action baut und legt
+# reduce.user.css als versionierte Datei in die Wurzel. Auf dem Server genügt
+# danach ein git pull plus cp — dort ist kein Node erreichbar (Shared Hosting,
+# eingeschränkte Shell), deshalb baut niemand mehr auf der Zielmaschine.
 #
-# Diese Action prüft deshalb nur, ob main baubar bleibt — kein SSH, keine
-# Secrets. Fällt sie rot aus, würde der Pull auf dem Server ebenfalls scheitern.
+# Die Datei in dist/ bleibt das lokale Bauprodukt und weiterhin ignoriert.
 
 on:
   push:
     branches: [main]
     paths: ['src/**', 'build.mjs', 'package.json', '.github/workflows/deploy.yml']
-  pull_request:
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
-  build:
+  publish:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -33,5 +34,22 @@ jobs:
       - name: verify
         run: |
           grep -m1 '@version' dist/reduce.user.css
-          grep -c '^@-moz-document' dist/reduce.user.css
+          test "$(grep -c '^@-moz-document' dist/reduce.user.css)" -ge 1
           test -s dist/reduce.user.css
+
+      - name: publish into repo root
+        run: cp dist/reduce.user.css reduce.user.css
+
+      # Der Commit ändert nur reduce.user.css — die Datei steht nicht im
+      # paths-Filter oben, löst also keinen weiteren Lauf aus.
+      - name: commit if changed
+        run: |
+          if git diff --quiet -- reduce.user.css; then
+            echo "unverändert, kein Commit"
+            exit 0
+          fi
+          git config user.name  'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add reduce.user.css
+          git commit -m "build: reduce.user.css $(grep -m1 '@version' reduce.user.css | tr -s ' ' | cut -d' ' -f2)"
+          git push

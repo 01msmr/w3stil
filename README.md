@@ -171,13 +171,16 @@ Artefakt nicht neu baust.
 
 ## Veröffentlichen
 
-Der Klon liegt **außerhalb** des Dokumentenstamms, ausgeliefert wird nur die
-gebaute Datei. Auf dem Server (netcup/Plesk, Node ist dort vorhanden):
+Gebaut wird in der GitHub-Action, nicht auf dem Server: das Hosting ist
+Shared Hosting mit eingeschränkter Shell, ein Node-Interpreter ist dort nicht
+erreichbar. Die Action legt `reduce.user.css` versioniert ins Repo; der Server
+holt sie mit `git pull` und kopiert sie in den Dokumentenstamm.
 
 ```
 /w3.msmr.co/w3stil/            Klon — nicht im Web
+        └ reduce.user.css      von der Action gebaut und committet
 /w3.msmr.co/httpdocs/          Dokumentenstamm
-        └ reduce.user.css      das Artefakt
+        └ reduce.user.css      die ausgelieferte Kopie
 ```
 
 Einmalig:
@@ -187,24 +190,18 @@ cd /w3.msmr.co
 git clone https://github.com/01msmr/w3stil.git
 ```
 
-Und für jede Aktualisierung:
+Und für jede Aktualisierung — ohne Node, ohne Buildschritt:
 
 ```bash
-cd /w3.msmr.co/w3stil
-git pull
-W3STIL_DEST=/w3.msmr.co/httpdocs npm run deploy
+cd /w3.msmr.co/w3stil && git pull && cp reduce.user.css /w3.msmr.co/httpdocs/
 ```
 
-`npm install` entfällt — `build.mjs` hat keine Abhängigkeiten. `W3STIL_DEST`
-bestimmt das Ziel der Kopie; ohne die Variable landet sie neben `dist/`, was
-für lokale Tests genügt.
+`dist/` bleibt das lokale Bauprodukt und ignoriert. Veröffentlicht wird allein
+die Kopie in der Repo-Wurzel, die die Action pflegt — lokal muss sie niemand
+von Hand aktualisieren.
 
-Diese Trennung hat einen zweiten Vorteil: `.git/` liegt nicht im Web, die
-nginx-Sperre dafür erübrigt sich.
-
-Die GitHub-Action baut nur noch zur Kontrolle. Fällt sie rot aus, würde der
-Pull auf dem Server ebenfalls scheitern — sie braucht dafür weder SSH noch
-Secrets.
+Weil der Klon außerhalb des Dokumentenstamms liegt, ist `.git/` nicht im Web;
+eine nginx-Sperre dafür erübrigt sich.
 
 ### Node.js in Plesk
 

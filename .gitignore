@@ -5,5 +5,3 @@ node_modules/
 .DS_Store
 dist/
 
-# die veröffentlichte Kopie im Wurzelverzeichnis (entsteht auf dem Server)
-reduce.user.css
