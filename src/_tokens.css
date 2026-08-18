@@ -33,7 +33,7 @@
    * ist Kartenweiß — eine DECKENDE Mischung, kein Alpha: 75% der Intensität
    * des Grau, um 25% Weiß aufgehellt. Dazu die Strichstärke. */
   --w3-divider-mix: 75%;
-  --w3-divider-w: 2px;
+  --w3-divider-w: 1px;
 
   /* Schriftgröße der kleinen Chips (Uhrzeit, Ressort/Hinweise): Faktor
    * relativ zur ZEILENschrift — einheitenlos aus demselben Grund wie
