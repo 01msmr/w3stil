@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        reduce-ticker
 // @namespace   msmr.co
-// @version     0.4.1
+// @version     0.4.2
 // @description Kürzt Ressort-Chips und formatiert Tagesköpfe der Newsticker
 // @author      msmr
 // @license     MIT
@@ -141,6 +141,11 @@
     const fertig = () => {
       clearInterval(watch);
       faehrt = false;
+
+      /* Richtung nullen, sonst stößt das letzte Scroll-Event der eigenen
+       * Gleitfahrt den nächsten Snap an und die Seite kettet sich bis zum
+       * letzten Tageskopf durch. */
+      richtung = 0;
       lastY = window.scrollY;
     };
     const watch = setInterval(ende, 80);
@@ -150,7 +155,9 @@
   window.addEventListener('scroll', () => {
     if (faehrt) return;
     const y = window.scrollY;
-    if (y !== lastY) richtung = y > lastY ? 1 : -1;
+
+    /* Sub-Pixel-Jitter nach dem Andocken ist keine Nutzerabsicht. */
+    if (Math.abs(y - lastY) > 2) richtung = y > lastY ? 1 : -1;
     lastY = y;
     clearTimeout(timer);
     timer = setTimeout(snap, RUHE_MS);
