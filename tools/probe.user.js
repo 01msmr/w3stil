@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         reduce · probe
-// @namespace    msmr.dev
+// @namespace    msmr.co
 // @version      1.0.0
 // @description  Struktur-Analyse und Selektor-Vorschläge zum Schreiben von src/<domain>.css
 // @match        *://*/*

@@ -112,9 +112,10 @@ auf `http://`-Seiten schlägt das Kopieren fehl, weil `navigator.clipboard` eine
 Secure Context verlangt — dann den Entwurf aus dem Overlay markieren und
 von Hand kopieren.
 
-Wer das Snippet nach jedem Reload nicht neu auslösen mag, installiert
-[Violentmonkey](https://violentmonkey.github.io/) und lässt es deaktiviert,
-bis eine Domain dazukommt. Dieselbe Datei, unverändert, in beiden Wegen.
+Wer das Snippet nach jedem Reload nicht neu auslösen mag, legt dieselbe
+Datei unverändert in Tampermonkey bzw. Violentmonkey an — seit dem
+Chip-Userscript ist ohnehin ein Manager installiert — und lässt sie
+deaktiviert, bis eine Domain dazukommt.
 
 ## Konventionen
 
@@ -324,7 +325,8 @@ der falschen Stelle.
 - **Shadow DOM.** CSS erreicht keine Shadow Roots. `probe` markiert sie; wo
   welche auftauchen, hilft nur `::part` — sofern die Seite Parts exportiert.
 - **Inline `!important`.** Rettet dich die User-Origin-Kaskade von Stylus, die
-  Author-`!important` schlägt. Deshalb Stylus und kein Userscript.
+  Author-`!important` schlägt. Deshalb bleibt das Layout ein Stylus-Style;
+  `reduce.user.js` ergänzt nur die Text-Kürzungen, die CSS nicht kann.
 - **Kein Safari.** Stylus gibt es dafür nicht. Falls das dazukommt: einen zweiten
   Emitter in `build.mjs` ergänzen, der `@match`-Metadaten statt
   `@-moz-document`-Sektionen schreibt, und die Ausgabe in der
