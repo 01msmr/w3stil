@@ -344,7 +344,7 @@ header[class*="theme-mac-and-i"] > a {
   align-self: stretch !important;
   margin: 0 !important;
   padding: 0 28px 0 36px !important;
-  border-right: var(--w3-divider-w) solid color-mix(in srgb, var(--mi-page) var(--w3-divider-mix), var(--mi-card)) !important;
+  border-right: 1px solid color-mix(in srgb, var(--mi-page) var(--w3-divider-mix), var(--mi-card)) !important;
 }
 
 header[class*="theme-mac-and-i"] > a svg {
@@ -401,8 +401,9 @@ header[class*="theme-mac-and-i"] ul[class*="gap-6"][class*="text-lg"] > li {
   flex: 0 0 auto !important;
 }
 
+/* In der Kapsel sind die Trennstriche feiner als zwischen den Zeilen. */
 header[class*="theme-mac-and-i"] ul[class*="gap-6"][class*="text-lg"] > li + li {
-  border-left: var(--w3-divider-w) solid color-mix(in srgb, var(--mi-page) var(--w3-divider-mix), var(--mi-card)) !important;
+  border-left: 1px solid color-mix(in srgb, var(--mi-page) var(--w3-divider-mix), var(--mi-card)) !important;
 }
 
 header[class*="theme-mac-and-i"] ul[class*="gap-6"][class*="text-lg"] > li > a {
