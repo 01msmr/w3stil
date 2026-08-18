@@ -330,22 +330,22 @@ article[data-teaser-name="HorizontalTimelineTeaser"]:has(img[src*="heise_plus"])
   line-height: 1 !important;
 }
 
-/* ── Kopfzeile als Riesen-Pill ──────────────────────────────────────────
- * Das Magazin-Kopfmodul wird EINE 70px-Kapsel mit halbrunden Enden auf dem
- * grauen Grund, bündig mit den Tages-Chips: links die Wortmarke, rechts die
- * sechs Rubriken als "Scheiben". Die erste Kopfreihe (Heftarchiv-Links,
- * Social-Icons, Abo-Knopf, Mobil-Flyout) entfällt — in 70px Höhe ist für
- * eine zweite Zeile kein Platz, und die Rubriken sind der eigentliche
- * Nutzwert. expect: 1 */
+/* ── Kopfzeile: freie Wortmarke + Link-Leiste als Riesen-Pill ───────────
+ * Das Magazin-Kopfmodul verliert seine Fläche und steht auf dem grauen
+ * Grund, bündig mit den Tages-Chips: links die Wortmarke ohne eigenen
+ * Hintergrund, vertikal mittig — rechts die weiße 70px-Kapsel mit den
+ * sechs Rubriken als Segment-Scheiben. Die erste Kopfreihe (Heftarchiv,
+ * Social, Abo-Knopf, Mobil-Flyout) entfällt. expect: 1 */
 header[class*="theme-mac-and-i"] {
   display: flex !important;
   align-items: center !important;
   height: 70px !important;
   max-width: var(--w3-row-w) !important;
   margin-inline: auto !important;
-  border-radius: 999px !important;
-  padding: 0 24px 0 40px !important;
-  background: var(--mi-card) !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  background: none !important;
+  box-shadow: none !important;
 }
 
 /* Die Wortmarke passt sich der Kapselhöhe an. expect: 1..2 */
@@ -354,30 +354,59 @@ header[class*="theme-mac-and-i"] > a svg {
   width: auto !important;
 }
 
-/* Die Nav wird einzeilig und mittig; ihre erste Reihe entfällt. expect: 1 */
+/* Die Nav wird einzeilig und läuft über die volle Kapselhöhe; ihre erste
+ * Reihe entfällt. expect: 1 */
 header[class*="theme-mac-and-i"] > nav {
   flex-direction: row !important;
-  align-items: center !important;
+  align-items: stretch !important;
+  align-self: stretch !important;
 }
 
 header[class*="theme-mac-and-i"] > nav > div:first-child {
   display: none !important;
 }
 
-/* Die sechs Rubriken (Tipps … Webinare) als "Scheiben": jede eine eigene
- * kleine Kapsel auf der Chipfläche. gap-6 unterscheidet diese Liste von der
- * Heftarchiv-Reihe, die ebenfalls text-lg trägt. expect: 6 */
+/* Die sechs Rubriken (Tipps … Webinare) als "Scheiben" eines Segment-
+ * Schalters: volle Kapselhöhe, ohne eigene Fläche, nur Trennstriche
+ * dazwischen. Erste und letzte Scheibe tragen außen die Halbkreise — die
+ * Füllung erscheint erst im Hover und formt dann Kapselenden nach.
+ * gap-6 unterscheidet diese Liste von der Heftarchiv-Reihe, die ebenfalls
+ * text-lg trägt. expect: 6 */
 header[class*="theme-mac-and-i"] ul[class*="gap-6"][class*="text-lg"] {
-  gap: 0.6em !important;
+  gap: 0 !important;
+  height: 100% !important;
+  align-items: stretch !important;
+
+  /* DIE Pill: die Leiste selbst trägt das Weiß und die Kapselform. */
+  background: var(--mi-card) !important;
+  border-radius: 999px !important;
+}
+
+header[class*="theme-mac-and-i"] ul[class*="gap-6"][class*="text-lg"] > li {
+  display: flex !important;
+}
+
+header[class*="theme-mac-and-i"] ul[class*="gap-6"][class*="text-lg"] > li + li {
+  border-left: var(--w3-divider-w) solid color-mix(in srgb, var(--mi-page) var(--w3-divider-mix), var(--mi-card)) !important;
 }
 
 header[class*="theme-mac-and-i"] ul[class*="gap-6"][class*="text-lg"] > li > a {
-  display: block !important;
-  border-radius: 999px !important;
-  background: var(--mi-chip) !important;
-  padding: 0.45em 1.1em !important;
+  display: flex !important;
+  align-items: center !important;
+  height: 100% !important;
+  background: none !important;
+  border-radius: 0 !important;
+  padding: 0 1.4em !important;
   color: var(--mi-fg) !important;
   text-decoration: none !important;
+}
+
+header[class*="theme-mac-and-i"] ul[class*="gap-6"][class*="text-lg"] > li:first-child > a {
+  border-radius: 999px 0 0 999px !important;
+}
+
+header[class*="theme-mac-and-i"] ul[class*="gap-6"][class*="text-lg"] > li:last-child > a {
+  border-radius: 0 999px 999px 0 !important;
 }
 
 header[class*="theme-mac-and-i"] ul[class*="gap-6"][class*="text-lg"] > li > a:hover,
