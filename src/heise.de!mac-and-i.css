@@ -112,7 +112,7 @@ div:has(> section > article[data-teaser-name="HorizontalTimelineTeaser"]) > h2 {
   font-family: var(--mi-head-font) !important;
   font-size: var(--mi-head-size) !important;
   font-weight: 400 !important;
-  font-style: italic !important;
+  font-style: normal !important;
   line-height: var(--mi-lh) !important;
 
   /* Gleiches Licht wie die Zeilencontainer. */
