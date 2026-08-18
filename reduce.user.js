@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        reduce-ticker
 // @namespace   msmr.co
-// @version     0.5.0
+// @version     0.5.1
 // @description Kürzt Ressort-Chips und formatiert Tagesköpfe der Newsticker
 // @author      msmr
 // @license     MIT
@@ -109,12 +109,6 @@
     'section:has(article > a > time) > div:first-child, ' +    // heise-Ticker
     'div:has(> section > article[data-teaser-name="HorizontalTimelineTeaser"]) > h2'; // Mac & i
 
-  /* Oberstes Ziel auf Mac & i: die Oberkante der grauen Karte — direkt
-   * unter heises erster Navi-Zeile, oberhalb des Weißraums über der
-   * Logo-Kapsel. Dort snappt es ohne Luft. */
-  const SNAP_KARTE =
-    'div:has(> div > section > div > section > article[data-teaser-name="HorizontalTimelineTeaser"])';
-
   const RUHE_MS = 150;   // so lange muss das Scrollen stehen, bevor gesnappt wird
   const LUFT = 12;       // Zielposition: so viel Raum bleibt über dem Kopf
 
@@ -145,8 +139,6 @@
     const y = window.scrollY;
     const ziele = [...document.querySelectorAll(SNAP_ZIELE)]
       .map((el) => Math.round(el.getBoundingClientRect().top + y - LUFT))
-      .concat([...document.querySelectorAll(SNAP_KARTE)]
-        .map((el) => Math.round(el.getBoundingClientRect().top + y)))
       .sort((a, b) => a - b);
     const ziel = richtung > 0
       ? ziele.find((t) => t > y + 4)
