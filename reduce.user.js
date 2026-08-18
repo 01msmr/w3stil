@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        reduce-ticker
 // @namespace   msmr.co
-// @version     0.4.3
+// @version     0.4.4
 // @description Kürzt Ressort-Chips und formatiert Tagesköpfe der Newsticker
 // @author      msmr
 // @license     MIT
@@ -121,7 +121,7 @@
   let faehrt = false;
 
   /* Verriegelung: nach jedem Andocken merkt sich das Skript den Landepunkt.
-   * Solange die Position keine 48px davon entfernt ist, wird NICHT gesnappt
+   * Solange die Position keine 24px davon entfernt ist, wird NICHT gesnappt
    * — egal, welche Events noch eintrudeln. Erst eine echte neue Scroll-
    * Bewegung über diese Schwelle hinaus entriegelt. Damit ist eine Kette
    * aus aufeinanderfolgenden Snaps kategorisch ausgeschlossen. */
@@ -165,7 +165,7 @@
     const y = window.scrollY;
 
     if (riegel !== null) {
-      if (Math.abs(y - riegel) < 48) {
+      if (Math.abs(y - riegel) < 24) {
         lastY = y;
         return;
       }
