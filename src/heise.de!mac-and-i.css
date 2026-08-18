@@ -57,9 +57,9 @@ body:has(article[data-teaser-name="HorizontalTimelineTeaser"]) {
   --mi-bleed: 24px;
   --mi-chip: color-mix(in oklab, var(--mi-fg) var(--w3-chip-mix), var(--mi-card));
   --mi-read: color-mix(in oklab, var(--mi-muted) 75%, var(--mi-page));
-  /* Dunkelgrau statt heises Blaugrau — Vorgabe nur für diese Seite.
+  /* Weiß auf dem abgedunkelten Grund — Vorgabe nur für diese Seite.
    * Ebenso eigen: größere, kursive, nicht fette Kopfschrift. */
-  --mi-head-color: #444;
+  --mi-head-color: #fff;
   --mi-head-size: 26px;
 
   /* Zur Wortmarke passende Schrift: das Logo ist eine schwere kursive
