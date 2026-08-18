@@ -116,7 +116,7 @@ div:has(> section > article[data-teaser-name="HorizontalTimelineTeaser"]) > h2 {
   line-height: var(--mi-lh) !important;
 
   /* Gleiches Licht wie die Zeilencontainer. */
-  text-shadow: 2px 5px 4px rgb(0 0 0 / 0.45) !important;
+  text-shadow: 2px 4px 4px rgb(0 0 0 / 0.45) !important;
 }
 
 /* Die Dekolinie unter dem Tageskopf. expect: 1..14 */
