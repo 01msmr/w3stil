@@ -331,13 +331,17 @@ header[class*="theme-mac-and-i"] {
   display: flex !important;
   align-items: stretch !important;
   height: 56px !important;
-  max-width: var(--w3-row-w) !important;
-  margin-inline: auto !important;
+
+  /* Inhaltsbreit statt voller Zeilenbreite — keine Leerfläche in der
+   * Kapsel. Links auto, rechts bündig mit der Kante der Tages-Chips: der
+   * Rand ist die halbe Differenz zwischen Modulbreite und Spalte. */
+  width: fit-content !important;
+  max-width: none !important;
+  margin: 0 max(0px, calc((100% - var(--w3-row-w)) / 2)) 0 auto !important;
   border-radius: 999px !important;
   padding: 0 !important;
   background: var(--mi-card) !important;
   box-shadow: none !important;
-
 }
 
 /* Das Logo-Segment: vertikal mittig, ohne eigene Fläche, mit Trennstrich
@@ -365,7 +369,7 @@ header[class*="theme-mac-and-i"] > nav {
   flex-direction: row !important;
   align-items: stretch !important;
   align-self: stretch !important;
-  flex: 1 1 auto !important;
+  flex: 0 0 auto !important;
 }
 
 header[class*="theme-mac-and-i"] > nav > div:first-child {
@@ -378,7 +382,7 @@ header[class*="theme-mac-and-i"] > nav > div:first-child {
 header[class*="theme-mac-and-i"] > nav > div:has(> ul[class*="gap-6"]) {
   display: flex !important;
   align-items: stretch !important;
-  flex: 1 1 auto !important;
+  flex: 0 0 auto !important;
   margin: 0 !important;
   padding: 0 !important;
   gap: 0 !important;
@@ -393,9 +397,8 @@ header[class*="theme-mac-and-i"] > nav > div:has(> ul[class*="gap-6"]) {
 header[class*="theme-mac-and-i"] ul[class*="gap-6"][class*="text-lg"] {
   gap: 0 !important;
   height: 100% !important;
-  width: 100% !important;
+  width: auto !important;
   align-items: stretch !important;
-  justify-content: flex-end !important;
   margin: 0 !important;
   padding: 0 !important;
   background: none !important;
