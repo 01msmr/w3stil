@@ -43,6 +43,12 @@
   /* Schriftgröße der Tagesköpfe. */
   --w3-head-size: 22px;
 
+  /* Zeilenbreite der Ticker inklusive Überstand — golems Ist-Maß (1000px
+   * Spalte + 2×10px Überstand). Überall als max-width eingesetzt: schmalere
+   * Viewports (Tablet) verkleinern die Spalte automatisch, eine zweite
+   * feste Stufe braucht es nicht. */
+  --w3-row-w: 1020px;
+
   /* Größe des nackten Plus-Zeichens, das Paid-Artikel markiert (golem Plus,
    * heise+): Faktor relativ zur ZEILENschrift, nicht zur Chip-Schrift —
    * einheitenlos, weil die Label-Leisten der Domains unterschiedliche

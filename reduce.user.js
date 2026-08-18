@@ -1,11 +1,12 @@
 // ==UserScript==
 // @name        reduce-ticker
 // @namespace   msmr.co
-// @version     0.2.0
+// @version     0.3.0
 // @description Kürzt Ressort-Chips und formatiert Tagesköpfe der Newsticker
 // @author      msmr
 // @license     MIT
 // @match       https://www.heise.de/newsticker*
+// @match       https://www.heise.de/mac-and-i/newsticker*
 // @match       https://www.golem.de/ticker*
 // @run-at      document-idle
 // @grant       none
@@ -21,7 +22,9 @@
  *
  * Aus "heise security" wird "security", aus "Mac & i Magazin" wird "Mac & i".
  * "heise online" verschwindet ganz: es ist das Standard-Ressort des Tickers
- * und traegt dort keine Information.
+ * und traegt dort keine Information. Auf dem Mac-&-i-Ticker gilt dasselbe
+ * fuer "Mac & i Magazin" (dort ist ALLES Mac & i); fremde Brandings wie
+ * "heise security" bleiben und werden nur gekuerzt.
  *
  * Die Tagesköpfe verlieren ihr "Heute –"/"Gestern –" (das Datum daneben
  * sagt dasselbe) und werden auf beiden Seiten einheitlich als
@@ -50,6 +53,18 @@
       .forEach((el) => {
         const t = el.textContent;
         if (/^heise\s+online$/i.test(t.trim())) {
+          el.remove();
+          return;
+        }
+        const kurz = t.replace(/^heise\s+/i, '').replace(/\s+Magazin$/i, '');
+        if (kurz !== t) el.textContent = kurz;
+      });
+
+    document
+      .querySelectorAll('[data-component="Branding"]')
+      .forEach((el) => {
+        const t = el.textContent.trim();
+        if (/^mac & i( magazin)?$/i.test(t)) {
           el.remove();
           return;
         }

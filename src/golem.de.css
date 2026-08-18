@@ -74,6 +74,16 @@ body:has(.ticker-list) {
   --gl-title-x: 96px;
 }
 
+/* Die Seite rastet beim Scrollen weich an den Tagesköpfen ein — proximity,
+ * nicht mandatory: nur wenn ein Kopf ohnehin nahe der Oberkante liegt. */
+html:has(.ticker-list) {
+  scroll-snap-type: y proximity !important;
+}
+
+.go-col:has(.ticker-list) > h2 {
+  scroll-snap-align: start !important;
+}
+
 /* golem klemmt die Spalte mit overflow: hidden ab. Ohne das hier wird der
  * Überstand der Hover-Fläche abgeschnitten und die Hinweise im grauen Rand
  * bleiben unsichtbar. Betrifft nur die Spalte, die die Ticker-Liste enthält.

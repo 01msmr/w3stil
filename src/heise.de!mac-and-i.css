@@ -12,9 +12,10 @@
  * sind Zeilenfläche und Uhrzeit-Häkchen unerreichbar; :visited wirkt allein
  * auf das <a> und seine Nachfahren.
  *
- * Bewusst weggelassen (Vorgabe): der „Mac & i"-Branding-Chip (alles hier IST
- * Mac & i) und die Kommentar-Sprechblasen — beides steckt im TeaserMeta-
- * Footer, der komplett verschwindet.
+ * Bewusst weggelassen (Vorgabe): der „Mac & i Magazin"-Chip (alles hier IST
+ * Mac & i — entfernt vom Userscript, CSS kann nicht nach Text selektieren)
+ * und die Kommentar-Sprechblasen. Fremde Brandings ("heise security") und
+ * Alerts bleiben und stehen wie beim Haupt-Ticker als Chips im linken Rand.
  *
  * Verifiziert am 2026-08-18 live gegen /mac-and-i/newsticker im eingeloggten
  * Chrome. Struktur:
@@ -37,22 +38,43 @@ body:has(article[data-teaser-name="HorizontalTimelineTeaser"]) {
   --mi-fg: #242b33;
   --mi-card: #fff;
   --mi-muted: #4f6584;
-  --mi-page: #e8edf0;
+
+  /* Golems Neutralgrau statt heises Blaugrau — golem ist die Vorgabe. */
+  --mi-page: #e8e8e8;
   --mi-blue: #14315b;
+  --mi-alert: oklch(0.505 0.213 27.518);
   --mi-mono: ui-monospace, "SF Mono", "IBM Plex Mono", Menlo, monospace;
   --mi-size: 19px;
   --mi-lh: 1.35;
   --mi-radius: 16px;
-  --mi-inset: 1rem;
+  /* 2px: der Chip soll vom Zeilenrand golems 26px haben (24px Polsterung
+   * + 2). */
+  --mi-inset: 2px;
   --mi-bleed: 24px;
   --mi-chip: color-mix(in oklab, var(--mi-fg) var(--w3-chip-mix), var(--mi-card));
   --mi-read: color-mix(in oklab, var(--mi-muted) 75%, var(--mi-page));
   --mi-head-color: #4f6584;
 
-  /* 24px mehr als beim Haupt-Ticker: dort ragen die Zeilen um --hs-bleed
-   * über den Kasten hinaus, hier liegen die 24px Zeilenpolsterung INNERHALB
-   * des Chips — der Titel beginnt also bei 96 + 24. Gemessen. */
-  --mi-title-x: 120px;
+  /* 24px mehr als beim Haupt-Ticker (die Zeilenpolsterung liegt hier
+   * INNERHALB des Chips), minus die 14px des kleineren Chip-Einzugs:
+   * 96 + 24 - 14. */
+  --mi-title-x: 106px;
+}
+
+/* Auch der Seitengrund außerhalb der Karte wird golems Grau — heises
+ * Blaugrau bliebe sonst als Rahmen sichtbar. expect: 1 */
+body:has(article[data-teaser-name="HorizontalTimelineTeaser"]) {
+  background: var(--mi-page) !important;
+}
+
+/* Die Seite rastet beim Scrollen weich an den Tagesköpfen ein — proximity,
+ * nicht mandatory. */
+html:has(article[data-teaser-name="HorizontalTimelineTeaser"]) {
+  scroll-snap-type: y proximity !important;
+}
+
+div:has(> section > article[data-teaser-name="HorizontalTimelineTeaser"]) > h2 {
+  scroll-snap-align: start !important;
 }
 
 /* Die weiße Inhaltskarte wird zur grauen Fläche, auf der die Tages-Chips
@@ -66,6 +88,9 @@ div:has(> div > section > div > section > article[data-teaser-name="HorizontalTi
  * expect: 1 */
 section:has(> div > section > article[data-teaser-name="HorizontalTimelineTeaser"]) {
   gap: 32px !important;
+
+  /* Golems Zeilenbreite. Als max-width: schmalere Viewports schrumpfen mit. */
+  max-width: var(--w3-row-w) !important;
 }
 
 /* Ein Tag: transparent, damit der Tageskopf im Grund steht. expect: 1..14 */
@@ -102,6 +127,9 @@ div:has(> section > article[data-teaser-name="HorizontalTimelineTeaser"]) > sect
 /* Trennlinie zwischen den Zeilen — dieselbe Mischung wie überall. Die hr
  * liegen fertig im Markup, sie werden nur umgefärbt. expect: 20..200 */
 div:has(> section > article[data-teaser-name="HorizontalTimelineTeaser"]) > section > hr {
+  /* heise blendet die hr selbst aus (display: none) — ohne das hier gäbe es
+   * keine Trennlinien. */
+  display: block !important;
   margin: 0 !important;
   border: 0 !important;
   border-top: var(--w3-divider-w) solid color-mix(in srgb, var(--mi-page) var(--w3-divider-mix), var(--mi-card)) !important;
@@ -198,10 +226,74 @@ article[data-teaser-name="HorizontalTimelineTeaser"] h3 > span {
   color: inherit !important;
 }
 
-/* Kommentar-Sprechblasen und Branding-Chip ("Mac & i" — alles hier IST
- * Mac & i): der ganze Meta-Footer entfällt. expect: 20..200 */
+/* Der Meta-Footer wird zur Chip-Leiste links außerhalb der Zeile, wie die
+ * Hinweis-Chips des Haupt-Tickers. Positionskontext ist der article.
+ * expect: 20..200 */
 article[data-teaser-name="HorizontalTimelineTeaser"] footer[data-component="TeaserMeta"] {
+  position: absolute !important;
+  right: 100% !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  gap: 0.4em !important;
+  margin: 0 0.8rem 0 0 !important;
+  padding: 0 !important;
+  background: none !important;
+  white-space: nowrap !important;
+}
+
+/* Die Kommentar-Sprechblasen samt Zähler entfallen. expect: 20..200 */
+article[data-teaser-name="HorizontalTimelineTeaser"] footer > span:has(> img[src*="comments"]) {
   display: none !important;
+}
+
+/* Branding-Chips ("heise security" …) wie die Hinweis-Chips des
+ * Haupt-Tickers. Den "Mac & i Magazin"-Chip entfernt das Userscript — alles
+ * hier IST Mac & i, CSS kann nicht nach Text selektieren. expect: 0..200 */
+article[data-teaser-name="HorizontalTimelineTeaser"] [data-component="Branding"] {
+  border: 0 !important;
+  border-radius: 4px !important;
+  background: color-mix(in oklab, var(--mi-fg) var(--w3-label-mix), var(--mi-page)) !important;
+  padding: 0.25em 0.6em !important;
+  color: var(--mi-muted) !important;
+  font-family: var(--mi-mono) !important;
+  font-size: calc(var(--mi-size) * var(--w3-chip-font)) !important;
+  letter-spacing: 0.03em !important;
+  line-height: var(--mi-lh) !important;
+  text-transform: uppercase !important;
+}
+
+/* Alert wie beim Haupt-Ticker: nur das rote Zeichen, ohne Chipfläche.
+ * font-size: 0 schluckt den Text im Badge, das SVG bekommt feste Maße.
+ * expect: 0..40 */
+article[data-teaser-name="HorizontalTimelineTeaser"] [data-component="AlertBadge"] {
+  background: none !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  overflow: visible !important;
+  font-size: 0 !important;
+  color: var(--mi-alert) !important;
+}
+
+article[data-teaser-name="HorizontalTimelineTeaser"] [data-component="AlertBadge"] svg {
+  position: static !important;
+  margin: 0 !important;
+  width: calc(var(--mi-size) * 0.85) !important;
+  height: calc(var(--mi-size) * 0.85) !important;
+}
+
+/* Eine Alert-Zeile färbt sich beim Überfahren vollständig rot — wie beim
+ * Haupt-Ticker. expect: 0..40 */
+article[data-teaser-name="HorizontalTimelineTeaser"]:has([data-component="AlertBadge"]):hover {
+  background: var(--mi-alert) !important;
+}
+
+article[data-teaser-name="HorizontalTimelineTeaser"]:has([data-component="AlertBadge"]):hover > time {
+  background: #fff !important;
+  color: var(--mi-alert) !important;
 }
 
 /* ── heise+ ───────────────────────────────────────────────────────────────
@@ -212,13 +304,10 @@ article[data-teaser-name="HorizontalTimelineTeaser"] h3 img[src*="heise_plus"] {
   display: none !important;
 }
 
-article[data-teaser-name="HorizontalTimelineTeaser"]:has(img[src*="heise_plus"])::before {
+article[data-teaser-name="HorizontalTimelineTeaser"]:has(img[src*="heise_plus"]) footer::before {
   content: "+" !important;
-  position: absolute !important;
-  right: 100% !important;
-  top: 50% !important;
-  transform: translateY(-50%) !important;
-  margin-right: 0.8rem !important;
+  display: flex !important;
+  align-items: center !important;
   color: var(--mi-muted) !important;
   font-family: var(--mi-mono) !important;
   font-weight: 700 !important;
@@ -269,6 +358,13 @@ article[data-teaser-name="HorizontalTimelineTeaser"]:hover > time {
   color: var(--mi-fg) !important;
 }
 
-article[data-teaser-name="HorizontalTimelineTeaser"]:hover::before {
+/* Chips der Leiste kippen im Hover mit ins Dunkle, das Plus wird dunkler —
+ * wie beim Haupt-Ticker. Die Alert-Flamme bleibt rot. */
+article[data-teaser-name="HorizontalTimelineTeaser"]:hover [data-component="Branding"] {
+  background: var(--mi-blue) !important;
+  color: var(--mi-card) !important;
+}
+
+article[data-teaser-name="HorizontalTimelineTeaser"]:hover footer::before {
   color: var(--mi-fg) !important;
 }

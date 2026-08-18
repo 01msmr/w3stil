@@ -30,7 +30,10 @@ body:has(article > a > time) {
   --hs-fg: #242b33;
   --hs-card: #fff;
   --hs-muted: #4f6584;
-  --hs-page: #e8edf0;
+
+  /* Der Grund ist bewusst golems Neutralgrau statt heises Blaugrau #e8edf0 —
+   * golem ist die Vorgabe, die Domains sollen auf demselben Grau liegen. */
+  --hs-page: #e8e8e8;
 
   /* Fläche des Uhrzeit-Chips — zugleich Tarnfarbe der Ziffern auf gelesenen
    * Zeilen, wie bei golem. */
@@ -55,14 +58,19 @@ body:has(article > a > time) {
   --hs-size: 19px;
   --hs-lh: 1.35;
   --hs-radius: 16px;
-  --hs-inset: 1rem;
+
+  /* 2px statt golems 1rem: heises Zeilen stehen 24px über (golem 10px),
+   * der Chip soll vom ZEILENrand denselben Abstand haben wie bei golem
+   * (10 + 16 = 26px = 24 + 2). */
+  --hs-inset: 2px;
   /* Der Überstand der Zeilen entspricht der Polsterung der Inhaltskarte
    * (24px). Damit fluchten die Tages-Chips exakt mit der Kopfleiste. */
   --hs-bleed: 24px;
 
-  /* Breite der Kopfleiste, gespiegelt von heises max-w-276. Sie gibt jetzt
-   * auch die Breite der Zeilen-Container vor. */
-  --hs-shell: 69rem;
+  /* Breite der Zeilen-Container: golems Zeilenbreite minus den Überstand,
+   * den die Zeilen selbst wieder hinzufügen — die Tages-Chips messen damit
+   * exakt --w3-row-w (1020px), wie bei golem. */
+  --hs-shell: calc(var(--w3-row-w) - 2 * var(--hs-bleed));
   --hs-row-h: 40.4px;
   --hs-head-color: #4f6584;
   --hs-head-size: var(--w3-head-size);
@@ -76,8 +84,19 @@ body:has(article > a > time) {
 
   /* X-Position des Titels: Chip-Einzug + Chipbreite + Abstand, gemessen bei
    * 19px Zeilenschrift. Wie bei golem ein fester Wert — CSS kann die Breite
-   * des Uhrzeit-Chips nicht auslesen. */
-  --hs-title-x: 96px;
+   * des Uhrzeit-Chips nicht auslesen. 82 = 96 minus die 14px, um die der
+   * Chip mit --hs-inset: 2px nach links gerückt ist. */
+  --hs-title-x: 82px;
+}
+
+/* Die Seite rastet beim Scrollen weich an den Tagesköpfen ein — proximity,
+ * nicht mandatory. */
+html:has(article > a > time) {
+  scroll-snap-type: y proximity !important;
+}
+
+section:has(article > a > time) > div:first-child {
+  scroll-snap-align: start !important;
 }
 
 /* Die weiße Inhaltskarte wird zur grauen Fläche, auf der die Tages-Chips
@@ -92,7 +111,9 @@ body:has(article > a > time) div:has(> div > section article > a > time) {
  * die Breite der Inhaltsspalte begrenzt und bekommt dieselben Radien wie die
  * Tages-Chips. expect: 1 */
 body:has(article > a > time) > div:first-of-type header {
-  max-width: var(--hs-shell) !important;
+  /* Die Kopfleiste flüchtet mit den Tages-Chips (voller Zeilenbreite),
+   * nicht mit der schmaleren Spalte. */
+  max-width: var(--w3-row-w) !important;
   margin-inline: auto !important;
   border-radius: var(--hs-radius) !important;
   overflow: hidden !important;
