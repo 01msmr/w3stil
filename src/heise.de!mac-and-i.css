@@ -46,7 +46,10 @@ body:has(article[data-teaser-name="HorizontalTimelineTeaser"]) {
   --mi-mono: ui-monospace, "SF Mono", "IBM Plex Mono", Menlo, monospace;
   --mi-size: 19px;
   --mi-lh: 1.35;
-  --mi-radius: 16px;
+  /* 50% der Zeilenhöhe (Zeile = Schrift × Zeilenhöhe + 2 × 0.5em Polster
+   * = --mi-size × (--mi-lh + 1)) — größere Radien als die 16px der anderen
+   * Seiten, Vorgabe für diese Seite. */
+  --mi-radius: calc(var(--mi-size) * (var(--mi-lh) + 1) / 2);
   /* 2px: der Chip soll vom Zeilenrand golems 26px haben (24px Polsterung
    * + 2). */
   --mi-inset: 2px;
