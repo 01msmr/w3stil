@@ -111,6 +111,14 @@ export async function build() {
     const site = await readFile(join(SRC, file), 'utf8');
     const siteCss = clean(site);
 
+    /* Opt-in Pfad-Scoping: eine Site-Datei kann ihren @-moz-document-Matcher
+     * selbst bestimmen, statt ihn aus dem Dateinamen abzuleiten — nötig, wenn
+     * nur EINE Unterseite einer Domain gemeint ist (Sektionen lassen sich
+     * nicht verschachteln). Erste Kommentarzeilen, z. B.:
+     *   @matcher url-prefix("https://www.heise.de/mac-and-i/newsticker")
+     * check.mjs liest dieselbe Zeile, um die richtige Seite zu laden. */
+    const mm = site.match(/@matcher\s+([^\n*]+)/);
+
     /* Opt-out: eine Site-Datei, die @no-reset deklariert, bekommt _reset.css
      * NICHT vorangestellt. Gedacht für Seiten, an denen ausdrücklich nur ein
      * Ausschnitt verändert werden soll — _reset greift ins Grundlayout ein
@@ -127,7 +135,7 @@ export async function build() {
     ]
       .filter(Boolean)
       .join('\n');
-    sections.push(`@-moz-document ${matcherFor(domain)} {\n${indent(body)}\n}`);
+    sections.push(`@-moz-document ${mm ? mm[1].trim() : matcherFor(domain)} {\n${indent(body)}\n}`);
   }
 
   const header = [

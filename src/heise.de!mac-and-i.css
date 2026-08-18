@@ -1,0 +1,274 @@
+/* @no-reset
+ * @matcher url-prefix("https://www.heise.de/mac-and-i/newsticker")
+ *
+ * Mac-&-i-Newsticker — Portierung des Ticker-Layouts auf heises ÄLTERES
+ * Teaser-System: hier steht die Uhrzeit NEBEN dem Link (article > time + a),
+ * nicht darin. Gleiche Palette wie heise.de.css, eigene Variablen (--mi-*),
+ * weil die heise-Sektion auf dieser Seite nicht aktiv wird (ihr
+ * body:has(article > a > time) matcht hier nicht).
+ *
+ * Folge der Struktur — dokumentierte Einschränkung: „gelesen" kann hier NUR
+ * den Titel dimmen. :has(:visited) matcht aus Datenschutzgründen nie, damit
+ * sind Zeilenfläche und Uhrzeit-Häkchen unerreichbar; :visited wirkt allein
+ * auf das <a> und seine Nachfahren.
+ *
+ * Bewusst weggelassen (Vorgabe): der „Mac & i"-Branding-Chip (alles hier IST
+ * Mac & i) und die Kommentar-Sprechblasen — beides steckt im TeaserMeta-
+ * Footer, der komplett verschwindet.
+ *
+ * Verifiziert am 2026-08-18 live gegen /mac-and-i/newsticker im eingeloggten
+ * Chrome. Struktur:
+ *
+ *   div.ho-bg (weiße Karte, 1104px)
+ *     └ div.jd-module
+ *        └ section (Spalte, 768px, flex-col gap-12)
+ *           └ div                       ein Tag
+ *              ├ h2                     "Dienstag, 18. August 2026"
+ *              ├ hr                     Dekolinie
+ *              └ section.grid           die Zeilen
+ *                 ├ article[data-teaser-name="HorizontalTimelineTeaser"]
+ *                 │   ├ time > span
+ *                 │   └ a > header > h3 > span[TeaserHeadline] (+ heise_plus-img)
+ *                 │       + footer[TeaserMeta]
+ *                 └ hr (zwischen den Zeilen)
+ */
+
+body:has(article[data-teaser-name="HorizontalTimelineTeaser"]) {
+  --mi-fg: #242b33;
+  --mi-card: #fff;
+  --mi-muted: #4f6584;
+  --mi-page: #e8edf0;
+  --mi-blue: #14315b;
+  --mi-mono: ui-monospace, "SF Mono", "IBM Plex Mono", Menlo, monospace;
+  --mi-size: 19px;
+  --mi-lh: 1.35;
+  --mi-radius: 16px;
+  --mi-inset: 1rem;
+  --mi-bleed: 24px;
+  --mi-chip: color-mix(in oklab, var(--mi-fg) var(--w3-chip-mix), var(--mi-card));
+  --mi-read: color-mix(in oklab, var(--mi-muted) 75%, var(--mi-page));
+  --mi-head-color: #4f6584;
+
+  /* 24px mehr als beim Haupt-Ticker: dort ragen die Zeilen um --hs-bleed
+   * über den Kasten hinaus, hier liegen die 24px Zeilenpolsterung INNERHALB
+   * des Chips — der Titel beginnt also bei 96 + 24. Gemessen. */
+  --mi-title-x: 120px;
+}
+
+/* Die weiße Inhaltskarte wird zur grauen Fläche, auf der die Tages-Chips
+ * liegen — wie beim Haupt-Ticker. expect: 1 */
+div:has(> div > section > div > section > article[data-teaser-name="HorizontalTimelineTeaser"]) {
+  background: var(--mi-page) !important;
+  box-shadow: none !important;
+}
+
+/* Abstand zwischen den Tagen: golems 32px-Raster statt gap-12 (48px).
+ * expect: 1 */
+section:has(> div > section > article[data-teaser-name="HorizontalTimelineTeaser"]) {
+  gap: 32px !important;
+}
+
+/* Ein Tag: transparent, damit der Tageskopf im Grund steht. expect: 1..14 */
+div:has(> section > article[data-teaser-name="HorizontalTimelineTeaser"]) {
+  background: none !important;
+}
+
+/* Tageskopf wie beim Haupt-Ticker; die Texte kommen hier bereits als
+ * "Dienstag, 18. August 2026" — kein Userscript nötig. expect: 1..14 */
+div:has(> section > article[data-teaser-name="HorizontalTimelineTeaser"]) > h2 {
+  margin: 0 !important;
+  padding: 1.7em 0 calc(0.2em + 16px) var(--mi-title-x) !important;
+  background: none !important;
+  color: var(--mi-head-color) !important;
+  font-size: var(--w3-head-size) !important;
+  font-weight: 700 !important;
+  line-height: var(--mi-lh) !important;
+}
+
+/* Die Dekolinie unter dem Tageskopf. expect: 1..14 */
+div:has(> section > article[data-teaser-name="HorizontalTimelineTeaser"]) > hr {
+  display: none !important;
+}
+
+/* Der Zeilen-Container ist der weiße Tages-Chip. block statt grid: die
+ * Zeilen stapeln sich, die hr dazwischen werden zu Trennlinien. overflow
+ * bleibt sichtbar, links außerhalb steht das Plus. expect: 1..14 */
+div:has(> section > article[data-teaser-name="HorizontalTimelineTeaser"]) > section {
+  display: block !important;
+  background: var(--mi-card) !important;
+  border-radius: var(--mi-radius) !important;
+}
+
+/* Trennlinie zwischen den Zeilen — dieselbe Mischung wie überall. Die hr
+ * liegen fertig im Markup, sie werden nur umgefärbt. expect: 20..200 */
+div:has(> section > article[data-teaser-name="HorizontalTimelineTeaser"]) > section > hr {
+  margin: 0 !important;
+  border: 0 !important;
+  border-top: var(--w3-divider-w) solid color-mix(in srgb, var(--mi-page) var(--w3-divider-mix), var(--mi-card)) !important;
+}
+
+/* ── Zeilen ───────────────────────────────────────────────────────────── */
+
+/* expect: 20..200 */
+article[data-teaser-name="HorizontalTimelineTeaser"] {
+  display: flex !important;
+  align-items: center !important;
+  gap: 1em !important;
+  position: relative !important;
+  padding: 0.5em var(--mi-bleed) !important;
+  background: var(--mi-card) !important;
+  color: var(--mi-fg) !important;
+  font-size: var(--mi-size) !important;
+  line-height: var(--mi-lh) !important;
+  font-weight: 400 !important;
+  white-space: nowrap !important;
+  border-radius: 0 !important;
+}
+
+/* Erste und letzte Zeile tragen die Radien des Tages-Chips — overflow:
+ * hidden am Container würde das Plus abschneiden. */
+div:has(> section > article[data-teaser-name="HorizontalTimelineTeaser"]) > section > article:first-of-type {
+  border-radius: var(--mi-radius) var(--mi-radius) 0 0 !important;
+}
+
+div:has(> section > article[data-teaser-name="HorizontalTimelineTeaser"]) > section > article:last-of-type {
+  border-radius: 0 0 var(--mi-radius) var(--mi-radius) !important;
+}
+
+/* Uhrzeit als Chip. Die feste Breite (w-12) muss weg. Kein Gelesen-Häkchen:
+ * die Uhrzeit steht außerhalb des Links, :visited erreicht sie nicht.
+ * expect: 20..200 */
+article[data-teaser-name="HorizontalTimelineTeaser"] > time {
+  flex: 0 0 auto !important;
+  width: auto !important;
+  margin-inline-start: var(--mi-inset) !important;
+  border-radius: 4px !important;
+  background: var(--mi-chip) !important;
+  padding: 0.25em 0.6em !important;
+  color: var(--mi-muted) !important;
+  font-family: var(--mi-mono) !important;
+  font-variant-numeric: tabular-nums !important;
+  font-size: calc(var(--mi-size) * var(--w3-chip-font)) !important;
+  letter-spacing: 0.03em !important;
+}
+
+article[data-teaser-name="HorizontalTimelineTeaser"] > time > span {
+  font: inherit !important;
+  color: inherit !important;
+}
+
+/* Der Link übernimmt den Rest der Zeile und kürzt lange Titel. expect: 20..200 */
+article[data-teaser-name="HorizontalTimelineTeaser"] > a {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  color: inherit !important;
+  text-decoration: none !important;
+}
+
+/* heises a umschließt nur den Titel — Uhrzeit und Ränder wären tote Fläche.
+ * Das aufgespannte Pseudo-Element macht die ganze Zeile klickbar; den
+ * Positionskontext trägt der article. */
+article[data-teaser-name="HorizontalTimelineTeaser"] > a::after {
+  content: "" !important;
+  position: absolute !important;
+  inset: 0 !important;
+}
+
+/* header trägt mb-2, h3 heises Titel-Typo — beides auf Zeilenmaß. */
+article[data-teaser-name="HorizontalTimelineTeaser"] header {
+  margin: 0 !important;
+}
+
+/* expect: 20..200 */
+article[data-teaser-name="HorizontalTimelineTeaser"] h3 {
+  margin: 0 !important;
+  display: block !important;
+  font-size: 1em !important;
+  font-weight: 400 !important;
+  line-height: var(--mi-lh) !important;
+  color: inherit !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+article[data-teaser-name="HorizontalTimelineTeaser"] h3 > span {
+  display: inline !important;
+  font: inherit !important;
+  color: inherit !important;
+}
+
+/* Kommentar-Sprechblasen und Branding-Chip ("Mac & i" — alles hier IST
+ * Mac & i): der ganze Meta-Footer entfällt. expect: 20..200 */
+article[data-teaser-name="HorizontalTimelineTeaser"] footer[data-component="TeaserMeta"] {
+  display: none !important;
+}
+
+/* ── heise+ ───────────────────────────────────────────────────────────────
+ * Wie überall: die Inline-Bilder verschwinden, ein nacktes fettes Plus steht
+ * links außerhalb der Zeile im grauen Rand — hier gibt es keine Chip-Leiste,
+ * das Plus ist allein. expect: 0..40 */
+article[data-teaser-name="HorizontalTimelineTeaser"] h3 img[src*="heise_plus"] {
+  display: none !important;
+}
+
+article[data-teaser-name="HorizontalTimelineTeaser"]:has(img[src*="heise_plus"])::before {
+  content: "+" !important;
+  position: absolute !important;
+  right: 100% !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  margin-right: 0.8rem !important;
+  color: var(--mi-muted) !important;
+  font-family: var(--mi-mono) !important;
+  font-weight: 700 !important;
+  font-size: calc(var(--mi-size) * var(--w3-plus-scale)) !important;
+  line-height: 1 !important;
+}
+
+/* Die CleverPush-Glocke (fixierter Abo-Button unten am Rand) hat auf einer
+ * Leseliste nichts verloren. expect: 0..2 */
+.cleverpush-bell {
+  display: none !important;
+}
+
+/* ── Zustände ─────────────────────────────────────────────────────────────
+ * LVHA: visited vor hover. Gelesen dimmt NUR den Titel (siehe Kopfkommentar).
+ */
+
+article[data-teaser-name="HorizontalTimelineTeaser"] a:visited,
+article[data-teaser-name="HorizontalTimelineTeaser"] a:visited h3,
+article[data-teaser-name="HorizontalTimelineTeaser"] a:visited h3 > span {
+  color: var(--mi-read) !important;
+}
+
+/* Hover invertiert die ganze Zeile — der Hover hängt am article, nicht am
+ * Link, damit auch Uhrzeit und Rand mitgehen wie beim Haupt-Ticker. */
+article[data-teaser-name="HorizontalTimelineTeaser"]:hover {
+  background: var(--mi-blue) !important;
+  color: var(--mi-card) !important;
+}
+
+article[data-teaser-name="HorizontalTimelineTeaser"]:hover a,
+article[data-teaser-name="HorizontalTimelineTeaser"]:hover h3,
+article[data-teaser-name="HorizontalTimelineTeaser"]:hover h3 > span {
+  color: var(--mi-card) !important;
+}
+
+/* Gelesene Titel bleiben auch im Hover als gelesen erkennbar: etwas dunkler
+ * als Weiß — dieselbe Mischung wie beim Haupt-Ticker. Nach den allgemeinen
+ * Hover-Regeln, gewinnt über die Reihenfolge. */
+article[data-teaser-name="HorizontalTimelineTeaser"]:hover a:visited,
+article[data-teaser-name="HorizontalTimelineTeaser"]:hover a:visited h3,
+article[data-teaser-name="HorizontalTimelineTeaser"]:hover a:visited h3 > span {
+  color: color-mix(in oklab, var(--mi-card) 85%, var(--mi-fg)) !important;
+}
+
+article[data-teaser-name="HorizontalTimelineTeaser"]:hover > time {
+  background: var(--mi-card) !important;
+  color: var(--mi-fg) !important;
+}
+
+article[data-teaser-name="HorizontalTimelineTeaser"]:hover::before {
+  color: var(--mi-fg) !important;
+}

@@ -86,12 +86,21 @@ let failures = 0;
 
 for (const file of files) {
   const domain = file.replace(/\.css$/, '').replace('!exact', '');
-  const rules = extract(await readFile(join(SRC, file), 'utf8'));
-  const ctx = await contextFor(domain);
+  const css = await readFile(join(SRC, file), 'utf8');
+  const rules = extract(css);
+
+  /* Pfad-gescopte Dateien (@matcher-Direktive, siehe build.mjs) werden gegen
+   * ihre tatsächliche URL geprüft, nicht gegen die Domain-Startseite. Die
+   * Auth-Session kommt weiterhin von der Domain. */
+  const mm = css.match(/@matcher\s+url-prefix\("([^"]+)"\)/);
+  const url = mm ? mm[1] : `https://${domain}/`;
+  const authDomain = mm ? new URL(url).hostname.replace(/^www\./, '') : domain;
+
+  const ctx = await contextFor(authDomain);
   const page = await ctx.newPage();
 
   try {
-    await page.goto(`https://${domain}/`, { waitUntil: 'domcontentloaded', timeout: 30000 });
+    await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 30000 });
     await page.waitForTimeout(2500); // Client-Rendering abwarten
   } catch (e) {
     report.push({ domain, sel: null, status: 'unreachable', msg: e.message.split('\n')[0] });

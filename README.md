@@ -51,6 +51,7 @@ Wie die Datei dorthin kommt, steht unter [Veröffentlichen](#veröffentlichen).
 |---|---|
 | `golem.de/ticker/` | vollständig umgebaut |
 | `heise.de/newsticker?timeFrame=last-7-days` | vollständig umgebaut |
+| `heise.de/mac-and-i/newsticker` | vollständig umgebaut; „gelesen" dimmt nur den Titel (s. u.) |
 | `de.wikipedia.org` | nur mit Skin **Vector 2022** (Einstellungen → Aussehen) |
 | Artikelseiten beider Portale | noch unverändert |
 
@@ -121,7 +122,22 @@ deaktiviert, bis eine Domain dazukommt.
 
 **Dateiname = Matcher.** `heise.de.css` wird zu `domain("heise.de")` und matcht
 alle Subdomains. Für exaktes Matching `heise.de!exact.css` — daraus wird ein
-`regexp()`, das Subdomains ausschließt.
+`regexp()`, das Subdomains ausschließt. Soll eine Datei nur EINE Unterseite
+treffen, bestimmt sie ihren Matcher selbst, per Direktive in den ersten
+Kommentarzeilen (Sektionen lassen sich nicht verschachteln):
+
+```css
+/* @no-reset
+ * @matcher url-prefix("https://www.heise.de/mac-and-i/newsticker")
+ */
+```
+
+`check.mjs` liest dieselbe Zeile und prüft die Selektoren dann gegen diese
+URL statt gegen die Domain-Startseite. So macht es `heise.de!mac-and-i.css` —
+der Mac-&-i-Ticker nutzt heises älteres Teaser-System, dort steht die Uhrzeit
+NEBEN dem Link (`article > time + a`). Folge: `:has(:visited)` matcht aus
+Datenschutzgründen nie, Zeilenfläche und Uhrzeit-Häkchen sind für „gelesen"
+unerreichbar — nur der Titel dimmt.
 
 **Was gehört wohin.** In `_reset.css` nur Selektoren, die ein Redesign überleben:
 Elemente, ARIA-Rollen, `:has()`-Strukturen. Alles Klassenbasierte in die
