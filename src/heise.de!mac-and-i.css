@@ -39,8 +39,10 @@ body:has(article[data-teaser-name="HorizontalTimelineTeaser"]) {
   --mi-card: #fff;
   --mi-muted: #4f6584;
 
-  /* Golems Neutralgrau statt heises Blaugrau — golem ist die Vorgabe. */
-  --mi-page: #e8e8e8;
+  /* Golems Neutralgrau, um 25% Richtung Schwarz abgedunkelt (~#aeaeae) —
+   * Vorgabe nur für diese Seite. Alles Abgeleitete (Gelesen-Farbe,
+   * Trennlinien, Chip-Leiste) rechnet mit. */
+  --mi-page: color-mix(in srgb, #e8e8e8 75%, #000);
   --mi-blue: #14315b;
   --mi-alert: oklch(0.505 0.213 27.518);
   --mi-mono: ui-monospace, "SF Mono", "IBM Plex Mono", Menlo, monospace;
@@ -60,6 +62,11 @@ body:has(article[data-teaser-name="HorizontalTimelineTeaser"]) {
    * Ebenso eigen: größere, kursive, nicht fette Kopfschrift. */
   --mi-head-color: #444;
   --mi-head-size: 26px;
+
+  /* Zur Wortmarke passende Schrift: das Logo ist eine schwere kursive
+   * Grotesk im Helvetica-Schnitt — Helvetica Neue kommt ihr auf macOS am
+   * nächsten, hier bewusst in normalem Gewicht. */
+  --mi-head-font: "Helvetica Neue", Helvetica, Arial, sans-serif;
 
   /* 24px mehr als beim Haupt-Ticker (die Zeilenpolsterung liegt hier
    * INNERHALB des Chips), minus die 14px des kleineren Chip-Einzugs:
@@ -111,6 +118,7 @@ div:has(> section > article[data-teaser-name="HorizontalTimelineTeaser"]) > h2 {
   padding: 1.7em 0 calc(0.2em + 16px) var(--mi-title-x) !important;
   background: none !important;
   color: var(--mi-head-color) !important;
+  font-family: var(--mi-head-font) !important;
   font-size: var(--mi-head-size) !important;
   font-weight: 400 !important;
   font-style: italic !important;
