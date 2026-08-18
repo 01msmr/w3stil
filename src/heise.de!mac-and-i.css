@@ -133,14 +133,17 @@ div:has(> section > article[data-teaser-name="HorizontalTimelineTeaser"]) > sect
   border-radius: var(--mi-radius) !important;
 
   /* Licht von links oben (~20° aus der Senkrechten): der Schatten fällt
-   * nach rechts unten, mittelstark. */
+   * nach rechts unten, mittelstark. Das Anheben beim Hover läuft weich mit
+   * bremsendem Auslauf (ease-out) — die Transition am Grundzustand wirkt
+   * in beide Richtungen, Eintritt wie Austritt. */
   box-shadow: 4px 10px 16px rgb(0 0 0 / 0.3) !important;
+  transition: box-shadow 0.25s ease-out !important;
 }
 
-/* Der Tages-Chip, in dem der Cursor steht, hebt sich deutlich: Offsets und
- * Blur um 60% erhöht. expect: 1..14 */
+/* Der Tages-Chip, in dem der Cursor steht, hebt sich kräftig: Offsets und
+ * Blur verdoppelt (+100% gegenüber dem Ruhezustand). expect: 1..14 */
 div:has(> section > article[data-teaser-name="HorizontalTimelineTeaser"]) > section:hover {
-  box-shadow: 6px 16px 26px rgb(0 0 0 / 0.3) !important;
+  box-shadow: 8px 20px 32px rgb(0 0 0 / 0.3) !important;
 }
 
 /* Trennlinie zwischen den Zeilen — dieselbe Mischung wie überall. Die hr
