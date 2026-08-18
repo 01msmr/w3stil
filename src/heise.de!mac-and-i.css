@@ -136,14 +136,14 @@ div:has(> section > article[data-teaser-name="HorizontalTimelineTeaser"]) > sect
    * nach rechts unten, mittelstark. Das Anheben beim Hover läuft weich mit
    * bremsendem Auslauf (ease-out) — die Transition am Grundzustand wirkt
    * in beide Richtungen, Eintritt wie Austritt. */
-  box-shadow: 4px 10px 16px rgb(0 0 0 / 0.3) !important;
+  box-shadow: 6px 14px 22px rgb(0 0 0 / 0.42) !important;
   transition: box-shadow 0.25s ease-out !important;
 }
 
 /* Der Tages-Chip, in dem der Cursor steht, hebt sich kräftig: Offsets und
  * Blur verdoppelt (+100% gegenüber dem Ruhezustand). expect: 1..14 */
 div:has(> section > article[data-teaser-name="HorizontalTimelineTeaser"]) > section:hover {
-  box-shadow: 8px 20px 32px rgb(0 0 0 / 0.3) !important;
+  box-shadow: 12px 28px 45px rgb(0 0 0 / 0.42) !important;
 }
 
 /* Trennlinie zwischen den Zeilen — dieselbe Mischung wie überall. Die hr
