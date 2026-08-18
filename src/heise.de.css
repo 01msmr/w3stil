@@ -113,9 +113,11 @@ article:has(> a > time) + article:has(> a > time) {
 }
 
 /* Die Section bleibt transparent — das Weiß tragen die Zeilen, damit der
- * Tageskopf im Grund stehen kann. expect: 1..14 */
+ * Tageskopf im Grund stehen kann. Der Abstand zwischen den Tagen folgt
+ * golems Raster (32px statt heises 48px). expect: 1..14 */
 section:has(article > a > time) {
   background: none !important;
+  margin-bottom: 32px !important;
 }
 
 /* Tageskopf: nicht mehr klebend, ohne Fläche, fett, linksbündig mit den
@@ -127,7 +129,9 @@ section:has(article > a > time) > div:first-child {
   font-size: var(--hs-head-size) !important;
   font-weight: 700 !important;
   margin: 0 !important;
-  padding: 1.7em 0 0.2em var(--hs-title-x) !important;
+  /* Nach unten wie golem: 0.2em am Kopf plus die 16px, die golems Wrapper
+   * zwischen Kopf und Tages-Chip stehen lässt. */
+  padding: 1.7em 0 calc(0.2em + 16px) var(--hs-title-x) !important;
 }
 
 /* Das h2 im Tageskopf bringt mit typo-highlight-heading eine eigene Größe
