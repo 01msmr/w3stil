@@ -291,17 +291,6 @@ article[data-teaser-name="HorizontalTimelineTeaser"] [data-component="AlertBadge
   height: calc(var(--mi-size) * 0.85) !important;
 }
 
-/* Eine Alert-Zeile färbt sich beim Überfahren vollständig rot — wie beim
- * Haupt-Ticker. expect: 0..40 */
-article[data-teaser-name="HorizontalTimelineTeaser"]:has([data-component="AlertBadge"]):hover {
-  background: var(--mi-alert) !important;
-}
-
-article[data-teaser-name="HorizontalTimelineTeaser"]:has([data-component="AlertBadge"]):hover > time {
-  background: #fff !important;
-  color: var(--mi-alert) !important;
-}
-
 /* ── heise+ ───────────────────────────────────────────────────────────────
  * Wie überall: die Inline-Bilder verschwinden, ein nacktes fettes Plus steht
  * links außerhalb der Zeile im grauen Rand — hier gibt es keine Chip-Leiste,
@@ -465,38 +454,10 @@ article[data-teaser-name="HorizontalTimelineTeaser"] a:visited h3 > span {
 
 /* Hover invertiert die ganze Zeile — der Hover hängt am article, nicht am
  * Link, damit auch Uhrzeit und Rand mitgehen wie beim Haupt-Ticker. */
+/* Hover ist hier bewusst leise — anders als die invertierenden Zeilen der
+ * anderen Ticker: nur die Zeilenfläche hellt sich ab, ein Drittel des
+ * Seitengrau-Anteils auf Weiß. Schrift, Uhrzeit-Chip und Rand-Chips
+ * bleiben unverändert; auch Alert-Zeilen hovern so. */
 article[data-teaser-name="HorizontalTimelineTeaser"]:hover {
-  background: var(--mi-blue) !important;
-  color: var(--mi-card) !important;
-}
-
-article[data-teaser-name="HorizontalTimelineTeaser"]:hover a,
-article[data-teaser-name="HorizontalTimelineTeaser"]:hover h3,
-article[data-teaser-name="HorizontalTimelineTeaser"]:hover h3 > span {
-  color: var(--mi-card) !important;
-}
-
-/* Gelesene Titel bleiben auch im Hover als gelesen erkennbar: etwas dunkler
- * als Weiß — dieselbe Mischung wie beim Haupt-Ticker. Nach den allgemeinen
- * Hover-Regeln, gewinnt über die Reihenfolge. */
-article[data-teaser-name="HorizontalTimelineTeaser"]:hover a:visited,
-article[data-teaser-name="HorizontalTimelineTeaser"]:hover a:visited h3,
-article[data-teaser-name="HorizontalTimelineTeaser"]:hover a:visited h3 > span {
-  color: color-mix(in oklab, var(--mi-card) 85%, var(--mi-fg)) !important;
-}
-
-article[data-teaser-name="HorizontalTimelineTeaser"]:hover > time {
-  background: var(--mi-card) !important;
-  color: var(--mi-fg) !important;
-}
-
-/* Chips der Leiste kippen im Hover mit ins Dunkle, das Plus wird dunkler —
- * wie beim Haupt-Ticker. Die Alert-Flamme bleibt rot. */
-article[data-teaser-name="HorizontalTimelineTeaser"]:hover [data-component="Branding"] {
-  background: var(--mi-blue) !important;
-  color: var(--mi-card) !important;
-}
-
-article[data-teaser-name="HorizontalTimelineTeaser"]:hover footer::before {
-  color: var(--mi-fg) !important;
+  background: color-mix(in srgb, var(--mi-page) 33%, var(--mi-card)) !important;
 }
