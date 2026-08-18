@@ -56,8 +56,10 @@ body:has(article[data-teaser-name="HorizontalTimelineTeaser"]) {
   --mi-bleed: 24px;
   --mi-chip: color-mix(in oklab, var(--mi-fg) var(--w3-chip-mix), var(--mi-card));
   --mi-read: color-mix(in oklab, var(--mi-muted) 75%, var(--mi-page));
-  /* Dunkelgrau statt heises Blaugrau — Vorgabe nur für diese Seite. */
+  /* Dunkelgrau statt heises Blaugrau — Vorgabe nur für diese Seite.
+   * Ebenso eigen: größere, kursive, nicht fette Kopfschrift. */
   --mi-head-color: #444;
+  --mi-head-size: 26px;
 
   /* 24px mehr als beim Haupt-Ticker (die Zeilenpolsterung liegt hier
    * INNERHALB des Chips), minus die 14px des kleineren Chip-Einzugs:
@@ -109,8 +111,9 @@ div:has(> section > article[data-teaser-name="HorizontalTimelineTeaser"]) > h2 {
   padding: 1.7em 0 calc(0.2em + 16px) var(--mi-title-x) !important;
   background: none !important;
   color: var(--mi-head-color) !important;
-  font-size: var(--w3-head-size) !important;
-  font-weight: 700 !important;
+  font-size: var(--mi-head-size) !important;
+  font-weight: 400 !important;
+  font-style: italic !important;
   line-height: var(--mi-lh) !important;
 }
 
