@@ -175,11 +175,13 @@ body:has(.ticker-list) .go-content-header {
   border: 0 !important;
 }
 
-/* Feine Trennlinie zwischen den Zeilen: die Farbe des Seitengrunds, halb
- * deckend. Nur zwischen Zeilen, nicht über der ersten — sonst zöge sie eine
+/* Feine Trennlinie zwischen den Zeilen: die Textfarbe, mit --w3-divider-mix
+ * Deckung — der Grund scheint zu 75% durch. Der Seitengrund als Tinte war
+ * auf den weißen Zeilen wirkungslos. Nur zwischen Zeilen, nicht über der
+ * ersten — sonst zöge sie eine
  * Kante quer durch den oberen Chip-Radius. expect: 20..400 */
 .ticker-list li + li .go-ticker-teaser {
-  border-top: var(--w3-divider-w) solid color-mix(in srgb, var(--gl-page) var(--w3-divider-mix), transparent) !important;
+  border-top: var(--w3-divider-w) solid color-mix(in srgb, var(--gl-fg) var(--w3-divider-mix), transparent) !important;
 }
 
 /* Anker ist das <a>, nicht ein Textfragment darin — sonst treffen :hover und
