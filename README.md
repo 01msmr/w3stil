@@ -177,6 +177,14 @@ stillschweigend. Major oder Minor bumpst du in der `package.json`; der Zähler
 läuft dabei weiter, die Reihenfolge bleibt also monoton. Ohne Git greift
 `major.minor.0`.
 
+**Name und Namespace sind die Identität des Styles.** Stylus ordnet Updates
+über `@name` + `@namespace` zu — ändert sich eines von beiden, schlagen
+Updates auf allen Rechnern STILL fehl, und ein manueller Neu-Install legt
+einen zweiten Eintrag an. Passiert mit dem Namespace-Wechsel msmr.dev →
+msmr.co (0.1.54): Reparatur ist, alle „reduce"-Einträge zu löschen und einmal
+frisch von der Update-URL zu installieren. Beide Felder also nur ändern, wenn
+es der Neu-Install auf jedem Rechner wert ist.
+
 **`@no-reset`** als erste Zeile einer Site-Datei lässt `_reset.css` für diese
 Domain weg:
 
