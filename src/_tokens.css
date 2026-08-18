@@ -40,6 +40,9 @@
    * --w3-plus-scale: die Label-Leisten erben je Domain andere Größen. */
   --w3-chip-font: 0.74;
 
+  /* Schriftgröße der Tagesköpfe. */
+  --w3-head-size: 22px;
+
   /* Größe des nackten Plus-Zeichens, das Paid-Artikel markiert (golem Plus,
    * heise+): Faktor relativ zur ZEILENschrift, nicht zur Chip-Schrift —
    * einheitenlos, weil die Label-Leisten der Domains unterschiedliche

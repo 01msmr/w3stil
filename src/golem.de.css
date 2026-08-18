@@ -63,7 +63,7 @@ body:has(.ticker-list) {
 
   /* Tagesköpfe. */
   --gl-head-color: #6f6f6f;
-  --gl-head-size: 22px;
+  --gl-head-size: var(--w3-head-size);
 
 
   /* X-Position, an der der Artikeltitel beginnt: Chip-Einzug + Chipbreite +

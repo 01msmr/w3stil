@@ -65,7 +65,7 @@ body:has(article > a > time) {
   --hs-shell: 69rem;
   --hs-row-h: 40.4px;
   --hs-head-color: #4f6584;
-  --hs-head-size: 22px;
+  --hs-head-size: var(--w3-head-size);
   --hs-hover-delay: 0.2s;
 
   /* heises red-700 — nur für Alert-Zeilen, sonst bleibt Signalrot ungenutzt. */
@@ -128,6 +128,18 @@ section:has(article > a > time) > div:first-child {
   font-weight: 700 !important;
   margin: 0 !important;
   padding: 1.7em 0 0.2em var(--hs-title-x) !important;
+}
+
+/* Das h2 im Tageskopf bringt mit typo-highlight-heading eine eigene Größe
+ * mit und schluckt sonst die vom Container — deshalb ausdrücklich auf
+ * dieselbe Kopfgröße wie bei golem gesetzt. expect: 1..14 */
+section:has(article > a > time) > div:first-child > h2 {
+  margin: 0 !important;
+  padding: 0 !important;
+  font-size: var(--hs-head-size) !important;
+  font-weight: 700 !important;
+  line-height: inherit !important;
+  color: inherit !important;
 }
 
 /* ── Zeilen ─────────────────────────────────────────────────────────────
