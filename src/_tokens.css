@@ -40,8 +40,10 @@
    * --w3-plus-scale: die Label-Leisten erben je Domain andere Größen. */
   --w3-chip-font: 0.74;
 
-  /* Schriftgröße der Tagesköpfe. */
+  /* Tagesköpfe: Schriftgröße und Farbe (dunkles Grau, auf allen Domains
+   * gleich — vorher golem #6f6f6f, heise #4f6584). */
   --w3-head-size: 22px;
+  --w3-head-color: #444;
 
   /* Zeilenbreite der Ticker inklusive Überstand — golems Ist-Maß (1000px
    * Spalte + 2×10px Überstand). Überall als max-width eingesetzt: schmalere
