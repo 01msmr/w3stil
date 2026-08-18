@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        reduce-ticker
 // @namespace   msmr.co
-// @version     0.4.5
+// @version     0.5.0
 // @description Kürzt Ressort-Chips und formatiert Tagesköpfe der Newsticker
 // @author      msmr
 // @license     MIT
@@ -33,8 +33,11 @@
  * das Datums-Muster nicht mehr — der MutationObserver läuft leer durch.
  *
  * Richtungs-Snapping: nach jedem Scrollen gleitet die Seite zum nächsten
- * Tageskopf IN Scrollrichtung — unabhängig von der Entfernung, nie
- * rückwärts. CSS-Snap (proximity) kann beides nicht: sein Fangradius ist
+ * Tageskopf IN Scrollrichtung — nie rückwärts. Auf golem und dem
+ * heise-Ticker (viele Zeilen je Tag) greift der Sog nur in einem engen
+ * Bereich um das Ziel (~30% der Fensterhöhe, ≈250px), sonst ließe sich
+ * das Innere langer Tage nie in Ruhe lesen; der kurze Mac-&-i-Ticker
+ * zieht über jede Entfernung an. CSS-Snap (proximity) kann beides nicht: sein Fangradius ist
  * browserintern, und er springt auch gegen die Scrollrichtung zurück.
  * Während der Gleitfahrt sind Scroll-Ereignisse stummgeschaltet, sonst
  * fütterte die eigene Animation die Richtungslogik.
@@ -115,6 +118,13 @@
   const RUHE_MS = 150;   // so lange muss das Scrollen stehen, bevor gesnappt wird
   const LUFT = 12;       // Zielposition: so viel Raum bleibt über dem Kopf
 
+  /* Anzieh-Reichweite: auf Seiten mit langen Tagen (golem, heise-Ticker)
+   * greift der Snap nur nahe am Ziel — relativ zur Fensterhöhe, damit sich
+   * das Verhalten kleinen Fenstern anpasst. Mac & i: unbegrenzt. */
+  const BEGRENZT = !location.pathname.startsWith('/mac-and-i');
+  const reichweite = () =>
+    BEGRENZT ? Math.round(window.innerHeight * 0.3) : Infinity;
+
   /* Richtung wird KUMULIERT gegen einen Referenzpunkt gemessen, nicht pro
    * Event: Trackpads liefern viele ~1px-Events, eine Schwelle pro Event
    * würde echte Scrolls als Jitter verwerfen und das Snapping lahmlegen. */
@@ -142,6 +152,7 @@
       ? ziele.find((t) => t > y + 4)
       : [...ziele].reverse().find((t) => t < y - 4);
     if (ziel == null) return;
+    if (Math.abs(ziel - y) > reichweite()) return;
 
     faehrt = true;
     window.scrollTo({ top: ziel, behavior: 'smooth' });
