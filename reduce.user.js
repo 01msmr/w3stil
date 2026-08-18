@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        reduce-ticker
 // @namespace   msmr.co
-// @version     0.4.2
+// @version     0.4.3
 // @description Kürzt Ressort-Chips und formatiert Tagesköpfe der Newsticker
 // @author      msmr
 // @license     MIT
@@ -120,6 +120,13 @@
   let timer = null;
   let faehrt = false;
 
+  /* Verriegelung: nach jedem Andocken merkt sich das Skript den Landepunkt.
+   * Solange die Position keine 48px davon entfernt ist, wird NICHT gesnappt
+   * — egal, welche Events noch eintrudeln. Erst eine echte neue Scroll-
+   * Bewegung über diese Schwelle hinaus entriegelt. Damit ist eine Kette
+   * aus aufeinanderfolgenden Snaps kategorisch ausgeschlossen. */
+  let riegel = null;
+
   const snap = () => {
     if (!richtung) return;
     const y = window.scrollY;
@@ -147,6 +154,7 @@
        * letzten Tageskopf durch. */
       richtung = 0;
       lastY = window.scrollY;
+      riegel = window.scrollY;
     };
     const watch = setInterval(ende, 80);
     setTimeout(fertig, 1200); // Notausstieg, falls das Ziel nie exakt erreicht wird
@@ -155,6 +163,14 @@
   window.addEventListener('scroll', () => {
     if (faehrt) return;
     const y = window.scrollY;
+
+    if (riegel !== null) {
+      if (Math.abs(y - riegel) < 48) {
+        lastY = y;
+        return;
+      }
+      riegel = null;
+    }
 
     /* Sub-Pixel-Jitter nach dem Andocken ist keine Nutzerabsicht. */
     if (Math.abs(y - lastY) > 2) richtung = y > lastY ? 1 : -1;
