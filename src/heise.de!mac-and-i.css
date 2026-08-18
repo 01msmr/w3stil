@@ -39,10 +39,10 @@ body:has(article[data-teaser-name="HorizontalTimelineTeaser"]) {
   --mi-card: #fff;
   --mi-muted: #4f6584;
 
-  /* Golems Neutralgrau, um 25% Richtung Schwarz abgedunkelt (~#aeaeae) —
+  /* Golems Neutralgrau, um 15% Richtung Schwarz abgedunkelt (~#c5c5c5) —
    * Vorgabe nur für diese Seite. Alles Abgeleitete (Gelesen-Farbe,
    * Trennlinien, Chip-Leiste) rechnet mit. */
-  --mi-page: color-mix(in srgb, #e8e8e8 75%, #000);
+  --mi-page: color-mix(in srgb, #e8e8e8 85%, #000);
   --mi-blue: #14315b;
   --mi-alert: oklch(0.505 0.213 27.518);
   --mi-mono: ui-monospace, "SF Mono", "IBM Plex Mono", Menlo, monospace;
