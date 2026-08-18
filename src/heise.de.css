@@ -89,16 +89,6 @@ body:has(article > a > time) {
   --hs-title-x: 82px;
 }
 
-/* Die Seite rastet beim Scrollen weich an den Tagesköpfen ein — proximity,
- * nicht mandatory. */
-html:has(article > a > time) {
-  scroll-snap-type: y proximity !important;
-}
-
-section:has(article > a > time) > div:first-child {
-  scroll-snap-align: start !important;
-}
-
 /* Die weiße Inhaltskarte wird zur grauen Fläche, auf der die Tages-Chips
  * liegen. Gefasst über ihre Beziehung zur Liste, nicht über ihre
  * Utility-Klassen. expect: 1 */

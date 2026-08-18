@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        reduce-ticker
 // @namespace   msmr.co
-// @version     0.3.0
+// @version     0.4.0
 // @description Kürzt Ressort-Chips und formatiert Tagesköpfe der Newsticker
 // @author      msmr
 // @license     MIT
@@ -10,6 +10,7 @@
 // @match       https://www.golem.de/ticker*
 // @run-at      document-idle
 // @grant       none
+// @noframes
 // @updateURL   https://w3.msmr.co/reduce.user.js
 // @downloadURL https://w3.msmr.co/reduce.user.js
 // ==/UserScript==
@@ -30,6 +31,13 @@
  * sagt dasselbe) und werden auf beiden Seiten einheitlich als
  * "Montag, den 17. August 2026" ausgeschrieben. Nach dem Umformen matcht
  * das Datums-Muster nicht mehr — der MutationObserver läuft leer durch.
+ *
+ * Richtungs-Snapping: nach jedem Scrollen gleitet die Seite zum nächsten
+ * Tageskopf IN Scrollrichtung — unabhängig von der Entfernung, nie
+ * rückwärts. CSS-Snap (proximity) kann beides nicht: sein Fangradius ist
+ * browserintern, und er springt auch gegen die Scrollrichtung zurück.
+ * Während der Gleitfahrt sind Scroll-Ereignisse stummgeschaltet, sonst
+ * fütterte die eigene Animation die Richtungslogik.
  * "heise+ exklusiv" bleibt unangetastet: das Plus hängt am Markennamen, ohne
  * ihn bliebe nur "exklusiv" übrig. Einwortige Chips ("bestenlisten", "WTF")
  * ändern sich nicht.
@@ -90,4 +98,54 @@
     childList: true,
     subtree: true,
   });
+
+  // ── Richtungs-Snapping an den Tagesköpfen ────────────────────────────
+
+  const SNAP_ZIELE =
+    '.go-col:has(.ticker-list) > h2, ' +                       // golem
+    'section:has(article > a > time) > div:first-child, ' +    // heise-Ticker
+    'div:has(> section > article[data-teaser-name="HorizontalTimelineTeaser"]) > h2, ' + // Mac & i
+    'header[class*="theme-mac-and-i"]';                        // Mac-&-i-Kopfkapsel
+
+  const RUHE_MS = 150;   // so lange muss das Scrollen stehen, bevor gesnappt wird
+  const LUFT = 12;       // Zielposition: so viel Raum bleibt über dem Kopf
+
+  let lastY = window.scrollY;
+  let richtung = 0;
+  let timer = null;
+  let faehrt = false;
+
+  const snap = () => {
+    if (!richtung) return;
+    const y = window.scrollY;
+    const ziele = [...document.querySelectorAll(SNAP_ZIELE)]
+      .map((el) => Math.round(el.getBoundingClientRect().top + y - LUFT))
+      .sort((a, b) => a - b);
+    const ziel = richtung > 0
+      ? ziele.find((t) => t > y + 4)
+      : [...ziele].reverse().find((t) => t < y - 4);
+    if (ziel == null) return;
+
+    faehrt = true;
+    window.scrollTo({ top: ziel, behavior: 'smooth' });
+    const ende = () => {
+      if (Math.abs(window.scrollY - ziel) < 2) fertig();
+    };
+    const fertig = () => {
+      clearInterval(watch);
+      faehrt = false;
+      lastY = window.scrollY;
+    };
+    const watch = setInterval(ende, 80);
+    setTimeout(fertig, 1200); // Notausstieg, falls das Ziel nie exakt erreicht wird
+  };
+
+  window.addEventListener('scroll', () => {
+    if (faehrt) return;
+    const y = window.scrollY;
+    if (y !== lastY) richtung = y > lastY ? 1 : -1;
+    lastY = y;
+    clearTimeout(timer);
+    timer = setTimeout(snap, RUHE_MS);
+  }, { passive: true });
 })();
