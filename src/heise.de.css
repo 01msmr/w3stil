@@ -104,13 +104,13 @@ div:has(> section article > a > time) {
   max-width: var(--hs-shell) !important;
 }
 
-/* Feine Trennlinie zwischen den Zeilen: die Textfarbe, mit --w3-divider-mix
- * Deckung — der Grund scheint zu 75% durch. Der Seitengrund als Tinte war
- * auf den weißen Zeilen wirkungslos. Nur zwischen Zeilen, nicht über der
- * ersten — sonst zöge sie eine
+/* Feine Trennlinie zwischen den Zeilen: der Seitengrund als Tinte, mit
+ * --w3-divider-mix Deckung — der Grund scheint zu 75% durch. Bewusst sehr
+ * zart; Textfarbe als Tinte war zu kräftig. Nur zwischen Zeilen, nicht über
+ * der ersten — sonst zöge sie eine
  * Kante quer durch den oberen Chip-Radius. expect: 20..400 */
 article:has(> a > time) + article:has(> a > time) {
-  border-top: var(--w3-divider-w) solid color-mix(in srgb, var(--hs-fg) var(--w3-divider-mix), transparent) !important;
+  border-top: var(--w3-divider-w) solid color-mix(in srgb, var(--hs-page) var(--w3-divider-mix), transparent) !important;
 }
 
 /* Die Section bleibt transparent — das Weiß tragen die Zeilen, damit der
