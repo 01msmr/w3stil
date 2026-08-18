@@ -56,7 +56,8 @@ body:has(article[data-teaser-name="HorizontalTimelineTeaser"]) {
   --mi-bleed: 24px;
   --mi-chip: color-mix(in oklab, var(--mi-fg) var(--w3-chip-mix), var(--mi-card));
   --mi-read: color-mix(in oklab, var(--mi-muted) 75%, var(--mi-page));
-  --mi-head-color: var(--w3-head-color);
+  /* Dunkelgrau statt heises Blaugrau — Vorgabe nur für diese Seite. */
+  --mi-head-color: #444;
 
   /* 24px mehr als beim Haupt-Ticker (die Zeilenpolsterung liegt hier
    * INNERHALB des Chips), minus die 14px des kleineren Chip-Einzugs:

@@ -62,7 +62,7 @@ body:has(.ticker-list) {
   --gl-hover-delay: 0.2s;
 
   /* Tagesköpfe. */
-  --gl-head-color: var(--w3-head-color);
+  --gl-head-color: #6f6f6f;
   --gl-head-size: var(--w3-head-size);
 
 

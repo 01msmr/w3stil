@@ -72,7 +72,7 @@ body:has(article > a > time) {
    * exakt --w3-row-w (1020px), wie bei golem. */
   --hs-shell: calc(var(--w3-row-w) - 2 * var(--hs-bleed));
   --hs-row-h: 40.4px;
-  --hs-head-color: var(--w3-head-color);
+  --hs-head-color: #4f6584;
   --hs-head-size: var(--w3-head-size);
   --hs-hover-delay: 0.2s;
 
