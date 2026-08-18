@@ -4,9 +4,11 @@ Reduziertes Lese-Layout für häufig besuchte Seiten. Quelle sind plain-CSS-Date
 der Build erzeugt ein einzelnes UserCSS-Artefakt für [Stylus](https://add0n.com/stylus.html).
 
 ```
-src/_reset.css        Basis, wird jeder Domain-Sektion vorangestellt
+src/_reset.css        Basis, wird Domain-Sektionen ohne @no-reset vorangestellt
+src/_tokens.css       domainübergreifende Konstanten, in JEDER Sektion
 src/<domain>.css      nur das, was _reset.css nicht generisch löst
 build.mjs             src/ → dist/reduce.user.css        (ohne Dependencies)
+reduce.user.js        Userscript für Text-Kürzungen, die CSS nicht kann
 tools/probe.user.js   Analyse-Overlay zum Schreiben neuer Regeln
 tools/check.mjs       prüft, ob die Selektoren noch matchen (Playwright)
 ```
@@ -125,6 +127,17 @@ Elemente, ARIA-Rollen, `:has()`-Strukturen. Alles Klassenbasierte in die
 Site-Datei. Faustregel: taucht ein Selektor in der dritten Site-Datei auf,
 gehört er nach `_reset.css`.
 
+**Tokens statt doppelter Zahlen.** `src/_tokens.css` hält alles, was auf allen
+Domains gleich sein soll: Mischverhältnisse der Zustandsflächen (gelesen,
+Gelesen-Hover), Chip- und Trennlinien-Werte, Kopfgröße, das Häkchen-Icon samt
+Größe. Der Build stellt die Datei **jeder** Sektion voran, auch solchen mit
+`@no-reset` — es sind reine Custom Properties auf `:root`, sie verändern
+nichts, solange eine Site-Datei sie nicht benutzt. Die Farbpaletten bleiben je
+Domain in der Site-Datei. Größenfaktoren (`--w3-chip-font`, `--w3-plus-scale`)
+sind bewusst einheitenlos und werden gegen die Zeilenschrift gerechnet: die
+Label-Container erben je Domain verschiedene Schriftgrößen, ein `em` misst
+dort nicht dasselbe.
+
 **`expect`-Annotation.** Ein Kommentar direkt über einer Regel gibt `check.mjs`
 die erwartete Trefferzahl mit:
 
@@ -204,10 +217,10 @@ mit `⊘` übersprungen statt fälschlich als kaputt gemeldet.
 ## Rollback
 
 Stylus hält keine Versionshistorie — ein fehlerhafter Deploy ist auf allen
-Rechnern sofort aktiv. Reparatur: Fehler in `src/` beheben, committen, pushen.
-Weil `@version` aus dem Commit-Zähler kommt, ist die Korrektur automatisch
-neuer als die kaputte Fassung. Ein `git revert` allein reicht nicht, wenn du das
-Artefakt nicht neu baust.
+Rechnern sofort aktiv. Reparatur: Fehler in `src/` beheben (ein `git revert`
+genügt), committen, pushen — die Action baut daraufhin neu, und weil
+`@version` aus dem Commit-Zähler kommt, ist die Korrektur automatisch neuer
+als die kaputte Fassung.
 
 ## Veröffentlichen
 
@@ -264,18 +277,32 @@ bleibt zum Bauen trotzdem nutzbar.
 Vier Grenzen, die uns Zeit gekostet haben und die bei jeder Erweiterung wieder
 auftauchen. Alle vier sind live nachgemessen, nicht angelesen.
 
-**`:visited` kann fast nichts.** Erlaubt sind nur Farbeigenschaften, und nur
-**am Link selbst** — weder an Nachfahren noch an dessen Pseudo-Elementen. Ein
-Haken statt der Uhrzeit für gelesene Zeilen ist damit ausgeschlossen: er bräuchte
-`content` und `display`. Auch die Deckkraft darf sich nicht ändern: steht der
-unbesuchte Zustand auf `background: none`, bleibt jede besuchte Hintergrundfarbe
-wirkungslos. Deshalb setzen beide Zeilen-Regeln `background-color` auf einen
-deckenden Wert, obwohl optisch dasselbe herauskäme.
+**`:visited` kann nur Farben — aber die reichen weiter als gedacht.** Erlaubt
+sind ausschließlich Farbeigenschaften (`color`, `background-color`, Rahmen-,
+Outline-, `text-decoration`-Farben); `content`, Maße, `opacity`, Transitions
+werden still ignoriert, und der Alpha-Kanal darf sich nicht ändern: steht der
+unbesuchte Zustand auf `background: none`, bleibt jede besuchte Fläche
+wirkungslos — deshalb setzen die Zeilen-Regeln deckende Werte, obwohl optisch
+dasselbe herauskäme. Entgegen der verbreiteten Lesart wirken die Farbwechsel
+aber auch auf **Nachfahren** des Links und sogar auf deren **Pseudo-Elemente**
+(beides live in Chrome verifiziert).
 
-Das ist kein Bug, sondern der Schutz davor, dass eine Seite die Browser-Historie
-ausliest. `getComputedStyle` liefert für besuchte Links absichtlich die Werte des
-unbesuchten Zustands, `matches(':visited')` immer `false` — geprüft werden kann
-nur mit dem Auge oder über einen Testkasten mit bekannt besuchtem Ziel.
+Das Gelesen-Häkchen im Uhrzeit-Chip entsteht genau daraus. Es ist IMMER
+gerendert — ein `::before` mit SVG-Maske (Font Awesome „check"), gefärbt über
+`background-color` — und wechselt per `:visited` allein die Farbe. Sichtbar
+und unsichtbar macht es ein konstanter `mix-blend-mode: darken`: weiß ist nie
+dunkler als der Untergrund und verschwindet, ohne transparent zu sein; die
+dunkle Gelesen-Farbe gewinnt überall und deckt die Ziffern ab, die sich
+zeitgleich in der Chipfarbe tarnen. Zwei Fallstricke aus der Praxis: das
+Häkchen muss ÜBER den Ziffern liegen (getarnte, aber deckende Glyphen stanzen
+sonst ihre Strichformen heraus), und eine Transition lässt sich für gelesene
+Zeilen nicht gezielt schalten — Chip und Häkchen schalten deshalb hart.
+
+Die Beschränkungen sind kein Bug, sondern der Schutz davor, dass eine Seite
+die Browser-Historie ausliest. `getComputedStyle` liefert für besuchte Links
+absichtlich die Werte des unbesuchten Zustands, `matches(':visited')` immer
+`false` — geprüft werden kann nur mit dem Auge oder über einen Testkasten mit
+bekannt besuchtem Ziel.
 
 **`:has()` darf nicht in `:has()`.** Eine Regel wie
 `main > *:has(.liste):has(+ *:has(.block))` fällt vollständig aus, ohne Warnung.
