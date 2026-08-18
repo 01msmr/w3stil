@@ -29,8 +29,10 @@
   --w3-chip-mix: 7%;
   --w3-label-mix: 12%;
 
-  /* Trennlinie zwischen den Zeilen: Deckung und Stärke. */
-  --w3-divider-mix: 25%;
+  /* Trennlinie zwischen den Zeilen: Anteil des Seitengrund-Graus, der Rest
+   * ist Kartenweiß — eine DECKENDE Mischung, kein Alpha: 75% der Intensität
+   * des Grau, um 25% Weiß aufgehellt. Dazu die Strichstärke. */
+  --w3-divider-mix: 75%;
   --w3-divider-w: 2px;
 
   /* Schriftgröße der kleinen Chips (Uhrzeit, Ressort/Hinweise): Faktor
