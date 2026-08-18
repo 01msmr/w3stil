@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        reduce-ticker
 // @namespace   msmr.co
-// @version     0.4.4
+// @version     0.4.5
 // @description Kürzt Ressort-Chips und formatiert Tagesköpfe der Newsticker
 // @author      msmr
 // @license     MIT
@@ -115,7 +115,10 @@
   const RUHE_MS = 150;   // so lange muss das Scrollen stehen, bevor gesnappt wird
   const LUFT = 12;       // Zielposition: so viel Raum bleibt über dem Kopf
 
-  let lastY = window.scrollY;
+  /* Richtung wird KUMULIERT gegen einen Referenzpunkt gemessen, nicht pro
+   * Event: Trackpads liefern viele ~1px-Events, eine Schwelle pro Event
+   * würde echte Scrolls als Jitter verwerfen und das Snapping lahmlegen. */
+  let refY = window.scrollY;
   let richtung = 0;
   let timer = null;
   let faehrt = false;
@@ -153,7 +156,7 @@
        * Gleitfahrt den nächsten Snap an und die Seite kettet sich bis zum
        * letzten Tageskopf durch. */
       richtung = 0;
-      lastY = window.scrollY;
+      refY = window.scrollY;
       riegel = window.scrollY;
     };
     const watch = setInterval(ende, 80);
@@ -164,17 +167,19 @@
     if (faehrt) return;
     const y = window.scrollY;
 
+    /* Verriegelt: refY bleibt auf dem Landepunkt stehen — beim Entriegeln
+     * liegt die kumulierte Distanz dann sofort über der Schwelle und die
+     * Richtung stimmt. */
     if (riegel !== null) {
-      if (Math.abs(y - riegel) < 24) {
-        lastY = y;
-        return;
-      }
+      if (Math.abs(y - riegel) < 24) return;
       riegel = null;
     }
 
-    /* Sub-Pixel-Jitter nach dem Andocken ist keine Nutzerabsicht. */
-    if (Math.abs(y - lastY) > 2) richtung = y > lastY ? 1 : -1;
-    lastY = y;
+    const d = y - refY;
+    if (Math.abs(d) > 4) {
+      richtung = d > 0 ? 1 : -1;
+      refY = y;
+    }
     clearTimeout(timer);
     timer = setTimeout(snap, RUHE_MS);
   }, { passive: true });
