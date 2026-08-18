@@ -374,6 +374,18 @@ header[class*="theme-mac-and-i"] > nav > div:first-child {
   display: none !important;
 }
 
+/* Der Zwischen-Wrapper um die Rubrikenliste darf keinen Raum kosten: die
+ * Leiste läuft bis an die Kapselkante, das letzte Segment IST das rechte
+ * Ende. expect: 1 */
+header[class*="theme-mac-and-i"] > nav > div:has(> ul[class*="gap-6"]) {
+  display: flex !important;
+  align-items: stretch !important;
+  flex: 1 1 auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  gap: 0 !important;
+}
+
 /* Die sechs Rubriken (Tipps … Webinare) als "Scheiben" eines Segment-
  * Schalters: volle Kapselhöhe, ohne eigene Fläche, nur Trennstriche
  * dazwischen. Erste und letzte Scheibe tragen außen die Halbkreise — die
@@ -386,6 +398,8 @@ header[class*="theme-mac-and-i"] ul[class*="gap-6"][class*="text-lg"] {
   width: 100% !important;
   align-items: stretch !important;
   justify-content: flex-end !important;
+  margin: 0 !important;
+  padding: 0 !important;
   background: none !important;
   border-radius: 0 !important;
 }
