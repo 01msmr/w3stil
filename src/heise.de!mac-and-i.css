@@ -114,6 +114,9 @@ div:has(> section > article[data-teaser-name="HorizontalTimelineTeaser"]) > h2 {
   font-weight: 400 !important;
   font-style: italic !important;
   line-height: var(--mi-lh) !important;
+
+  /* Gleiches Licht wie die Zeilencontainer. */
+  text-shadow: 2px 5px 6px rgb(0 0 0 / 0.35) !important;
 }
 
 /* Die Dekolinie unter dem Tageskopf. expect: 1..14 */
@@ -128,6 +131,10 @@ div:has(> section > article[data-teaser-name="HorizontalTimelineTeaser"]) > sect
   display: block !important;
   background: var(--mi-card) !important;
   border-radius: var(--mi-radius) !important;
+
+  /* Licht von links oben (~20° aus der Senkrechten): der Schatten fällt
+   * nach rechts unten, mittelstark. */
+  box-shadow: 4px 10px 24px rgb(0 0 0 / 0.22) !important;
 }
 
 /* Trennlinie zwischen den Zeilen — dieselbe Mischung wie überall. Die hr
