@@ -27,23 +27,7 @@
  */
 
 
-/* heise-Tokens (Tailwind v4). Ergiebiger als Element-Selektoren:
- * das sind heises interne API-Namen, sie überleben Redesigns.
- * --card-bg bleibt #fff, sonst geht die Zeilentrennung verloren. */
-:root {
-  --page-bg: var(--rr-bg, #fff) !important;
-  --accent-bg: var(--rr-bg, #fff) !important;
-  --akwa-body-bg-color: var(--rr-bg, #fff) !important;
-  --akwa-bg-color: var(--rr-bg, #fff) !important;
-  --akwa-ads-bg-color: var(--rr-bg, #fff) !important;
 
-
-    /* heise-Tokens umbiegen: Karte übernimmt die Flächenfarbe, damit die
-   * Kante zwischen Karte und Seite verschwindet. Die Zeilentrennung kommt
-   * aus --w3-divider-w, nicht aus dem Helligkeitsunterschied. */
-  --card-bg: #e8edf0 !important;
-  --card-highlight-bg: #e8edf0 !important;
-}
 
 
 body:has(article > a > time) {
@@ -53,7 +37,7 @@ body:has(article > a > time) {
 
   /* Der Grund ist bewusst golems Neutralgrau statt heises Blaugrau #e8edf0 —
    * golem ist die Vorgabe, die Domains sollen auf demselben Grau liegen. */
-  --hs-page: #e8e8e8;
+  --hs-page: #e8edf0;
 
   /* Fläche des Uhrzeit-Chips — zugleich Tarnfarbe der Ziffern auf gelesenen
    * Zeilen, wie bei golem. */
