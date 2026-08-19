@@ -36,6 +36,13 @@
   --akwa-body-bg-color: var(--rr-bg, #fff) !important;
   --akwa-bg-color: var(--rr-bg, #fff) !important;
   --akwa-ads-bg-color: var(--rr-bg, #fff) !important;
+
+
+    /* heise-Tokens umbiegen: Karte übernimmt die Flächenfarbe, damit die
+   * Kante zwischen Karte und Seite verschwindet. Die Zeilentrennung kommt
+   * aus --w3-divider-w, nicht aus dem Helligkeitsunterschied. */
+  --card-bg: #e8edf0 !important;
+  --card-highlight-bg: #e8edf0 !important;
 }
 
 
