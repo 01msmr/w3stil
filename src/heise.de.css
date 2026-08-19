@@ -26,6 +26,19 @@
  * setzt — hier soll wie bei golem nur der Listenbereich anders aussehen.
  */
 
+
+/* heise-Tokens (Tailwind v4). Ergiebiger als Element-Selektoren:
+ * das sind heises interne API-Namen, sie überleben Redesigns.
+ * --card-bg bleibt #fff, sonst geht die Zeilentrennung verloren. */
+:root {
+  --page-bg: var(--rr-bg, #fff) !important;
+  --accent-bg: var(--rr-bg, #fff) !important;
+  --akwa-body-bg-color: var(--rr-bg, #fff) !important;
+  --akwa-bg-color: var(--rr-bg, #fff) !important;
+  --akwa-ads-bg-color: var(--rr-bg, #fff) !important;
+}
+
+
 body:has(article > a > time) {
   --hs-fg: #242b33;
   --hs-card: #fff;
