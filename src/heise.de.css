@@ -26,17 +26,13 @@
  * setzt — hier soll wie bei golem nur der Listenbereich anders aussehen.
  */
 
-
-
-
-
 body:has(article > a > time) {
   --hs-fg: #242b33;
   --hs-card: #fff;
   --hs-muted: #4f6584;
 
-  /* Der Grund ist bewusst golems Neutralgrau statt heises Blaugrau #e8edf0 —
-   * golem ist die Vorgabe, die Domains sollen auf demselben Grau liegen. */
+  /* Zurück auf heises eigenes Blaugrau — der Ausflug zu golems Neutralgrau
+   * ist revidiert, die heise-Seite darf ihre Palette behalten. */
   --hs-page: #e8edf0;
 
   /* Fläche des Uhrzeit-Chips — zugleich Tarnfarbe der Ziffern auf gelesenen

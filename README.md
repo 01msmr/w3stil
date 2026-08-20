@@ -76,6 +76,28 @@ sich nur, wenn heise das Chip-Markup umbaut. Kein Build: die Datei liegt als
 Quelle im Repo-Root, die Action kopiert sie unverändert auf den
 `publish`-Branch (siehe [Veröffentlichen](#veröffentlichen)).
 
+## iOS und Safari: die Userscripts-App
+
+Stylus gibt es für Safari nicht; Safari kennt auch kein `@-moz-document`.
+Deshalb erzeugt der Build zusätzlich **eine Datei je Domain** in
+`dist/safari/` — gleicher Inhalt, gescoped über `@match`-Metadaten. Die
+freie App [Userscripts](https://github.com/quoid/userscripts) (Mac und iOS,
+Safari-Erweiterung) liest solche Dateien aus einem iCloud-Ordner; das
+Userscript `reduce.user.js` versteht sie unverändert.
+
+Einmalig einrichten:
+
+1. App **Userscripts** aus dem App Store auf Mac **und** iPhone/iPad laden.
+2. In der Mac-App den Skript-Ordner auf den vorgeschlagenen iCloud-Ordner
+   stellen (Standard); auf iOS dieselbe Einstellung.
+3. Safari: die Erweiterung aktivieren und ihr Zugriff auf golem.de/heise.de
+   erlauben (iOS: Einstellungen → Apps → Safari → Erweiterungen).
+4. `tools/ios-sync.sh` ausführen — baut und kopiert die Safari-Fassungen und
+   das Userscript in den Ordner. iCloud synchronisiert aufs iPhone.
+
+Aktualisieren = das Skript erneut ausführen (es pullt und baut selbst).
+Kein eigener Update-Kanal: die Geräte lesen, was im Ordner liegt.
+
 ## Entwickeln
 
 ```bash

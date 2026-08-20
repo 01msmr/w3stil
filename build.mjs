@@ -6,6 +6,10 @@
  * @-moz-document-Sektion; src/_tokens.css (domainübergreifende Konstanten)
  * wird JEDER Sektion vorangestellt, src/_reset.css nur denen ohne @no-reset.
  *
+ * Zusätzlich entsteht je Domain eine Safari-Fassung in dist/safari/: Safari
+ * kennt kein @-moz-document, die Userscripts-App (iOS/macOS) scopet über
+ * @match-Metadaten — deshalb eine Datei pro Domain, gleicher Inhalt.
+ *
  *   node build.mjs            einmalig bauen
  *   node build.mjs --watch    bei Änderungen in src/ neu bauen
  *   node build.mjs --serve    watch + HTTP-Server auf :8787 (Dev-Install)
@@ -23,6 +27,7 @@ import { dirname, join } from 'node:path';
 const ROOT = dirname(fileURLToPath(import.meta.url));
 const SRC = join(ROOT, 'src');
 const OUT = join(ROOT, 'dist', 'reduce.user.css');
+const SAFARI = join(ROOT, 'dist', 'safari');
 
 const META = {
   name: 'reduce',
@@ -156,8 +161,41 @@ export async function build() {
   await mkdir(dirname(OUT), { recursive: true });
   await writeFile(OUT, out);
 
+  /* Safari-Fassungen: eine Datei je Domain, gescoped über @match statt
+   * @-moz-document. Kein Zusammenlegen — die wikipedia-Sektion enthält
+   * _reset (seitenweite Regeln) und würde in einer Sammeldatei auf die
+   * anderen Domains durchschlagen. */
+  await mkdir(SAFARI, { recursive: true });
+  for (const file of files) {
+    const domain = file.replace(/\.css$/, '');
+    const site = await readFile(join(SRC, file), 'utf8');
+    const bare = /^\s*\/\*\s*@no-reset\b/.test(site);
+    const mm = site.match(/@matcher\s+url-prefix\("([^"]+)"\)/);
+    const matches = mm
+      ? [`${mm[1]}*`]
+      : domain.endsWith('!exact')
+        ? [`*://${domain.slice(0, -'!exact'.length)}/*`]
+        : [`*://${domain}/*`, `*://*.${domain}/*`];
+    const name = domain.replace('!', '-');
+    const metaBlock = [
+      '/* ==UserScript==',
+      `// @name        ${META.name} · ${name}`,
+      `// @namespace   ${META.namespace}`,
+      `// @version     ${version()}`,
+      `// @description ${META.description} (Safari-Fassung: ${name})`,
+      ...matches.map((m) => `// @match       ${m}`),
+      '// ==/UserScript== */',
+    ].join('\n');
+    const body = [
+      clean(tokens),
+      bare ? '' : clean(reset),
+      clean(site),
+    ].filter(Boolean).join('\n\n');
+    await writeFile(join(SAFARI, `${name}.user.css`), metaBlock + '\n\n' + body + '\n');
+  }
+
   const kb = (Buffer.byteLength(out) / 1024).toFixed(1);
-  console.log(`✓ dist/reduce.user.css — ${files.length} Sektionen, ${kb} kB, v${version()}`);
+  console.log(`✓ dist/reduce.user.css — ${files.length} Sektionen, ${kb} kB, v${version()} (+ ${files.length} Safari-Dateien)`);
   return out;
 }
 
