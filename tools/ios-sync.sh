@@ -9,9 +9,23 @@
 set -eu
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-ZIEL="${USERSCRIPTS_DIR:-$HOME/Library/Mobile Documents/iCloud~com~userscripts~macos/Documents}"
 
-if [ ! -d "$ZIEL" ]; then
+# Kandidaten: erst der App-eigene iCloud-Container, sonst ein gewoehnlicher
+# iCloud-Drive-Ordner "Userscripts" — den kann man in der App (Mac wie iOS)
+# als Skript-Verzeichnis auswaehlen, und er synchronisiert ueberall hin.
+KANDIDATEN="$HOME/Library/Mobile Documents/iCloud~com~userscripts~macos/Documents
+$HOME/Library/Mobile Documents/com~apple~CloudDocs/Userscripts"
+
+ZIEL="${USERSCRIPTS_DIR:-}"
+if [ -z "$ZIEL" ]; then
+  while IFS= read -r k; do
+    [ -d "$k" ] && ZIEL="$k" && break
+  done <<EOF2
+$KANDIDATEN
+EOF2
+fi
+
+if [ -z "$ZIEL" ] || [ ! -d "$ZIEL" ]; then
   echo "✗ Userscripts-Ordner nicht gefunden: $ZIEL"
   echo "  Ist die App 'Userscripts' installiert und ihr Ordner auf iCloud gestellt?"
   echo "  Abweichenden Ordner mit USERSCRIPTS_DIR=... angeben."
