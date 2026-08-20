@@ -81,8 +81,9 @@ Quelle im Repo-Root, die Action kopiert sie unverändert auf den
 Stylus gibt es für Safari nicht; Safari kennt auch kein `@-moz-document`.
 Deshalb erzeugt der Build zusätzlich **eine Datei je Domain** in
 `dist/safari/` — gleicher Inhalt, gescoped über `@match`-Metadaten. Die
-freie App [Userscripts](https://github.com/quoid/userscripts) (Mac und iOS,
-Safari-Erweiterung) liest solche Dateien aus einem iCloud-Ordner; das
+freie App **Userscripts** ([App Store](https://apps.apple.com/de/app/userscripts/id1463298887),
+[Quellcode](https://github.com/quoid/userscripts)) — Mac und iOS,
+Safari-Erweiterung — liest solche Dateien aus einem iCloud-Ordner; das
 Userscript `reduce.user.js` versteht sie unverändert.
 
 Einmalig einrichten:
@@ -110,8 +111,10 @@ Dateien per Dateien-App in ihren lokalen Ordner zu kopieren
 Ein Symlink in den App-Ordner ist keine Option: iOS erlaubt keine Links
 zwischen App-Containern.
 
-Den Kopierschritt verkürzt ein **Kurzbefehl** (einmalig in der
-Kurzbefehle-App anlegen):
+Den Kopierschritt erledigt der Kurzbefehl
+**[„copy Userscripts"](https://www.icloud.com/shortcuts/bb1852c5f7cd43d8960801817af6547e)**
+(Link auf dem iPhone öffnen → „Kurzbefehl hinzufügen"; danach einmal die
+beiden Ordner auf die eigenen zeigen lassen). Zum Nachbauen von Hand:
 
 1. Aktion **„Ordnerinhalt abrufen"** — Ordner: iCloud Drive → Userscripts.
 2. Aktion **„Datei sichern"** — Eingabe: der Ordnerinhalt; „Speicherort
