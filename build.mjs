@@ -177,14 +177,17 @@ export async function build() {
         ? [`*://${domain.slice(0, -'!exact'.length)}/*`]
         : [`*://${domain}/*`, `*://*.${domain}/*`];
     const name = domain.replace('!', '-');
+    /* Die Userscripts-App verlangt für CSS exakt diesen Block:
+     * "/* ==UserStyle==" … "==/UserStyle== *\/" — Schlusszeile ohne "//",
+     * sonst verwirft ihr Parser die Datei ("no valid files"). */
     const metaBlock = [
-      '/* ==UserScript==',
-      `// @name        ${META.name} · ${name}`,
-      `// @namespace   ${META.namespace}`,
-      `// @version     ${version()}`,
-      `// @description ${META.description} (Safari-Fassung: ${name})`,
-      ...matches.map((m) => `// @match       ${m}`),
-      '// ==/UserScript== */',
+      '/* ==UserStyle==',
+      `@name        ${META.name} · ${name}`,
+      `@namespace   ${META.namespace}`,
+      `@version     ${version()}`,
+      `@description ${META.description} (Safari-Fassung: ${name})`,
+      ...matches.map((m) => `@match       ${m}`),
+      '==/UserStyle== */',
     ].join('\n');
     const body = [
       clean(tokens),
