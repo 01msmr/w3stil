@@ -107,6 +107,19 @@ die veralteten lokalen Kopien und holt alles frisch. Nimmt die App den
 iCloud-Ordner trotzdem nicht an, funktioniert als Fallback immer, die
 Dateien per Dateien-App in ihren lokalen Ordner zu kopieren
 („Auf meinem iPhone" → Userscripts) — dann nach jedem Sync wiederholen.
+Ein Symlink in den App-Ordner ist keine Option: iOS erlaubt keine Links
+zwischen App-Containern.
+
+Den Kopierschritt verkürzt ein **Kurzbefehl** (einmalig in der
+Kurzbefehle-App anlegen):
+
+1. Aktion **„Ordnerinhalt abrufen"** — Ordner: iCloud Drive → Userscripts.
+2. Aktion **„Datei sichern"** — Eingabe: der Ordnerinhalt; „Speicherort
+   fragen" AN, „Überschreiben, falls vorhanden" AN.
+
+Ausführen → im einen Dialog „Auf meinem iPhone → Userscripts" wählen →
+fertig. (Fragt dein iOS je Datei einzeln nach dem Ziel, bleibt die
+Dateien-App-Methode gleich schnell.)
 
 ## Entwickeln
 

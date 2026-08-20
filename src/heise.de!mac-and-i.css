@@ -55,6 +55,9 @@ body:has(article[data-teaser-name="HorizontalTimelineTeaser"]) {
    * + 2). */
   --mi-inset: 2px;
   --mi-bleed: 24px;
+
+  /* Chip-Schriftgröße als Rechenbasis für Platte und Häkchen (unten). */
+  --mi-cf: calc(var(--mi-size) * var(--w3-chip-font));
   --mi-chip: color-mix(in oklab, var(--mi-fg) var(--w3-chip-mix), var(--mi-card));
   --mi-read: color-mix(in oklab, var(--mi-muted) 75%, var(--mi-page));
   /* Weiß auf dem abgedunkelten Grund — Vorgabe nur für diese Seite.
@@ -459,8 +462,61 @@ header[class*="theme-mac-and-i"] ul[class*="gap-6"][class*="text-lg"] > li > a:f
   display: none !important;
 }
 
+/* ── Gelesen-Häkchen ────────────────────────────────────────────────────
+ * Die Uhr steht AUSSERHALB des Links, :has(:visited) matcht nie — der
+ * Haupt-Ticker-Trick (Ziffern tarnen) ist hier unmöglich. Stattdessen zwei
+ * Pseudo-Elemente des LINKS mit Gegenblenden, beide wechseln nur ihre
+ * background-color (das einzige, was :visited erlaubt):
+ *
+ * 1. Die "Platte" (a::before) liegt über den Ziffern. Blendmodus lighten:
+ *    unbesucht ist sie SCHWARZ und damit unsichtbar (nichts ist heller als
+ *    der Untergrund); besucht wird sie chipfarben und LÖSCHT die Ziffern.
+ * 2. Das Häkchen ist ein kleines Pseudo-Element des Titel-Headers (als
+ *    Link-NACHFAHRE ebenso :visited-färbbar), absolut über die Chip-
+ *    Position gelegt. Blendmodus darken: unbesucht WEISS (unsichtbar),
+ *    besucht in der Gelesen-Farbe. Bewusst NICHT auf dem Zeilen-Cover:
+ *    ein Vollflächen-Blend je Zeile treibt den Compositor in die Knie.
+ *
+ * Die Geometrie ist gerechnet, nicht gemessen (CSS kann die Chip-Breite
+ * nicht lesen): 5 Tabellenziffern à ~0.6em plus Polster und Laufweite. */
+article[data-teaser-name="HorizontalTimelineTeaser"] > a::before {
+  content: "" !important;
+  position: absolute !important;
+  left: calc(var(--mi-bleed) + var(--mi-inset) + 0.45 * var(--mi-cf)) !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  width: calc(3.5 * var(--mi-cf)) !important;
+  height: calc(1.4 * var(--mi-cf)) !important;
+  border-radius: 3px !important;
+  mix-blend-mode: lighten !important;
+  background-color: #000 !important;
+}
+
+article[data-teaser-name="HorizontalTimelineTeaser"] > a:visited::before {
+  background-color: var(--mi-chip) !important;
+}
+
+article[data-teaser-name="HorizontalTimelineTeaser"] > a header::before {
+  content: "" !important;
+  position: absolute !important;
+  left: calc(var(--mi-bleed) + var(--mi-inset) + 2.175 * var(--mi-cf) - 0.7 * var(--mi-cf)) !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  width: calc(1.4 * var(--mi-cf)) !important;
+  height: calc(1.6 * var(--mi-cf)) !important;
+  mask: var(--w3-icon-check) center / contain no-repeat !important;
+  mix-blend-mode: darken !important;
+  background-color: #fff !important;
+}
+
+article[data-teaser-name="HorizontalTimelineTeaser"] > a:visited header::before {
+  background-color: var(--mi-read) !important;
+}
+
 /* ── Zustände ─────────────────────────────────────────────────────────────
- * LVHA: visited vor hover. Gelesen dimmt NUR den Titel (siehe Kopfkommentar).
+ * LVHA: visited vor hover. Gelesen dimmt den Titel (siehe Kopfkommentar) —
+ * und seit dem Platten-Trick oben ersetzt zusätzlich ein Häkchen die
+ * Uhrzeit-Ziffern.
  */
 
 article[data-teaser-name="HorizontalTimelineTeaser"] a:visited,
