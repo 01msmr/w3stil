@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        reduce-ticker
 // @namespace   msmr.co
-// @version     0.10.1
+// @version     0.11.0
 // @description Kürzt Ressort-Chips und formatiert Tagesköpfe der Newsticker
 // @author      msmr
 // @license     MIT
@@ -304,11 +304,32 @@
    * aus aufeinanderfolgenden Snaps kategorisch ausgeschlossen. */
   let riegel = null;
 
+  /* Snap-Ziel ist die ORIGINALSTELLE des Kopfs im Fluss. Mobil kleben die
+   * Köpfe (sticky) und melden per getBoundingClientRect ihre Klebe- bzw.
+   * Endposition — die Fluss-Position wird deshalb rekonstruiert: für den
+   * ersten Kindkopf aus der Oberkante seines Tages-Containers, sonst aus
+   * dem nächsten sichtbaren Geschwister (golems Köpfe teilen sich einen
+   * Container). Desktop-Köpfe sind nicht sticky → direkter Messwert. */
+  const flussTop = (el) => {
+    const cs = getComputedStyle(el);
+    if (cs.position !== 'sticky') return el.getBoundingClientRect().top;
+    if (el === el.parentElement.firstElementChild) {
+      return el.parentElement.getBoundingClientRect().top
+        + parseFloat(cs.marginTop);
+    }
+    let n = el.nextElementSibling;
+    while (n && n.getBoundingClientRect().height === 0) n = n.nextElementSibling;
+    if (!n) return el.getBoundingClientRect().top;
+    return n.getBoundingClientRect().top
+      - el.getBoundingClientRect().height
+      - parseFloat(cs.marginBottom);
+  };
+
   const snap = () => {
     if (!richtung) return;
     const y = window.scrollY;
     const ziele = [...document.querySelectorAll(SNAP_ZIELE)]
-      .map((el) => Math.round(el.getBoundingClientRect().top + y - luft()))
+      .map((el) => Math.round(flussTop(el) + y - luft()))
       .sort((a, b) => a - b);
     const ziel = richtung > 0
       ? ziele.find((t) => t > y + 4)

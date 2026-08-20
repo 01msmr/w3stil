@@ -89,7 +89,12 @@ Ganzes — die Uhr fährt mit weg, ihr Platz gehört dem Titel. Zwischen
 Zieh-Fläche = volle Zeilenhöhe). Eine scroll-getriebene Maske
 (`--w3-title-fade-*` in `_tokens.css`) blendet jede tatsächlich
 abgeschnittene Kante über eine feste Zone auf 10 % Deckkraft ab —
-rechts am Anfang, beidseitig mittendrin, links am Ende. Alle drei
+rechts am Anfang, beidseitig mittendrin, links am Ende. Der jeweils
+zutreffende Tageskopf klebt mobil als Pille oben — ihre Fläche ist der
+Seitengrund, sichtbar also erst über den weißen Zeilen; Taps gehen
+durch sie hindurch, und das Snapping zielt weiter auf die
+Originalstelle oberhalb des Zeilencontainers (das Userscript
+rekonstruiert die Fluss-Position klebender Köpfe). Alle drei
 Ticker folgen dem System-Dark-Mode: je Site kippt ein `@media`-Block
 nur die Grundvariablen (invertierte, für Dunkel nachjustierte Farben),
 alles Abgeleitete rechnet per `color-mix` mit; die Blendmodi von

@@ -941,3 +941,23 @@ main > .go-col--full:has(.go-button):hover {
     mix-blend-mode: lighten !important;
   }
 }
+
+/* ── Mobil: klebender Tageskopf als Pille — Mechanik wie bei heise (dort
+ * erklärt). golems Köpfe teilen sich EINEN Container (keine Tages-Divs):
+ * der nächste Kopf schiebt den vorigen nicht hinaus, sondern legt sich
+ * über ihn — bei deckender Pille sieht das wie Ablösen aus. Das
+ * Vertikal-Polster wandert in den margin, das Pillen-Polster in den
+ * padding; der margin-left-Abzug hält die Titel-Flucht. */
+@media (max-width: 700px) {
+  .go-col:has(.ticker-list) > h2 {
+    position: sticky !important;
+    top: 4px !important;
+    z-index: 5 !important;
+    pointer-events: none !important;
+    width: fit-content !important;
+    background: var(--gl-page) !important;
+    border-radius: 999px !important;
+    margin: 0.5em 0 0.2em calc(var(--gl-title-x) - 0.9em) !important;
+    padding: 0.2em 0.9em !important;
+  }
+}

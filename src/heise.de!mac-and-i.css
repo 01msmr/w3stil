@@ -750,3 +750,20 @@ article[data-teaser-name="HorizontalTimelineTeaser"] > time .w3-colon {
     background-color: #000 !important;
   }
 }
+
+/* ── Mobil: klebender Tageskopf als Pille — Mechanik wie bei heise (dort
+ * erklärt); jeder Tag hat hier seinen eigenen Container, der nächste
+ * Kopf schiebt den vorigen sauber hinaus. */
+@media (max-width: 700px) {
+  div:has(> section > article[data-teaser-name="HorizontalTimelineTeaser"]) > h2 {
+    position: sticky !important;
+    top: 4px !important;
+    z-index: 5 !important;
+    pointer-events: none !important;
+    width: fit-content !important;
+    background: var(--mi-page) !important;
+    border-radius: 999px !important;
+    margin: 0.4em 0 calc(0.2em + 16px) calc(var(--mi-title-x) - 0.9em) !important;
+    padding: 0.2em 0.9em !important;
+  }
+}

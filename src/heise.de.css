@@ -902,3 +902,27 @@ a.w3-row:visited > time .w3-colon {
     mix-blend-mode: lighten !important;
   }
 }
+
+/* ── Mobil: klebender Tageskopf als Pille ───────────────────────────────
+ * Der zutreffende Tageskopf bleibt beim Scrollen oben stehen (sticky im
+ * Tages-Abschnitt — der nächste Kopf schiebt ihn hinaus). Die Pille trägt
+ * den SEITENGRUND als Fläche: im Ruhezustand unsichtbar (Grund auf
+ * Grund), sichtbar erst, wenn sie über den weißen Zeilen schwebt.
+ * pointer-events: none — Taps gehen an die Zeile darunter. Der negative
+ * margin-left gleicht das Pillen-Polster aus, die Flucht bleibt. */
+@media (max-width: 700px) {
+  section:has(article > a > time) > div:first-child {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 5 !important;
+    pointer-events: none !important;
+  }
+
+  section:has(article > a > time) > div:first-child > h2 {
+    width: fit-content !important;
+    background: var(--hs-page) !important;
+    border-radius: 999px !important;
+    padding: 0.2em 0.9em !important;
+    margin-left: -0.9em !important;
+  }
+}
