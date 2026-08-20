@@ -140,12 +140,15 @@ div:has(> section > article[data-teaser-name="HorizontalTimelineTeaser"]) > hr {
   display: none !important;
 }
 
-/* Der Zeilen-Container ist der weiße Tages-Chip. block statt grid: die
- * Zeilen stapeln sich, die hr dazwischen werden zu Trennlinien. overflow
- * bleibt sichtbar, links außerhalb steht das Plus. expect: 1..14 */
+/* Der Zeilen-Container: block statt grid, die hr dazwischen werden zu
+ * Trennlinien; overflow bleibt sichtbar, links außerhalb steht das Plus.
+ * BEWUSST OHNE eigenes Weiß — das tragen die Zeilen (samt Radien an
+ * erster/letzter): nur so sind die transparenten Fugen ECHTE
+ * Durchbrüche bis zur Seite, inklusive etwaiger Schatten dort.
+ * expect: 1..14 */
 div:has(> section > article[data-teaser-name="HorizontalTimelineTeaser"]) > section {
   display: block !important;
-  background: var(--mi-card) !important;
+  background: none !important;
   border-radius: var(--mi-radius) !important;
 
   /* Passiv ohne Schatten — er kommt erst mit dem Hover (Transition am
@@ -160,9 +163,11 @@ div:has(> section > article[data-teaser-name="HorizontalTimelineTeaser"]) > sect
   box-shadow: 12px 28px 45px rgb(0 0 0 / 0.42) !important;
 }
 
-/* Trennlinie zwischen den Zeilen: VOLL TRANSPARENT — nur der 1px-Takt
- * bleibt erhalten, die Linie selbst ist unsichtbar (Vorgabe). Die hr
- * liegen fertig im Markup. expect: 20..200 */
+/* Trennlinie zwischen den Zeilen: ECHT transparent — die Section trägt
+ * kein eigenes Weiß mehr (siehe oben), die 1px-Fuge zeigt also
+ * tatsächlich die Seite dahinter, samt Schatten. Eine quantifizierte
+ * Schattenfarbe wäre unmöglich: Blur ist ein Verlauf. Die hr liegen
+ * fertig im Markup. expect: 20..200 */
 div:has(> section > article[data-teaser-name="HorizontalTimelineTeaser"]) > section > hr {
   /* heise blendet die hr selbst aus (display: none) — ohne das hier gäbe es
    * keine Trennlinien. */

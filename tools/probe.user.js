@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         reduce · probe
-// @namespace    msmr.co
+// @namespace    msmr.dev
 // @version      1.0.0
 // @description  Struktur-Analyse und Selektor-Vorschläge zum Schreiben von src/<domain>.css
 // @match        *://*/*
@@ -31,7 +31,7 @@
     /^css-[a-z0-9]{5,}$/i,                      // emotion
     /^sc-[A-Za-z]{6,}$/,                        // styled-components
     /^[A-Za-z]+_[A-Za-z]+__[A-Za-z0-9]{5,}$/,   // CSS Modules
-    /^[a-z]{1,2}[A-Z0-9][A-Za-z0-9]{4,}$/,      // minifiziert
+    /^[a-z]{1,2}[A-Z0-9][A-Za-z0-9]{4,}$/,      // minifiziertn
     /^_[A-Za-z0-9]{5,}$/,
     /^[a-f0-9]{6,}$/i,                          // reiner Hash
     /^(?:[a-z]+-)?[0-9]{4,}$/,
