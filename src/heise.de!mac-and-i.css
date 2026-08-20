@@ -801,3 +801,20 @@ article[data-teaser-name="HorizontalTimelineTeaser"] > time .w3-colon {
     border-color: var(--mi-muted) !important;
   }
 }
+
+/* ── Telefon: Fugen gemalt statt transparent ────────────────────────────
+ * Unter 500px maskiert der Zeilen-Phase-out die ganze Zeile — hinter ihr
+ * muss dafür Kartenweiß liegen, sonst blenden die Titel ins Seitengrau
+ * (Nebeneffekt der entkernten Section). Die Section bekommt ihr Weiß
+ * hier zurück, und die Fugen werden exakt seitengrund-farben gemalt:
+ * ohne Hover-Schatten (Touch) ist das pixelidentisch mit echter
+ * Transparenz. Desktop behält Transparent-Fugen samt drop-shadow. */
+@media (max-width: 500px) {
+  div:has(> section > article[data-teaser-name="HorizontalTimelineTeaser"]) > section {
+    background: var(--mi-card) !important;
+  }
+
+  div:has(> section > article[data-teaser-name="HorizontalTimelineTeaser"]) > section > hr {
+    border-top-color: var(--mi-page) !important;
+  }
+}
