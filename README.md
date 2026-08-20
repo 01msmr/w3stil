@@ -105,6 +105,11 @@ von iCloud Drive → Userscripts in den lokalen App-Ordner kopieren
 öffnen. Nach jedem `ios-sync.sh` wiederholt sich dieser Kopierschritt —
 solange die App den iCloud-Ordner nicht annimmt, ist das der Update-Weg.
 
+Zeigt die Dateien-App dabei alte Stände (Dateien springen nicht auf den
+neuen Zeitstempel): auf den Ordnernamen „Userscripts" oben tippen →
+**„Geladenes entfernen"** → danach **„Jetzt laden"** — das verwirft die
+veralteten lokalen Kopien und holt alle Dateien frisch aus iCloud.
+
 ## Entwickeln
 
 ```bash
