@@ -243,7 +243,7 @@ body:has(.ticker-list) .go-content-header {
  * halb: unter :visited wirken allein Farbeigenschaften, eine Transition ließe
  * sich für gelesene Zeilen nicht gezielt steuern. */
 .go-ticker-teaser__datetime,
-.go-ticker-teaser__datetime::before {
+.go-ticker-teaser__datetime > .w3-check {
   transition: none !important;
 }
 
@@ -269,11 +269,13 @@ body:has(.ticker-list) .go-content-header {
   z-index: 0 !important;
 }
 
-/* Das Gelesen-Häkchen, deckungsgleich ÜBER den Ziffern. Es ist immer da —
- * content darf unter :visited nicht wechseln, ebensowenig Deckkraft oder
- * Alpha. Was wechseln darf, ist die Farbe: ungelesen ist das Häkchen weiß,
- * gelesen gedimmt wie die Zeilenschrift (Regeln bei den :visited-Zuständen
- * unten).
+/* Das Gelesen-Häkchen, deckungsgleich ÜBER den Ziffern. Ein ECHTES Element
+ * (vom Userscript in jeden Chip injiziert), kein Pseudo mehr: WebKit wendet
+ * :visited-Farben nur auf Elemente an, Pseudo-Elemente bleiben unbesucht —
+ * auf iOS blieb das Häkchen unsichtbar. Ungelesen ist es weiß, gelesen
+ * gedimmt wie die Zeilenschrift (Regeln bei den :visited-Zuständen unten).
+ * Ohne Userscript fehlt nur das Häkchen; die Ziffern-Tarnung (leere Pille
+ * = gelesen) trägt das Signal weiter.
  *
  * Sichtbar und unsichtbar macht es mix-blend-mode: darken — der Modus selbst
  * ist konstant und braucht :visited nicht. Weiß ist niemals dunkler als der
@@ -289,8 +291,9 @@ body:has(.ticker-list) .go-content-header {
  * Request. Gefärbt wird die Maske über background-color, das ebenfalls auf
  * der :visited-Whitelist steht; Maske und Blendmodus bleiben in allen
  * Zuständen gleich. */
-.go-ticker-teaser__datetime::before {
-  content: "" !important;
+.go-ticker-teaser__datetime > .w3-check {
+  display: block !important;
+  pointer-events: none !important;
   position: absolute !important;
   inset: 0 !important;
   mix-blend-mode: darken !important;
@@ -428,7 +431,7 @@ body:has(.ticker-list) .go-content-header {
   color: var(--gl-chip) !important;
 }
 
-.go-ticker-teaser:visited .go-ticker-teaser__datetime::before {
+.go-ticker-teaser:visited .go-ticker-teaser__datetime > .w3-check {
   background-color: var(--gl-muted) !important;
 }
 
@@ -473,8 +476,8 @@ body:has(.ticker-list) .go-content-header {
  * weiß und die Uhrzeit ist wieder lesbar, auch auf gelesenen Zeilen. Muss
  * nach der :visited-Häkchen-Regel stehen, um sie bei gleicher Spezifität
  * zu schlagen. */
-.go-ticker-teaser:hover .go-ticker-teaser__datetime::before,
-.go-ticker-teaser:focus-visible .go-ticker-teaser__datetime::before {
+.go-ticker-teaser:hover .go-ticker-teaser__datetime > .w3-check,
+.go-ticker-teaser:focus-visible .go-ticker-teaser__datetime > .w3-check {
   background-color: var(--gl-card) !important;
 }
 
@@ -748,7 +751,7 @@ main > .go-col--full:has(.go-button):hover {
     color: var(--gl-muted) !important;
   }
 
-  .go-ticker-teaser:hover .go-ticker-teaser__datetime::before {
+  .go-ticker-teaser:hover .go-ticker-teaser__datetime > .w3-check {
     background-color: var(--gl-card) !important;
   }
 
@@ -770,7 +773,7 @@ main > .go-col--full:has(.go-button):hover {
     color: var(--gl-chip) !important;
   }
 
-  .go-ticker-teaser:visited:hover .go-ticker-teaser__datetime::before {
+  .go-ticker-teaser:visited:hover .go-ticker-teaser__datetime > .w3-check {
     background-color: var(--gl-muted) !important;
   }
 }

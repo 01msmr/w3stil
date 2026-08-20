@@ -469,19 +469,21 @@ header[class*="theme-mac-and-i"] ul[class*="gap-6"][class*="text-lg"] > li > a:f
  * Pseudo-Elemente des LINKS mit Gegenblenden, beide wechseln nur ihre
  * background-color (das einzige, was :visited erlaubt):
  *
- * 1. Die "Platte" (a::before) liegt über den Ziffern. Blendmodus lighten:
+ * Beide sind ECHTE Elemente, vom Userscript in den Link injiziert — WebKit
+ * färbt Pseudo-Elemente nicht per :visited, auf iOS blieb sonst alles aus.
+ *
+ * 1. Die "Platte" (.w3-plate) liegt über den Ziffern. Blendmodus lighten:
  *    unbesucht ist sie SCHWARZ und damit unsichtbar (nichts ist heller als
  *    der Untergrund); besucht wird sie chipfarben und LÖSCHT die Ziffern.
- * 2. Das Häkchen ist ein kleines Pseudo-Element des Titel-Headers (als
- *    Link-NACHFAHRE ebenso :visited-färbbar), absolut über die Chip-
- *    Position gelegt. Blendmodus darken: unbesucht WEISS (unsichtbar),
+ * 2. Das Häkchen (.w3-check) liegt absolut über der Chip-Position. Blendmodus darken: unbesucht WEISS (unsichtbar),
  *    besucht in der Gelesen-Farbe. Bewusst NICHT auf dem Zeilen-Cover:
  *    ein Vollflächen-Blend je Zeile treibt den Compositor in die Knie.
  *
  * Die Geometrie ist gerechnet, nicht gemessen (CSS kann die Chip-Breite
  * nicht lesen): 5 Tabellenziffern à ~0.6em plus Polster und Laufweite. */
-article[data-teaser-name="HorizontalTimelineTeaser"] > a::before {
-  content: "" !important;
+article[data-teaser-name="HorizontalTimelineTeaser"] > a > .w3-plate {
+  display: block !important;
+  pointer-events: none !important;
   position: absolute !important;
   left: calc(var(--mi-bleed) + var(--mi-inset) + 0.45 * var(--mi-cf)) !important;
   top: 50% !important;
@@ -493,12 +495,13 @@ article[data-teaser-name="HorizontalTimelineTeaser"] > a::before {
   background-color: #000 !important;
 }
 
-article[data-teaser-name="HorizontalTimelineTeaser"] > a:visited::before {
+article[data-teaser-name="HorizontalTimelineTeaser"] > a:visited > .w3-plate {
   background-color: var(--mi-chip) !important;
 }
 
-article[data-teaser-name="HorizontalTimelineTeaser"] > a header::before {
-  content: "" !important;
+article[data-teaser-name="HorizontalTimelineTeaser"] > a > .w3-check {
+  display: block !important;
+  pointer-events: none !important;
   position: absolute !important;
   left: calc(var(--mi-bleed) + var(--mi-inset) + 2.175 * var(--mi-cf) - 0.7 * var(--mi-cf)) !important;
   top: 50% !important;
@@ -510,7 +513,7 @@ article[data-teaser-name="HorizontalTimelineTeaser"] > a header::before {
   background-color: #fff !important;
 }
 
-article[data-teaser-name="HorizontalTimelineTeaser"] > a:visited header::before {
+article[data-teaser-name="HorizontalTimelineTeaser"] > a:visited > .w3-check {
   background-color: var(--mi-read) !important;
 }
 

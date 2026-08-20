@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        reduce-ticker
 // @namespace   msmr.co
-// @version     0.6.2
+// @version     0.7.0
 // @description Kürzt Ressort-Chips und formatiert Tagesköpfe der Newsticker
 // @author      msmr
 // @license     MIT
@@ -40,6 +40,13 @@
  * sagt dasselbe) und werden auf beiden Seiten einheitlich als
  * "Montag, den 17. August 2026" ausgeschrieben. Nach dem Umformen matcht
  * das Datums-Muster nicht mehr — der MutationObserver läuft leer durch.
+ *
+ * Gelesen-Marker: das Skript injiziert in jeden Uhrzeit-Chip (golem,
+ * heise-Ticker) ein leeres <i class="w3-check">, auf Mac & i zusätzlich
+ * Platte und Häkchen in jeden Zeilen-Link. Die Optik kommt komplett aus
+ * dem Style; hier entstehen nur die ECHTEN Elemente, weil WebKit
+ * :visited-Farben nicht auf Pseudo-Elemente anwendet — auf iOS blieben
+ * die Häkchen sonst unsichtbar.
  *
  * Richtungs-Snapping: nach jedem Scrollen gleitet die Seite zum nächsten
  * Tageskopf IN Scrollrichtung — nie rückwärts. Auf golem und dem
@@ -130,9 +137,36 @@
     }
   };
 
+  // ── Gelesen-Marker (echte Elemente für :visited, s. Kopfkommentar) ──
+
+  const marker = () => {
+    for (const chip of document.querySelectorAll(
+      '.go-ticker-teaser__datetime, article > a > time'
+    )) {
+      if (!chip.querySelector(':scope > .w3-check')) {
+        const i = document.createElement('i');
+        i.className = 'w3-check';
+        chip.appendChild(i);
+      }
+    }
+    if (!MACI) return;
+    for (const a of document.querySelectorAll(
+      'article[data-teaser-name="HorizontalTimelineTeaser"] > a'
+    )) {
+      if (!a.querySelector(':scope > .w3-plate')) {
+        const p = document.createElement('i');
+        p.className = 'w3-plate';
+        const c = document.createElement('i');
+        c.className = 'w3-check';
+        a.append(p, c);
+      }
+    }
+  };
+
   const trim = () => {
     chips();
     koepfe();
+    marker();
   };
 
   trim();

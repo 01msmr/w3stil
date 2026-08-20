@@ -225,9 +225,12 @@ article > a > time {
  * mix-blend-mode: darken ist konstant, nur die Farbe wechselt per :visited.
  * Weiß lässt den Untergrund stehen (unsichtbar ohne Alpha-Wechsel), die
  * dunkle Textfarbe gewinnt überall und deckt die getarnten Ziffern ab.
- * Die Form ist Font Awesomes "check" (Free/Solid, CC BY 4.0). */
-article > a > time::before {
-  content: "" !important;
+ * Die Form ist Font Awesomes "check" (Free/Solid, CC BY 4.0). Ein ECHTES
+ * Element vom Userscript, kein Pseudo — WebKit färbt Pseudos nicht per
+ * :visited (siehe golem). */
+article > a > time > .w3-check {
+  display: block !important;
+  pointer-events: none !important;
   position: absolute !important;
   inset: 0 !important;
   mix-blend-mode: darken !important;
@@ -327,7 +330,7 @@ article:has(> a > time) > a:visited > time {
   color: var(--hs-chip) !important;
 }
 
-article:has(> a > time) > a:visited > time::before {
+article:has(> a > time) > a:visited > time > .w3-check {
   background-color: var(--hs-read) !important;
 }
 
@@ -355,8 +358,8 @@ article:has(> a > time) > a:focus-visible > time {
 /* Im Hover ist die Chipfläche weiß — das Häkchen tarnt sich weiß und die
  * Uhrzeit ist wieder lesbar, auch auf gelesenen Zeilen. Nach der
  * :visited-Häkchen-Regel, um sie bei gleicher Spezifität zu schlagen. */
-article:has(> a > time) > a:hover > time::before,
-article:has(> a > time) > a:focus-visible > time::before {
+article:has(> a > time) > a:hover > time > .w3-check,
+article:has(> a > time) > a:focus-visible > time > .w3-check {
   background-color: var(--hs-card) !important;
 }
 
@@ -698,7 +701,7 @@ article:has(> a[href*="/bestenlisten/"]) > a > time {
     color: var(--hs-muted) !important;
   }
 
-  article:has(> a > time) > a:hover > time::before {
+  article:has(> a > time) > a:hover > time > .w3-check {
     background-color: var(--hs-card) !important;
   }
 
@@ -717,7 +720,7 @@ article:has(> a[href*="/bestenlisten/"]) > a > time {
     color: var(--hs-chip) !important;
   }
 
-  article:has(> a > time) > a:visited:hover > time::before {
+  article:has(> a > time) > a:visited:hover > time > .w3-check {
     background-color: var(--hs-read) !important;
   }
 }
