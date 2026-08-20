@@ -720,6 +720,7 @@ main > .go-col--full:has(.go-button):hover {
     overflow-x: auto !important;
     text-overflow: clip !important;
     scrollbar-width: none !important;
+    mask-image: var(--w3-title-fade) !important;
 
     /* Eigene Ebene: WebKit malt die :visited-Farbe in Scrollern sonst
      * verzögert — hereingescrollter Text erschien erst dunkler. */

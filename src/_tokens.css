@@ -71,5 +71,12 @@
     --w3-chip-font: 0.6;
     --w3-plus-scale: 1.05;
     --w3-head-size: 18px;
+
+    /* Ziehbare Titel: die letzten 5 % fallen auf 30 % Deckkraft ab — so
+     * ist ein abgeschnittener Titel als überlang erkennbar. Kein Abfall
+     * auf 0: am Scroll-Ende bleiben die letzten Zeichen lesbar. Die Maske
+     * klebt am Element, nicht am Inhalt, und markiert darum stets die
+     * Schnittkante; kurze Titel erreichen die Zone nicht. */
+    --w3-title-fade: linear-gradient(to right, #000 95%, rgb(0 0 0 / 0.3));
   }
 }

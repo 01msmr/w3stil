@@ -674,6 +674,7 @@ article:has(> a[href*="/bestenlisten/"]) > a > time {
     overflow-x: auto !important;
     text-overflow: clip !important;
     scrollbar-width: none !important;
+    mask-image: var(--w3-title-fade) !important;
 
     /* Eigene Ebene gegen WebKits verzögertes :visited-Malen im Scroller. */
     transform: translateZ(0) !important;

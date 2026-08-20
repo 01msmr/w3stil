@@ -564,6 +564,7 @@ article[data-teaser-name="HorizontalTimelineTeaser"]:hover {
     overflow-x: auto !important;
     text-overflow: clip !important;
     scrollbar-width: none !important;
+    mask-image: var(--w3-title-fade) !important;
     position: relative !important;
     z-index: 1 !important;
 
