@@ -1,15 +1,18 @@
 # w3stil
 
-Reduziertes Lese-Layout für häufig besuchte Seiten. Quelle sind plain-CSS-Dateien;
-der Build erzeugt ein UserCSS-Artefakt für [Stylus](https://add0n.com/stylus.html)
-und Safari-Fassungen für die Userscripts-App.
+Reduziertes Lese-Layout für häufig besuchte Seiten. Quelle sind
+plain-CSS-Dateien; der Build erzeugt ein UserCSS-Artefakt für
+[Stylus](https://add0n.com/stylus.html) und Safari-Fassungen für die
+Userscripts-App.
 
-## Schnellstart
+---
+
+## 1 · Benutzen
 
 Style (Aussehen) und Userscript (Textkürzungen, Gelesen-Häkchen, Snapping)
 gehören zusammen — beide installieren.
 
-**Chrome, Vivaldi, Edge, Firefox (Desktop):**
+### Chrome, Vivaldi, Edge, Firefox (Desktop)
 
 1. [Stylus](https://add0n.com/stylus.html) und
    [Tampermonkey](https://www.tampermonkey.net/) installieren
@@ -19,7 +22,7 @@ gehören zusammen — beide installieren.
 
 Updates holen beide Erweiterungen selbst.
 
-**Mac (Safari):**
+### Mac (Safari)
 
 1. App [Userscripts](https://apps.apple.com/de/app/userscripts/id1463298887)
    laden, als Verzeichnis **iCloud Drive → Userscripts** wählen; Erweiterung
@@ -28,7 +31,7 @@ Updates holen beide Erweiterungen selbst.
 
 Aktualisieren: Skript erneut ausführen, Seite neu laden.
 
-**iPhone/iPad (Safari):**
+### iPhone / iPad (Safari)
 
 1. Dieselbe App laden; Erweiterung unter Einstellungen → Apps → Safari →
    Erweiterungen aktivieren, golem.de/heise.de erlauben.
@@ -41,6 +44,20 @@ Aktualisieren: Skript erneut ausführen, Seite neu laden.
 Aktualisieren: läuft über iCloud bzw. Kurzbefehl, sobald am Mac
 `tools/ios-sync.sh` gelaufen ist.
 
+### Was danach anders aussieht
+
+| Seite | Zustand |
+|---|---|
+| `golem.de/ticker/` | vollständig umgebaut |
+| `heise.de/newsticker?timeFrame=last-7-days` | vollständig umgebaut |
+| `heise.de/mac-and-i/newsticker` | vollständig umgebaut |
+| `de.wikipedia.org` | nur mit Skin **Vector 2022** |
+| Artikelseiten der Portale | unverändert |
+
+---
+
+## 2 · Bausteine
+
 ```
 src/_reset.css        Basis, wird Domain-Sektionen ohne @no-reset vorangestellt
 src/_tokens.css       domainübergreifende Konstanten, in JEDER Sektion
@@ -52,62 +69,35 @@ tools/check.mjs       prüft, ob die Selektoren noch matchen (Playwright)
 tools/ios-sync.sh     baut und befüllt den Userscripts-Ordner (iCloud)
 ```
 
-## Einrichten
-
-`node build.mjs` genügt (keine Dependencies). `npm install` nur für
-`check.mjs` und Stylelint. `dist/` ist gitignored — nach dem Clone einmal
-bauen.
-
-**Dev-Server:** `npm run dev` baut bei Änderungen neu und serviert auf
-`:8787`; `http://localhost:8787/reduce.user.css` öffnen und in Stylus
-installieren. Neue Fassung: dieselbe URL erneut öffnen und überschreiben —
-die `@version` steigt nur mit Commits, ein Update-Check allein zieht einen
-Rebuild ohne Commit nicht.
-
-**Produktiv:** `https://w3.msmr.co/reduce.user.css` installieren; Updates
-kommen über die `@updateURL`.
-
-### Was danach anders aussieht
-
-| Seite | Zustand |
-|---|---|
-| `golem.de/ticker/` | vollständig umgebaut |
-| `heise.de/newsticker?timeFrame=last-7-days` | vollständig umgebaut |
-| `heise.de/mac-and-i/newsticker` | vollständig umgebaut |
-| `de.wikipedia.org` | nur mit Skin **Vector 2022** |
-| Artikelseiten der Portale | unverändert |
-
-## Userscript
+### Userscript
 
 `reduce.user.js` übernimmt, was CSS nicht kann:
 
-- **Chips kürzen**: „heise "-Präfix und „ Magazin"-Suffix entfallen,
-  „heise online" (und auf Mac & i „Mac & i Magazin") ganz. CSS kann Text
+- **Chips kürzen** — „heise "-Präfix und „ Magazin"-Suffix entfallen,
+  „heise online" (auf Mac & i auch „Mac & i Magazin") ganz. CSS kann Text
   weder umschreiben noch nach Inhalt selektieren.
-- **Tagesköpfe**: einheitlich „Montag, den 17. August 2026".
-- **Gelesen-Marker**: injiziert `<i class="w3-check">`/`w3-plate` und die
-  Klasse `w3-row` — nötig, weil WebKit `:visited` weder auf Pseudo-Elemente
-  noch auf `:has()`-Selektoren anwendet (siehe unten).
-- **Richtungs-Snapping**: nach dem Scrollen gleitet die Seite zum nächsten
+- **Tagesköpfe** — einheitlich „Montag, den 17. August 2026".
+- **Gelesen-Marker** — injiziert `<i class="w3-check">`/`w3-plate` und die
+  Klasse `w3-row`; nötig, weil WebKit `:visited` weder auf Pseudo-Elemente
+  noch auf `:has()`-Selektoren anwendet (→ Abschnitt 5).
+- **Richtungs-Snapping** — nach dem Scrollen gleitet die Seite zum nächsten
   Tageskopf in Scrollrichtung, nie rückwärts; auf golem/heise nur nahe am
-  Ziel (~30% Fensterhöhe), auf Mac & i unbegrenzt.
+  Ziel (~30 % Fensterhöhe), auf Mac & i unbegrenzt.
 
-Version wird von Hand gepflegt; kein Build, die Action kopiert die Datei
+Version wird von Hand gepflegt; kein Build — die Action kopiert die Datei
 unverändert auf `publish`.
 
-## iOS und Safari: die Userscripts-App
+### Safari-Fassungen (Userscripts-App)
 
 Safari kennt kein `@-moz-document`, Stylus existiert dort nicht. Der Build
-erzeugt deshalb je Domain eine Datei in `dist/safari/`, gescoped über
+erzeugt je Domain eine Datei in `dist/safari/`, gescoped über
 `@match`-Metadaten im `==UserStyle==`-Block. Die App **Userscripts**
 ([App Store, iPhone/iPad und Mac](https://apps.apple.com/de/app/userscripts/id1463298887),
 [Quellcode](https://github.com/quoid/userscripts)) liest sie aus einem
 iCloud-Ordner; `reduce.user.js` läuft dort unverändert.
 
 `tools/ios-sync.sh` pullt, baut und befüllt den Ordner. Der Mac liest ihn
-direkt (Safari neu laden genügt); iOS synchronisiert über iCloud oder — wenn
-die App den iCloud-Ordner nicht annimmt — über den Kurzbefehl aus dem
-Schnellstart.
+direkt; iOS synchronisiert über iCloud oder den Kurzbefehl.
 
 **iOS-Stolpersteine:**
 
@@ -116,28 +106,42 @@ Schnellstart.
 - Zeigt die Dateien-App alte Stände: Ordnernamen antippen →
   „Geladenes entfernen" → „Jetzt laden".
 - Symlinks in App-Ordner sind auf iOS nicht möglich.
+- Kurzbefehl von Hand: „Ordnerinhalt abrufen" (iCloud Drive → Userscripts)
+  → „Datei sichern" (fester Zielordner „Auf meinem iPhone → Userscripts",
+  „Überschreiben" an).
 
-Kurzbefehl von Hand: „Ordnerinhalt abrufen" (iCloud Drive → Userscripts) →
-„Datei sichern" (fester Zielordner „Auf meinem iPhone → Userscripts",
-„Überschreiben" an).
+---
 
-## Entwickeln
+## 3 · Werkstatt
 
-`npm run dev`, den lokalen Endpunkt als zweiten Style installieren, den
-produktiven solange deaktivieren. Nicht im Stylus-Editor arbeiten — siehe
-Fallstrick.
+### Einrichten
 
-Neue Seite: `tools/probe.user.js` auf der Zielseite ausführen (Struktur,
+`node build.mjs` genügt (keine Dependencies). `npm install` nur für
+`check.mjs` und Stylelint. `dist/` ist gitignored — nach dem Clone einmal
+bauen.
+
+**Dev-Server:** `npm run dev` baut bei Änderungen neu und serviert auf
+`:8787`; `http://localhost:8787/reduce.user.css` als **zweiten** Style
+installieren, den produktiven solange deaktivieren. Neue Fassung: dieselbe
+URL erneut öffnen und überschreiben — die `@version` steigt nur mit
+Commits.
+
+**Fallstrick Stylus-Editor:** er schreibt in Stylus' Storage; das nächste
+Update überschreibt Änderungen dort kommentarlos. Quelle ist dieses Repo.
+
+### Neue Seite aufnehmen
+
+`tools/probe.user.js` auf der Zielseite ausführen (Struktur,
 Haltbarkeits-Schätzung, CSS-Entwurf), Entwurf als `src/<domain>.css`
 speichern, überarbeiten, bauen, committen.
 
-**probe ausführen:** als DevTools-Snippet (F12 → Sources → Snippets →
-einfügen → `Ctrl+Enter`; überlebt keinen Reload) oder unverändert in
+probe läuft als DevTools-Snippet (F12 → Sources → Snippets → einfügen →
+`Ctrl+Enter`; überlebt keinen Reload) oder unverändert in
 Tampermonkey/Violentmonkey, deaktiviert bis zum Bedarf. Ohne Manager
 schlägt nur das Kopieren auf `http://`-Seiten fehl (Clipboard braucht
 Secure Context).
 
-## Konventionen
+### Konventionen
 
 **Mobil ist eine Schicht, kein Fork.** `@media (max-width: 700px)`
 überschreibt Variablen: Tokens in `_tokens.css`, Domain-Werte am Ende jeder
@@ -193,12 +197,7 @@ es, wikipedia nicht.
 **Kommentare fliegen aus `dist/`** (sonst n-fach dupliziert);
 `node build.mjs --comments` behält sie.
 
-## Der Fallstrick
-
-Der Stylus-Editor schreibt in Stylus' Storage — das nächste Update
-überschreibt Änderungen dort kommentarlos. Quelle ist dieses Repo.
-
-## Wartung
+### Wartung
 
 `tools/check.mjs` lädt jede Domain und zählt die Treffer aller Selektoren;
 läuft wöchentlich in GitHub Actions und öffnet bei Drift ein Issue
@@ -217,13 +216,11 @@ Ausgabe: `✗` tot, `~` außerhalb `expect`, `?` ungültig, `!` unerreichbar,
 wegklicken, Enter) — Session landet gitignored in `.auth/` und wird von
 `check.mjs` genutzt; in CI werden solche Domains mit `⊘` übersprungen.
 
-## Rollback
+---
 
-Stylus hält keine Versionshistorie. Reparatur: Fehler in `src/` beheben
-oder `git revert`, pushen — die Action baut neu, der Commit-Zähler macht
-die Korrektur automatisch zur höheren Version.
+## 4 · Betrieb
 
-## Veröffentlichen
+### Veröffentlichen
 
 Gebaut wird in der GitHub-Action (das Shared Hosting hat kein Node). Sie
 force-pusht die Auslieferungsdateien auf den Branch `publish`; `main` trägt
@@ -253,7 +250,15 @@ Verzeichnis muss vor der ersten Bereitstellung existieren. Die
 Node-Anwendung der Domain bleibt deaktiviert (statische Datei, Passenger
 stünde nur im Weg).
 
-## Was CSS hier nicht kann
+### Rollback
+
+Stylus hält keine Versionshistorie. Reparatur: Fehler in `src/` beheben
+oder `git revert`, pushen — die Action baut neu, der Commit-Zähler macht
+die Korrektur automatisch zur höheren Version.
+
+---
+
+## 5 · Was CSS hier nicht kann
 
 **`:visited` erlaubt nur deckende Farbwechsel** (`color`,
 `background-color`, Rahmen-/Outline-/Dekorationsfarben; kein `content`,
@@ -271,16 +276,16 @@ noch auf Selektoren mit `:has()`. Konsequenz: Häkchen/Platte sind echte,
 vom Userscript injizierte Elemente, und alle Visited-Regeln hängen an der
 Userscript-Klasse `a.w3-row`.
 
-Prüfbar ist `:visited` nur mit dem Auge: `getComputedStyle` liefert
+**`:has(:visited)` matcht nie** (Historienschutz) — Zeilenflächen oder
+Geschwister eines Links sind für den Gelesen-Zustand unerreichbar, wenn
+die Uhr außerhalb des Links steht (Mac & i: gelöst über injizierte
+Link-Kinder).
+
+**Prüfbar ist `:visited` nur mit dem Auge:** `getComputedStyle` liefert
 absichtlich die Unbesucht-Werte, `matches(':visited')` immer `false`.
 
 **`:has()` darf nicht in `:has()`** — die Regel fällt komplett und ohne
 Warnung aus; stattdessen eine Klasse als Marker verwenden.
-
-**`:has(:visited)` matcht nie** (Historienschutz) — Zeilenflächen oder
-Geschwister eines Links sind für den Gelesen-Zustand unerreichbar, wenn
-die Uhr außerhalb des Links steht (Mac & i: gelöst über Link-Pseudos bzw.
-injizierte Link-Kinder).
 
 **Custom Properties vererben nur nach unten** — deshalb hängen alle
 Variablen an `body:has(…)`.
@@ -289,11 +294,7 @@ Variablen an `body:has(…)`.
 eingehängte `<style>`, auch mit `!important`. Zum Testen den installierten
 Style deaktivieren.
 
-## Grenzen
-
-- **Shadow DOM.** CSS erreicht keine Shadow Roots; hilft nur `::part`,
-  sofern die Seite Parts exportiert. `probe` markiert sie.
-- **Inline `!important`.** Schlägt Author-CSS; nur die User-Origin von
-  Stylus gewinnt dagegen. Deshalb bleibt das Layout ein Stylus-Style —
-  die Safari-Fassungen (Author-Origin) können hier im Einzelfall
-  unterliegen.
+**Shadow DOM und Inline-`!important`:** CSS erreicht keine Shadow Roots
+(nur `::part`, sofern exportiert; `probe` markiert sie). Inline-`!important`
+schlägt Author-CSS — nur Stylus' User-Origin gewinnt dagegen; die
+Safari-Fassungen (Author-Origin) können hier im Einzelfall unterliegen.
