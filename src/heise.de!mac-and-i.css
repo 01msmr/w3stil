@@ -148,11 +148,9 @@ div:has(> section > article[data-teaser-name="HorizontalTimelineTeaser"]) > sect
   background: var(--mi-card) !important;
   border-radius: var(--mi-radius) !important;
 
-  /* Licht von links oben (~20° aus der Senkrechten): der Schatten fällt
-   * nach rechts unten, mittelstark. Das Anheben beim Hover läuft weich mit
-   * bremsendem Auslauf (ease-out) — die Transition am Grundzustand wirkt
-   * in beide Richtungen, Eintritt wie Austritt. */
-  box-shadow: 6px 14px 22px rgb(0 0 0 / 0.42) !important;
+  /* Passiv ohne Schatten — er kommt erst mit dem Hover (Transition am
+   * Grundzustand wirkt in beide Richtungen, Eintritt wie Austritt). */
+  box-shadow: none !important;
   transition: box-shadow 0.25s ease-out !important;
 }
 
