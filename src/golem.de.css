@@ -699,9 +699,14 @@ main > .go-col--full:has(.go-button):hover {
  * Tageskopf — das Snap-Ziel sitzt mobil zusätzlich tiefer (Userscript). */
 @media (max-width: 700px) {
   body:has(.ticker-list) {
-    --gl-size: 17px;
+    --gl-size: 16px;
     --gl-inset: 2px;
-    --gl-title-x: 64px;
+    --gl-title-x: 52px;
+  }
+
+  /* Kaum Raum rechts der Uhr. */
+  .go-ticker-teaser {
+    gap: 0.4em !important;
   }
 
   .go-col:has(.ticker-list) > h2 {

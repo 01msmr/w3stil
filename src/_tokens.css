@@ -70,5 +70,6 @@
   :root {
     --w3-chip-font: 0.6;
     --w3-plus-scale: 1.05;
+    --w3-head-size: 18px;
   }
 }

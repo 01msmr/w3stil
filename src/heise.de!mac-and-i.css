@@ -483,12 +483,33 @@ article[data-teaser-name="HorizontalTimelineTeaser"]:hover {
  * Enger und kleiner wie die anderen Ticker; flacherer Tageskopf. */
 @media (max-width: 700px) {
   body:has(article[data-teaser-name="HorizontalTimelineTeaser"]) {
-    --mi-size: 17px;
-    --mi-bleed: 12px;
-    --mi-title-x: 76px;
+    --mi-size: 16px;
+    --mi-bleed: 8px;
+    --mi-title-x: 60px;
+    --mi-head-size: 18px;
   }
 
+  /* Kaum Raum rechts der Uhr. */
+  article[data-teaser-name="HorizontalTimelineTeaser"] {
+    gap: 0.4em !important;
+  }
+
+  /* Mehr Weißraum über der Tageszeile — der Bereich unter der Statusleiste
+   * bleibt beim Andocken leer. */
   div:has(> section > article[data-teaser-name="HorizontalTimelineTeaser"]) > h2 {
-    padding: 0.7em 0 calc(0.2em + 16px) var(--mi-title-x) !important;
+    padding: 1.3em 0 calc(0.2em + 16px) var(--mi-title-x) !important;
+  }
+
+  /* Und darunter liegt IMMER der Seitengrund: ein fixer Streifen in
+   * Grundfarbe deckt beim Scrollen den obersten Rand ab — die Statusleiste
+   * flimmert nicht mit dem durchlaufenden Inhalt. */
+  body:has(article[data-teaser-name="HorizontalTimelineTeaser"])::before {
+    content: "" !important;
+    position: fixed !important;
+    inset: 0 0 auto 0 !important;
+    height: 12px !important;
+    background: var(--mi-page) !important;
+    z-index: 60 !important;
+    pointer-events: none !important;
   }
 }

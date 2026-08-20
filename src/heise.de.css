@@ -647,9 +647,14 @@ article:has(> a[href*="/bestenlisten/"]) > a > time {
  * flacherer Tageskopf. */
 @media (max-width: 700px) {
   body:has(article > a > time) {
-    --hs-size: 17px;
-    --hs-bleed: 12px;
-    --hs-title-x: 52px;
+    --hs-size: 16px;
+    --hs-bleed: 8px;
+    --hs-title-x: 36px;
+  }
+
+  /* Kaum Raum rechts der Uhr. */
+  article:has(> a > time) > a {
+    gap: 0.4em !important;
   }
 
   section:has(article > a > time) > div:first-child {
