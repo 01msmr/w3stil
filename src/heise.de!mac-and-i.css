@@ -471,6 +471,9 @@ header[class*="theme-mac-and-i"] ul[class*="gap-6"][class*="text-lg"] > li > a:f
  *
  * Beide sind ECHTE Elemente, vom Userscript in den Link injiziert — WebKit
  * färbt Pseudo-Elemente nicht per :visited, auf iOS blieb sonst alles aus.
+ * Die Visited-Selektoren hängen zudem an a.w3-row (ebenfalls Userscript):
+ * WebKit ignoriert :visited auch in Selektoren mit Attribut-/:has-Ballast
+ * am Vorfahren zuverlässiger als mit purer Klasse am Link selbst.
  *
  * 1. Die "Platte" (.w3-plate) liegt über den Ziffern. Blendmodus lighten:
  *    unbesucht ist sie SCHWARZ und damit unsichtbar (nichts ist heller als
@@ -495,7 +498,7 @@ article[data-teaser-name="HorizontalTimelineTeaser"] > a > .w3-plate {
   background-color: #000 !important;
 }
 
-article[data-teaser-name="HorizontalTimelineTeaser"] > a:visited > .w3-plate {
+a.w3-row:visited > .w3-plate {
   background-color: var(--mi-chip) !important;
 }
 
@@ -513,7 +516,7 @@ article[data-teaser-name="HorizontalTimelineTeaser"] > a > .w3-check {
   background-color: #fff !important;
 }
 
-article[data-teaser-name="HorizontalTimelineTeaser"] > a:visited > .w3-check {
+a.w3-row:visited > .w3-check {
   background-color: var(--mi-read) !important;
 }
 
@@ -523,9 +526,9 @@ article[data-teaser-name="HorizontalTimelineTeaser"] > a:visited > .w3-check {
  * Uhrzeit-Ziffern.
  */
 
-article[data-teaser-name="HorizontalTimelineTeaser"] a:visited,
-article[data-teaser-name="HorizontalTimelineTeaser"] a:visited h3,
-article[data-teaser-name="HorizontalTimelineTeaser"] a:visited h3 > span {
+a.w3-row:visited,
+a.w3-row:visited h3,
+a.w3-row:visited h3 > span {
   color: var(--mi-read) !important;
 }
 

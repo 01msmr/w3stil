@@ -303,6 +303,12 @@ article h3 + div > div {
 
 /* LVHA-Reihenfolge: visited vor hover, sonst gewinnt visited.
  *
+ * Die Visited-Regeln hängen an a.w3-row (Klasse vom Userscript) statt an
+ * article:has(…): WebKit wendet :visited-Farben nicht an, wenn der
+ * Selektor ein :has() enthält — auf iOS blieben Dimmung, Ziffern-Tarnung
+ * und Häkchen sonst stumm. Ohne Userscript fällt nur der
+ * Gelesen-Zustand aus, nicht die Liste.
+ *
  * Gelesene Zeilen erkennt man an zweierlei: an der leicht abgesetzten Fläche
  * und am Häkchen, das im Uhrzeit-Chip die Ziffern ersetzt — wie bei golem.
  * Die Schrift der Zeile selbst bleibt unverändert.
@@ -317,7 +323,7 @@ article h3 + div > div {
  *
  * Prüfbar nur mit dem Auge: getComputedStyle liefert für besuchte Links
  * absichtlich die Werte des unbesuchten Zustands. expect: 20..400 */
-article:has(> a > time) > a:visited {
+a.w3-row:visited {
   background-color: color-mix(in oklab, var(--hs-card) var(--w3-read-card), var(--hs-page)) !important;
   color: var(--hs-read) !important;
 }
@@ -326,11 +332,11 @@ article:has(> a > time) > a:visited {
  * Chipfläche ab, das Häkchen tritt hervor — gedimmt wie die Zeilenschrift,
  * nicht in voller Textfarbe. Beim Hover kehrt die Uhrzeit zurück: die
  * Hover-Regeln unten gewinnen bei gleicher Spezifität über die Reihenfolge. */
-article:has(> a > time) > a:visited > time {
+a.w3-row:visited > time {
   color: var(--hs-chip) !important;
 }
 
-article:has(> a > time) > a:visited > time > .w3-check {
+a.w3-row:visited > time > .w3-check {
   background-color: var(--hs-read) !important;
 }
 
@@ -372,8 +378,8 @@ article:has(> a > time) > a:focus-visible h3 + div > span {
 /* Gelesene Zeilen bleiben auch im Hover erkennbar: hellere Fläche als bei
  * ungelesenen, dafür etwas dunklere Schrift als Weiß. Nach der allgemeinen
  * Hover-Regel, sonst verlöre sie bei gleicher Spezifität der Reihenfolge nach. */
-article:has(> a > time) > a:visited:hover,
-article:has(> a > time) > a:visited:focus-visible {
+a.w3-row:visited:hover,
+a.w3-row:visited:focus-visible {
   background-color: color-mix(in oklab, var(--hs-blue) var(--w3-read-hover), var(--hs-page)) !important;
   color: color-mix(in oklab, var(--hs-card) var(--w3-read-hover-text), var(--hs-fg)) !important;
 }
@@ -711,16 +717,16 @@ article:has(> a[href*="/bestenlisten/"]) > a > time {
     color: var(--hs-muted) !important;
   }
 
-  article:has(> a > time) > a:visited:hover {
+  a.w3-row:visited:hover {
     background-color: color-mix(in oklab, var(--hs-card) var(--w3-read-card), var(--hs-page)) !important;
     color: var(--hs-read) !important;
   }
 
-  article:has(> a > time) > a:visited:hover > time {
+  a.w3-row:visited:hover > time {
     color: var(--hs-chip) !important;
   }
 
-  article:has(> a > time) > a:visited:hover > time > .w3-check {
+  a.w3-row:visited:hover > time > .w3-check {
     background-color: var(--hs-read) !important;
   }
 }

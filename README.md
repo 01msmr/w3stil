@@ -99,7 +99,9 @@ Einmalig einrichten:
    das Userscript in den Ordner. iCloud synchronisiert aufs iPhone.
 
 Aktualisieren = das Skript erneut ausführen (es pullt und baut selbst).
-Kein eigener Update-Kanal: die Geräte lesen, was im Ordner liegt.
+Kein eigener Update-Kanal: die Geräte lesen, was im Ordner liegt. Auf dem
+Mac ist damit alles getan — die Mac-App liest den Ordner direkt, Safari
+neu laden genügt; nur iOS braucht wegen der Sandbox den Kopier-Kurzbefehl.
 
 **iOS-Stolpersteine:** Der Verzeichnis-Wechsel der iOS-App auf den
 iCloud-Ordner greift mitunter erst, nachdem die Dateien einmal frisch

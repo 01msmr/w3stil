@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        reduce-ticker
 // @namespace   msmr.co
-// @version     0.7.0
+// @version     0.7.1
 // @description Kürzt Ressort-Chips und formatiert Tagesköpfe der Newsticker
 // @author      msmr
 // @license     MIT
@@ -148,11 +148,15 @@
         i.className = 'w3-check';
         chip.appendChild(i);
       }
+      /* Klasse am Link: WebKit wendet :visited nicht an, wenn der Selektor
+       * ein :has() trägt — die Visited-Regeln hängen deshalb an a.w3-row. */
+      chip.closest('a')?.classList.add('w3-row');
     }
     if (!MACI) return;
     for (const a of document.querySelectorAll(
       'article[data-teaser-name="HorizontalTimelineTeaser"] > a'
     )) {
+      a.classList.add('w3-row');
       if (!a.querySelector(':scope > .w3-plate')) {
         const p = document.createElement('i');
         p.className = 'w3-plate';
