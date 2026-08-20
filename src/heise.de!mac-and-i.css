@@ -151,16 +151,20 @@ div:has(> section > article[data-teaser-name="HorizontalTimelineTeaser"]) > sect
   background: none !important;
   border-radius: var(--mi-radius) !important;
 
-  /* Passiv ohne Schatten — er kommt erst mit dem Hover (Transition am
-   * Grundzustand wirkt in beide Richtungen, Eintritt wie Austritt). */
+  /* Passiv ohne Schatten — er kommt erst mit dem Hover. drop-shadow
+   * statt box-shadow: der beschattet die SILHOUETTE, sein Blur blutet
+   * durch die 1px-Fugen — durch die transparenten Schlitze ist damit
+   * ECHTER Schatten zu sehen (box-shadow malt nur außerhalb der Box).
+   * Grundzustand mit Alpha 0, damit die Transition weich läuft. */
   box-shadow: none !important;
-  transition: box-shadow 0.25s ease-out !important;
+  filter: drop-shadow(12px 28px 22px rgb(0 0 0 / 0)) !important;
+  transition: filter 0.25s ease-out !important;
 }
 
 /* Der Tages-Chip, in dem der Cursor steht, hebt sich kräftig: Offsets und
  * Blur verdoppelt (+100% gegenüber dem Ruhezustand). expect: 1..14 */
 div:has(> section > article[data-teaser-name="HorizontalTimelineTeaser"]) > section:hover {
-  box-shadow: 12px 28px 45px rgb(0 0 0 / 0.42) !important;
+  filter: drop-shadow(12px 28px 22px rgb(0 0 0 / 0.42)) !important;
 }
 
 /* Trennlinie zwischen den Zeilen: ECHT transparent — die Section trägt
