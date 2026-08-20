@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        reduce-ticker
 // @namespace   msmr.co
-// @version     0.6.0
+// @version     0.6.1
 // @description Kürzt Ressort-Chips und formatiert Tagesköpfe der Newsticker
 // @author      msmr
 // @license     MIT
@@ -149,7 +149,10 @@
     'div:has(> section > article[data-teaser-name="HorizontalTimelineTeaser"]) > h2'; // Mac & i
 
   const RUHE_MS = 150;   // so lange muss das Scrollen stehen, bevor gesnappt wird
-  const LUFT = 12;       // Zielposition: so viel Raum bleibt über dem Kopf
+
+  /* Zielposition: so viel Raum bleibt über dem Kopf. Mobil fast nichts —
+   * unter der iOS-Statusleiste soll kein Rest des Vortags stehen. */
+  const luft = () => (window.innerWidth < 700 ? 2 : 12);
 
   /* Anzieh-Reichweite: auf Seiten mit langen Tagen (golem, heise-Ticker)
    * greift der Snap nur nahe am Ziel — relativ zur Fensterhöhe, damit sich
@@ -177,7 +180,7 @@
     if (!richtung) return;
     const y = window.scrollY;
     const ziele = [...document.querySelectorAll(SNAP_ZIELE)]
-      .map((el) => Math.round(el.getBoundingClientRect().top + y - LUFT))
+      .map((el) => Math.round(el.getBoundingClientRect().top + y - luft()))
       .sort((a, b) => a - b);
     const ziel = richtung > 0
       ? ziele.find((t) => t > y + 4)

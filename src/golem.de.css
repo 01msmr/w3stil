@@ -294,7 +294,9 @@ body:has(.ticker-list) .go-content-header {
   inset: 0 !important;
   mix-blend-mode: darken !important;
   background-color: var(--gl-card) !important;
-  mask: var(--w3-icon-check) center / auto var(--w3-check-size) no-repeat !important;
+  /* Höhe gedeckelt: das Häkchen bleibt IN der Chip-Box, statt sie zu
+   * überragen — auf kleinen Chips (mobil) lief es sonst über. */
+  mask: var(--w3-icon-check) center / auto min(var(--w3-check-size), 86%) no-repeat !important;
 }
 
 /* Übernimmt das Kürzen langer Titel, seit die Zeile selbst nicht mehr klemmt. */
@@ -689,4 +691,20 @@ main > *:has(.go-teaser-block--highlight):hover,
 main > *:has(.go-teaser-block--highlight):hover .go-teaser-block--highlight,
 main > .go-col--full:has(.go-button):hover {
   transition-delay: var(--gl-hover-delay) !important;
+}
+
+/* ── Mobil ──────────────────────────────────────────────────────────────
+ * Enger und behutsam kleiner: kaum Raum vor der Uhr, Zeilenschrift 17px,
+ * Titel-Flucht nachgerechnet (Einzug -14, Chip -16, Lücke -2), flacherer
+ * Tageskopf — das Snap-Ziel sitzt mobil zusätzlich tiefer (Userscript). */
+@media (max-width: 700px) {
+  body:has(.ticker-list) {
+    --gl-size: 17px;
+    --gl-inset: 2px;
+    --gl-title-x: 64px;
+  }
+
+  .go-col:has(.ticker-list) > h2 {
+    padding: 0.7em 0 0.2em var(--gl-title-x) !important;
+  }
 }

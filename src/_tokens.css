@@ -61,3 +61,14 @@
   --w3-icon-check: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 448 512'%3E%3Cpath d='M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z'/%3E%3C/svg%3E");
   --w3-check-size: 2.04em;
 }
+
+/* ── Mobil ──────────────────────────────────────────────────────────────
+ * Schmale Viewports (iPhone & Co.): kleinere Uhr und ein kleineres Plus.
+ * Die übrigen Mobil-Maße (Zeilenschrift, Einzüge, Titel-Flucht) liegen je
+ * Domain in deren Site-Datei — sie hängen an den Domain-Variablen. */
+@media (max-width: 700px) {
+  :root {
+    --w3-chip-font: 0.6;
+    --w3-plus-scale: 1.05;
+  }
+}

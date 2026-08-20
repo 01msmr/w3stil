@@ -229,7 +229,8 @@ article > a > time::before {
   inset: 0 !important;
   mix-blend-mode: darken !important;
   background-color: var(--hs-card) !important;
-  mask: var(--w3-icon-check) center / auto var(--w3-check-size) no-repeat !important;
+  /* Höhe gedeckelt wie bei golem: bleibt in der Chip-Box. */
+  mask: var(--w3-icon-check) center / auto min(var(--w3-check-size), 86%) no-repeat !important;
 }
 
 /* Der Block zwischen Uhrzeit und Meta-Zeile trägt den Titel. */
@@ -638,4 +639,20 @@ article:has(> a[href*="/bestenlisten/"]) > a:focus-visible > time {
 article:has(h3 + div [class*="bg-heiseblau"]) > a > time,
 article:has(> a[href*="/bestenlisten/"]) > a > time {
   opacity: 0.4 !important;
+}
+
+/* ── Mobil ──────────────────────────────────────────────────────────────
+ * Wie golem: enger, Zeilenschrift 17px, Überstand halbiert (die Spalte
+ * rechnet über --hs-shell automatisch mit), Titel-Flucht nachgezogen,
+ * flacherer Tageskopf. */
+@media (max-width: 700px) {
+  body:has(article > a > time) {
+    --hs-size: 17px;
+    --hs-bleed: 12px;
+    --hs-title-x: 52px;
+  }
+
+  section:has(article > a > time) > div:first-child {
+    padding: 0.7em 0 calc(0.2em + 16px) var(--hs-title-x) !important;
+  }
 }

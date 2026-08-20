@@ -478,3 +478,17 @@ article[data-teaser-name="HorizontalTimelineTeaser"] a:visited h3 > span {
 article[data-teaser-name="HorizontalTimelineTeaser"]:hover {
   background: color-mix(in srgb, var(--mi-page) 33%, var(--mi-card)) !important;
 }
+
+/* ── Mobil ──────────────────────────────────────────────────────────────
+ * Enger und kleiner wie die anderen Ticker; flacherer Tageskopf. */
+@media (max-width: 700px) {
+  body:has(article[data-teaser-name="HorizontalTimelineTeaser"]) {
+    --mi-size: 17px;
+    --mi-bleed: 12px;
+    --mi-title-x: 76px;
+  }
+
+  div:has(> section > article[data-teaser-name="HorizontalTimelineTeaser"]) > h2 {
+    padding: 0.7em 0 calc(0.2em + 16px) var(--mi-title-x) !important;
+  }
+}
