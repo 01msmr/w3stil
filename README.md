@@ -79,11 +79,12 @@ Der Dateiname bestimmt den Matcher (`heise.de.css` → Domain inkl.
 Subdomains); Mobil ist keine eigene Fassung, sondern eine
 Variablen-Schicht per `@media`; die Zeilenhöhe ist fest (`--w3-row-h`,
 48px — das Polster ergibt sich aus `calc((h - 1lh) / 2)`). Unter 500px
-(iPhone, nicht iPad) stapelt der Uhrzeit-Chip Stunden über `:Minuten`,
-rechtsbündig im Quadrat — der gewonnene Raum gehört dem Titel; die
-Spans dafür injiziert das Userscript. Überlange
-Titel sind dort seitlich ziehbar (ohne Scrollbalken, über die volle
-Zeilenhöhe); eine scroll-getriebene Maske
+(iPhone, nicht iPad) stapelt der Uhrzeit-Chip Stunden über `:Minuten`
+im Quadrat (Ziffern zentriert, der Doppelpunkt zählt dabei nicht mit;
+die Spans injiziert das Userscript), und überlange Zeilen scrollen als
+Ganzes — die Uhr fährt mit weg, ihr Platz gehört dem Titel. Zwischen
+500 und 700px scrollt stattdessen nur der Titel (ohne Scrollbalken,
+Zieh-Fläche = volle Zeilenhöhe). Eine scroll-getriebene Maske
 (`--w3-title-fade-*` in `_tokens.css`) blendet jede tatsächlich
 abgeschnittene Kante über eine feste Zone auf 10 % Deckkraft ab —
 rechts am Anfang, beidseitig mittendrin, links am Ende. `main` trägt

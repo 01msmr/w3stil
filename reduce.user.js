@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        reduce-ticker
 // @namespace   msmr.co
-// @version     0.9.0
+// @version     0.10.0
 // @description Kürzt Ressort-Chips und formatiert Tagesköpfe der Newsticker
 // @author      msmr
 // @license     MIT
@@ -182,13 +182,19 @@
         .flatMap((el) => [...el.childNodes])
         .find((n) => n.nodeType === 3 && /^\s*\d{1,2}:\d{2}\s*$/.test(n.nodeValue));
       if (!knoten) continue;
-      const [, hh, mm] = knoten.nodeValue.match(/(\d{1,2})(:\d{2})/);
+      const [, hh, mm] = knoten.nodeValue.match(/(\d{1,2}):(\d{2})/);
       const h = document.createElement('span');
       h.className = 'w3-hh';
       h.textContent = hh;
+      /* Der Doppelpunkt bekommt einen eigenen Span: der Phone-Block nimmt
+       * ihn aus dem Fluss (absolute), damit die Ziffern im Quadrat ZENTRIERT
+       * stehen, ohne dass er wegfällt — er hängt links vor den Minuten. */
       const m = document.createElement('span');
       m.className = 'w3-mm';
-      m.textContent = mm;
+      const d = document.createElement('span');
+      d.className = 'w3-colon';
+      d.textContent = ':';
+      m.append(d, mm);
       knoten.replaceWith(h, m);
     }
   };
@@ -211,12 +217,16 @@
    * Ausgangslage zurück. Nur mobil sind Titel überhaupt Scroller — auf
    * Desktop gibt es keinen Scrollweg, die Handler bleiben stumm. */
 
+  /* Unter 500px scrollt die ganze Zeile (Uhr fährt mit weg), zwischen 500
+   * und 700px nur der Titel — beide Sorten Scroller stehen in der Liste,
+   * es feuert jeweils nur die, die tatsächlich Scrollweg hat. */
   const TITEL_SCROLLER =
-    '.go-ticker-teaser__content, ' +
-    'article:has(> a > time) h3, ' +
+    '.go-ticker-teaser, .go-ticker-teaser__content, ' +
+    'article:has(> a > time) > a, article:has(> a > time) h3, ' +
+    'article[data-teaser-name="HorizontalTimelineTeaser"], ' +
     'article[data-teaser-name="HorizontalTimelineTeaser"] h3';
   const RUECK_RUHE_MS = 12000;
-  const RUECK_DAUER_MS = 1100;
+  const RUECK_DAUER_MS = 750;
 
   const rueckTimer = new WeakMap(); // Ruhe-Timer je Titel
   const rueckFahrt = new WeakMap(); // Marke der laufenden Rückfahrt

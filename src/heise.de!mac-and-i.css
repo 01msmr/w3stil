@@ -633,7 +633,7 @@ article[data-teaser-name="HorizontalTimelineTeaser"]:hover {
 
   article[data-teaser-name="HorizontalTimelineTeaser"] > time {
     display: inline-grid !important;
-    justify-items: end !important;
+    justify-items: center !important;
     align-content: center !important;
     box-sizing: border-box !important;
     min-width: 2.8em !important;
@@ -647,6 +647,16 @@ article[data-teaser-name="HorizontalTimelineTeaser"]:hover {
     display: block !important;
   }
 
+  /* Ziffern zentriert, Doppelpunkt außer Betracht (Begründung bei golem). */
+  article[data-teaser-name="HorizontalTimelineTeaser"] > time .w3-mm {
+    position: relative !important;
+  }
+
+  article[data-teaser-name="HorizontalTimelineTeaser"] > time .w3-colon {
+    position: absolute !important;
+    right: 100% !important;
+  }
+
   article[data-teaser-name="HorizontalTimelineTeaser"] > a > .w3-plate {
     left: calc(var(--mi-bleed) + var(--mi-inset)) !important;
     width: calc(2.8 * var(--mi-cf)) !important;
@@ -656,5 +666,47 @@ article[data-teaser-name="HorizontalTimelineTeaser"]:hover {
 
   article[data-teaser-name="HorizontalTimelineTeaser"] > a > .w3-check {
     left: calc(var(--mi-bleed) + var(--mi-inset) + 0.7 * var(--mi-cf)) !important;
+  }
+}
+
+/* ── Telefon: die ganze Zeile scrollt — Mechanik wie bei heise (dort
+ * erklärt). Hier ist der article der Scroller (die Uhr steht außerhalb
+ * des Links); Platte und Häkchen sind absolute Kinder im Scrollinhalt
+ * und wandern von selbst mit der Uhr mit. */
+@media (max-width: 500px) {
+  article[data-teaser-name="HorizontalTimelineTeaser"] {
+    overflow-x: auto !important;
+    scrollbar-width: none !important;
+    transform: translateZ(0) !important;
+  }
+
+  article[data-teaser-name="HorizontalTimelineTeaser"]::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  article[data-teaser-name="HorizontalTimelineTeaser"] > a,
+  article[data-teaser-name="HorizontalTimelineTeaser"] > a > header {
+    flex: 0 0 auto !important;
+    min-width: max-content !important;
+  }
+
+  article[data-teaser-name="HorizontalTimelineTeaser"] h3 {
+    overflow-x: visible !important;
+    width: max-content !important;
+    animation: none !important;
+    mask-image: none !important;
+  }
+
+  @supports (animation-timeline: scroll()) {
+    article[data-teaser-name="HorizontalTimelineTeaser"] {
+      animation: w3-title-fade linear both !important;
+      animation-timeline: scroll(self inline) !important;
+    }
+  }
+
+  @supports not (animation-timeline: scroll()) {
+    article[data-teaser-name="HorizontalTimelineTeaser"] {
+      mask-image: var(--w3-title-fade) !important;
+    }
   }
 }

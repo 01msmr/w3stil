@@ -831,7 +831,7 @@ main > .go-col--full:has(.go-button):hover {
 
   .go-ticker-teaser__datetime {
     display: inline-grid !important;
-    justify-items: end !important;
+    justify-items: center !important;
     align-content: center !important;
     box-sizing: border-box !important;
     min-width: 2.8em !important;
@@ -843,5 +843,52 @@ main > .go-col--full:has(.go-button):hover {
   .go-ticker-teaser__datetime .w3-hh,
   .go-ticker-teaser__datetime .w3-mm {
     display: block !important;
+  }
+
+  /* Die Ziffern zentrieren, der Doppelpunkt zählt nicht mit: aus dem
+   * Fluss genommen hängt er links vor den Minuten — sichtbar, aber ohne
+   * die Mitte zu verschieben. */
+  .go-ticker-teaser__datetime .w3-mm {
+    position: relative !important;
+  }
+
+  .go-ticker-teaser__datetime .w3-colon {
+    position: absolute !important;
+    right: 100% !important;
+  }
+}
+
+/* ── Telefon: die ganze Zeile scrollt — Mechanik wie bei heise (dort
+ * erklärt): Zeile weiß auf weißer Liste, die Maske bleibt unsichtbar. */
+@media (max-width: 500px) {
+  .go-ticker-teaser {
+    overflow-x: auto !important;
+    scrollbar-width: none !important;
+    transform: translateZ(0) !important;
+  }
+
+  .go-ticker-teaser::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  .go-ticker-teaser__content {
+    flex: 0 0 auto !important;
+    min-width: max-content !important;
+    overflow-x: visible !important;
+    animation: none !important;
+    mask-image: none !important;
+  }
+
+  @supports (animation-timeline: scroll()) {
+    .go-ticker-teaser {
+      animation: w3-title-fade linear both !important;
+      animation-timeline: scroll(self inline) !important;
+    }
+  }
+
+  @supports not (animation-timeline: scroll()) {
+    .go-ticker-teaser {
+      mask-image: var(--w3-title-fade) !important;
+    }
   }
 }

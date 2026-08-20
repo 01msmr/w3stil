@@ -776,7 +776,7 @@ article:has(> a[href*="/bestenlisten/"]) > a > time {
 
   article > a > time {
     display: inline-grid !important;
-    justify-items: end !important;
+    justify-items: center !important;
     align-content: center !important;
     box-sizing: border-box !important;
     min-width: 2.8em !important;
@@ -788,5 +788,61 @@ article:has(> a[href*="/bestenlisten/"]) > a > time {
   article > a > time .w3-hh,
   article > a > time .w3-mm {
     display: block !important;
+  }
+
+  /* Ziffern zentriert, Doppelpunkt außer Betracht (Begründung bei golem). */
+  article > a > time .w3-mm {
+    position: relative !important;
+  }
+
+  article > a > time .w3-colon {
+    position: absolute !important;
+    right: 100% !important;
+  }
+}
+
+/* ── Telefon: die ganze Zeile scrollt ───────────────────────────────────
+ * Scroller ist der Zeilen-Link selbst — die Uhr scrollt mit weg, ihr
+ * Platz gehört dem gezogenen Titel. Der Titel-Scroller des 700er-Blocks
+ * wird zurückgebaut; Maske und Scroll-Timeline wandern auf die Zeile.
+ * Deren weiße Fläche liegt auf weißem article, die Maske bleibt dadurch
+ * unsichtbar — abgeblendet werden nur Text und Chip (der beim
+ * Hinausscrollen durch die linke Zone ausblendet). */
+@media (max-width: 500px) {
+  article:has(> a > time) > a {
+    overflow-x: auto !important;
+    scrollbar-width: none !important;
+    transform: translateZ(0) !important;
+  }
+
+  article:has(> a > time) > a::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  /* Titel-Container und h3 schrumpfen nicht mehr und scrollen nicht
+   * selbst — ihre volle Breite lässt die Zeile überlaufen. */
+  article:has(> a > time) > a > div {
+    flex: 0 0 auto !important;
+    min-width: max-content !important;
+  }
+
+  article:has(> a > time) h3 {
+    overflow-x: visible !important;
+    width: max-content !important;
+    animation: none !important;
+    mask-image: none !important;
+  }
+
+  @supports (animation-timeline: scroll()) {
+    article:has(> a > time) > a {
+      animation: w3-title-fade linear both !important;
+      animation-timeline: scroll(self inline) !important;
+    }
+  }
+
+  @supports not (animation-timeline: scroll()) {
+    article:has(> a > time) > a {
+      mask-image: var(--w3-title-fade) !important;
+    }
   }
 }
