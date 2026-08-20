@@ -662,6 +662,9 @@ article:has(> a[href*="/bestenlisten/"]) > a > time {
     overflow-x: auto !important;
     text-overflow: clip !important;
     scrollbar-width: none !important;
+
+    /* Eigene Ebene gegen WebKits verzögertes :visited-Malen im Scroller. */
+    transform: translateZ(0) !important;
   }
 
   article:has(> a > time) h3::-webkit-scrollbar {
@@ -670,5 +673,48 @@ article:has(> a[href*="/bestenlisten/"]) > a > time {
 
   section:has(article > a > time) > div:first-child {
     padding: 0.7em 0 calc(0.2em + 16px) var(--hs-title-x) !important;
+  }
+}
+
+/* ── Touch: kein Hover — wie bei golem, samt Alert- und Werbezeilen. ── */
+@media (hover: none) {
+  article:has(> a > time) > a:hover,
+  article:has(> a > time) > a:focus-visible,
+  article:has(h3 + div [class*="bg-red-700"]) > a:hover,
+  article:has(h3 + div [class*="bg-heiseblau"]) > a:hover,
+  article:has(> a[href*="/bestenlisten/"]) > a:hover {
+    background: var(--hs-card) !important;
+    color: var(--hs-fg) !important;
+  }
+
+  article:has(> a > time) > a:hover > time,
+  article:has(h3 + div [class*="bg-red-700"]) > a:hover > time,
+  article:has(h3 + div [class*="bg-heiseblau"]) > a:hover > time,
+  article:has(> a[href*="/bestenlisten/"]) > a:hover > time {
+    background: var(--hs-chip) !important;
+    color: var(--hs-muted) !important;
+  }
+
+  article:has(> a > time) > a:hover > time::before {
+    background-color: var(--hs-card) !important;
+  }
+
+  article:has(> a > time) > a:hover h3 + div > span,
+  article:has(h3 + div [class*="bg-red-700"]) > a:hover h3 + div > span {
+    background: color-mix(in oklab, var(--hs-fg) var(--w3-label-mix), var(--hs-page)) !important;
+    color: var(--hs-muted) !important;
+  }
+
+  article:has(> a > time) > a:visited:hover {
+    background-color: color-mix(in oklab, var(--hs-card) var(--w3-read-card), var(--hs-page)) !important;
+    color: var(--hs-read) !important;
+  }
+
+  article:has(> a > time) > a:visited:hover > time {
+    color: var(--hs-chip) !important;
+  }
+
+  article:has(> a > time) > a:visited:hover > time::before {
+    background-color: var(--hs-read) !important;
   }
 }

@@ -503,6 +503,9 @@ article[data-teaser-name="HorizontalTimelineTeaser"]:hover {
     scrollbar-width: none !important;
     position: relative !important;
     z-index: 1 !important;
+
+    /* Eigene Ebene gegen WebKits verzögertes :visited-Malen im Scroller. */
+    transform: translateZ(0) !important;
   }
 
   article[data-teaser-name="HorizontalTimelineTeaser"] h3::-webkit-scrollbar {
@@ -526,5 +529,16 @@ article[data-teaser-name="HorizontalTimelineTeaser"]:hover {
     background: var(--mi-page) !important;
     z-index: 60 !important;
     pointer-events: none !important;
+  }
+}
+
+/* ── Touch: kein Hover. ─────────────────────────────────────────────────*/
+@media (hover: none) {
+  article[data-teaser-name="HorizontalTimelineTeaser"]:hover {
+    background: var(--mi-card) !important;
+  }
+
+  div:has(> section > article[data-teaser-name="HorizontalTimelineTeaser"]) > section:hover {
+    box-shadow: 6px 14px 22px rgb(0 0 0 / 0.42) !important;
   }
 }

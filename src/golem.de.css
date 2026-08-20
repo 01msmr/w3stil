@@ -715,6 +715,10 @@ main > .go-col--full:has(.go-button):hover {
     overflow-x: auto !important;
     text-overflow: clip !important;
     scrollbar-width: none !important;
+
+    /* Eigene Ebene: WebKit malt die :visited-Farbe in Scrollern sonst
+     * verzögert — hereingescrollter Text erschien erst dunkler. */
+    transform: translateZ(0) !important;
   }
 
   .go-ticker-teaser__content::-webkit-scrollbar {
@@ -723,5 +727,48 @@ main > .go-col--full:has(.go-button):hover {
 
   .go-col:has(.ticker-list) > h2 {
     padding: 0.7em 0 0.2em var(--gl-title-x) !important;
+  }
+}
+
+/* ── Touch: kein Hover ──────────────────────────────────────────────────
+ * iOS setzt :hover bei Berührung — beim seitlichen Ziehen eines Titels
+ * flackerte die Zeile ins Hover-Schwarz. Auf Geräten ohne echten Hover
+ * werden alle Hover-Markierungen auf den Grundzustand zurückgesetzt. */
+@media (hover: none) {
+  .go-ticker-teaser:hover,
+  .go-ticker-teaser:focus-visible {
+    background-color: var(--gl-card) !important;
+    color: var(--gl-fg) !important;
+  }
+
+  .go-ticker-teaser:hover .go-ticker-teaser__datetime {
+    background: var(--gl-chip) !important;
+    color: var(--gl-muted) !important;
+  }
+
+  .go-ticker-teaser:hover .go-ticker-teaser__datetime::before {
+    background-color: var(--gl-card) !important;
+  }
+
+  .go-ticker-teaser:hover .go-ticker-teaser__labels > * {
+    background: color-mix(in oklab, var(--gl-fg) var(--w3-label-mix), var(--gl-page)) !important;
+    color: var(--gl-muted) !important;
+  }
+
+  .go-ticker-teaser:hover .go-ticker-teaser__labels:has(svg)::before {
+    color: var(--gl-muted) !important;
+  }
+
+  .go-ticker-teaser:visited:hover {
+    background-color: color-mix(in oklab, var(--gl-card) var(--w3-read-card), var(--gl-page)) !important;
+    color: var(--gl-muted) !important;
+  }
+
+  .go-ticker-teaser:visited:hover .go-ticker-teaser__datetime {
+    color: var(--gl-chip) !important;
+  }
+
+  .go-ticker-teaser:visited:hover .go-ticker-teaser__datetime::before {
+    background-color: var(--gl-muted) !important;
   }
 }
