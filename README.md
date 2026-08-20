@@ -121,7 +121,10 @@ Kurzbefehle-App anlegen):
 
 Ausführen → fertig, ganz ohne Dialog. (Lässt ein strengeres iOS den
 fremden App-Ordner nicht als festes Ziel zu: „Speicherort fragen" AN —
-dann kostet jeder Lauf einen Bestätigungs-Tipp.)
+dann kostet jeder Lauf einen Bestätigungs-Tipp.) Vollautomatisch wird es
+mit einem Auslöser davor — ab iOS 27 als erste Aktion im Kurzbefehl
+selbst: **„Wenn [Safari] [geöffnet] ist"** — das Kopieren ist idempotent
+und schnell, es darf bei jedem Safari-Start laufen.
 
 ## Entwickeln
 
