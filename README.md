@@ -380,6 +380,14 @@ Häkchen muss ÜBER den Ziffern liegen (getarnte, aber deckende Glyphen stanzen
 sonst ihre Strichformen heraus), und eine Transition lässt sich für gelesene
 Zeilen nicht gezielt schalten — Chip und Häkchen schalten deshalb hart.
 
+**WebKit ist strenger als Chrome** (beides live auf iOS nachgemessen):
+Safari wendet :visited-Farben erstens NICHT auf Pseudo-Elemente an — das
+Häkchen musste deshalb vom ::before zu einem echten, vom Userscript
+injizierten Element werden. Und zweitens ignoriert Safari :visited-Regeln,
+deren Selektor ein `:has()` enthält — heises `article:has(…) > a:visited`
+blieb komplett stumm, während golems reine Klasse funktionierte; seither
+vergibt das Userscript `a.w3-row`, und alle Visited-Regeln hängen daran.
+
 Die Beschränkungen sind kein Bug, sondern der Schutz davor, dass eine Seite
 die Browser-Historie ausliest. `getComputedStyle` liefert für besuchte Links
 absichtlich die Werte des unbesuchten Zustands, `matches(':visited')` immer
