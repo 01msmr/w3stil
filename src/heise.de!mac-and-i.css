@@ -187,6 +187,20 @@ div:has(> section > article[data-teaser-name="HorizontalTimelineTeaser"]) > sect
   border-top: var(--w3-divider-w) solid transparent !important;
 }
 
+/* ── Navi-Pille: Logo vertikal zentriert ────────────────────────────────
+ * heise verankert die Wortmarke per lg:place-self-start am OBEREN Rand
+ * der runden Kopfleiste; wo das Logo die Pille überragt, hängt es dann
+ * einseitig heraus. Zentriert überragt es symmetrisch — unabhängig von
+ * den Menüpunkten daneben. theme-mac-and-i ist ein Theme-Marker, keine
+ * Layout-Utility, und damit als Anker haltbar. Live verifiziert:
+ * Logo-Mitte == Pillen-Mitte. expect: 1 */
+header.theme-mac-and-i > a:first-child {
+  align-self: center !important;
+  place-self: center !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
 /* ── Zeilen ───────────────────────────────────────────────────────────── */
 
 /* expect: 20..200 */
