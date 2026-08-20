@@ -115,11 +115,13 @@ Kurzbefehle-App anlegen):
 
 1. Aktion **„Ordnerinhalt abrufen"** — Ordner: iCloud Drive → Userscripts.
 2. Aktion **„Datei sichern"** — Eingabe: der Ordnerinhalt; „Speicherort
-   fragen" AN, „Überschreiben, falls vorhanden" AN.
+   fragen" AUS und als festen Zielordner einmalig
+   „Auf meinem iPhone → Userscripts" wählen; „Überschreiben, falls
+   vorhanden" AN.
 
-Ausführen → im einen Dialog „Auf meinem iPhone → Userscripts" wählen →
-fertig. (Fragt dein iOS je Datei einzeln nach dem Ziel, bleibt die
-Dateien-App-Methode gleich schnell.)
+Ausführen → fertig, ganz ohne Dialog. (Lässt ein strengeres iOS den
+fremden App-Ordner nicht als festes Ziel zu: „Speicherort fragen" AN —
+dann kostet jeder Lauf einen Bestätigungs-Tipp.)
 
 ## Entwickeln
 
