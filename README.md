@@ -98,6 +98,13 @@ Einmalig einrichten:
 Aktualisieren = das Skript erneut ausführen (es pullt und baut selbst).
 Kein eigener Update-Kanal: die Geräte lesen, was im Ordner liegt.
 
+**iOS-Fallback:** Der Verzeichnis-Wechsel der iOS-App auf einen iCloud-Ordner
+greift nicht zuverlässig (Stand 08/2026). Dann die Dateien per Dateien-App
+von iCloud Drive → Userscripts in den lokalen App-Ordner kopieren
+(„Auf meinem iPhone" → Userscripts, Ersetzen bestätigen) und die App neu
+öffnen. Nach jedem `ios-sync.sh` wiederholt sich dieser Kopierschritt —
+solange die App den iCloud-Ordner nicht annimmt, ist das der Update-Weg.
+
 ## Entwickeln
 
 ```bash
