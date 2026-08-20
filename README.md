@@ -81,9 +81,11 @@ Quelle im Repo-Root, die Action kopiert sie unverändert auf den
 Stylus gibt es für Safari nicht; Safari kennt auch kein `@-moz-document`.
 Deshalb erzeugt der Build zusätzlich **eine Datei je Domain** in
 `dist/safari/` — gleicher Inhalt, gescoped über `@match`-Metadaten. Die
-freie App **Userscripts** ([App Store](https://apps.apple.com/de/app/userscripts/id1463298887),
-[Quellcode](https://github.com/quoid/userscripts)) — Mac und iOS,
-Safari-Erweiterung — liest solche Dateien aus einem iCloud-Ordner; das
+freie App **Userscripts**
+([App Store für iPhone/iPad und Mac](https://apps.apple.com/de/app/userscripts/id1463298887),
+[Quellcode](https://github.com/quoid/userscripts)) — eine Safari-Erweiterung,
+auf beiden Plattformen aus demselben Listing — liest solche Dateien aus
+einem iCloud-Ordner; das
 Userscript `reduce.user.js` versteht sie unverändert.
 
 Einmalig einrichten:
