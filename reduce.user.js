@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        reduce-ticker
 // @namespace   msmr.co
-// @version     0.10.0
+// @version     0.10.1
 // @description Kürzt Ressort-Chips und formatiert Tagesköpfe der Newsticker
 // @author      msmr
 // @license     MIT
@@ -225,7 +225,7 @@
     'article:has(> a > time) > a, article:has(> a > time) h3, ' +
     'article[data-teaser-name="HorizontalTimelineTeaser"], ' +
     'article[data-teaser-name="HorizontalTimelineTeaser"] h3';
-  const RUECK_RUHE_MS = 12000;
+  const RUECK_RUHE_MS = 9000;
   const RUECK_DAUER_MS = 750;
 
   const rueckTimer = new WeakMap(); // Ruhe-Timer je Titel

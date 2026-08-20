@@ -17,7 +17,7 @@ Zwei Teile, die zusammengehören:
   kürzt Chip-Texte, vereinheitlicht Tagesköpfe, injiziert die
   Gelesen-Marker (WebKit wendet `:visited` weder auf Pseudo-Elemente noch
   auf `:has()` an), snappt beim Scrollen zum nächsten Tageskopf und
-  stellt seitlich gezogene Titel nach 12 s Ruhe langsam zurück.
+  stellt seitlich gezogene Titel nach 9 s Ruhe zurück.
 
 Veröffentlicht wird über GitHub Actions: ein Push auf `main` baut und
 force-pusht die Auslieferungsdateien auf den Branch `publish`, von dort
