@@ -217,6 +217,17 @@ deaktiviert, bis eine Domain dazukommt.
 
 ## Konventionen
 
+**Mobil ist eine Schicht, kein Fork.** Schmale Viewports (`@media
+(max-width: 700px)`) überschreiben nur Variablen und wenige Regeln: in
+`_tokens.css` die domainübergreifenden Werte (Chip-Schrift, Plus, Kopfgröße),
+am Ende jeder Site-Datei die Domain-Werte (Zeilenschrift 16px, Einzüge,
+Titel-Flucht) plus Mobil-Eigenheiten — seitlich ziehbare Titel ohne
+Scrollbalken, flachere Tagesköpfe. Die Titel-Fluchten sind gerechnet, nicht
+gemessen: ändert sich Chip-Polsterung oder Schriftgröße, müssen sie
+nachgezogen werden. Berührung ist kein Hover: `@media (hover: none)` setzt
+alle Hover-Markierungen auf den Grundzustand zurück, sonst flackern die
+Zeilen beim Ziehen der Titel.
+
 **Dateiname = Matcher.** `heise.de.css` wird zu `domain("heise.de")` und matcht
 alle Subdomains. Für exaktes Matching `heise.de!exact.css` — daraus wird ein
 `regexp()`, das Subdomains ausschließt. Soll eine Datei nur EINE Unterseite
