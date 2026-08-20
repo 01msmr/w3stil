@@ -16,7 +16,8 @@ Zwei Teile, die zusammengehören:
 - **Userscript** — `reduce.user.js` übernimmt, was CSS nicht kann:
   kürzt Chip-Texte, vereinheitlicht Tagesköpfe, injiziert die
   Gelesen-Marker (WebKit wendet `:visited` weder auf Pseudo-Elemente noch
-  auf `:has()` an) und snappt beim Scrollen zum nächsten Tageskopf.
+  auf `:has()` an), snappt beim Scrollen zum nächsten Tageskopf und
+  stellt seitlich gezogene Titel nach 12 s Ruhe langsam zurück.
 
 Veröffentlicht wird über GitHub Actions: ein Push auf `main` baut und
 force-pusht die Auslieferungsdateien auf den Branch `publish`, von dort
@@ -76,8 +77,10 @@ tools/ios-sync.sh     baut und befüllt den Userscripts-Ordner (iCloud);
 
 Der Dateiname bestimmt den Matcher (`heise.de.css` → Domain inkl.
 Subdomains); Mobil ist keine eigene Fassung, sondern eine
-Variablen-Schicht per `@media`. Überlange Titel sind dort seitlich
-ziehbar (ohne Scrollbalken); eine scroll-getriebene Maske
+Variablen-Schicht per `@media`; die Zeilenhöhe ist fest (`--w3-row-h`,
+48px — das Polster ergibt sich aus `calc((h - 1lh) / 2)`). Überlange
+Titel sind dort seitlich ziehbar (ohne Scrollbalken, über die volle
+Zeilenhöhe); eine scroll-getriebene Maske
 (`--w3-title-fade-*` in `_tokens.css`) blendet jede tatsächlich
 abgeschnittene Kante über eine feste Zone auf 10 % Deckkraft ab —
 rechts am Anfang, beidseitig mittendrin, links am Ende. `main` trägt

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        reduce-ticker
 // @namespace   msmr.co
-// @version     0.7.1
+// @version     0.8.0
 // @description Kürzt Ressort-Chips und formatiert Tagesköpfe der Newsticker
 // @author      msmr
 // @license     MIT
@@ -178,6 +178,57 @@
     childList: true,
     subtree: true,
   });
+
+  // ── Titel-Rückstellung ───────────────────────────────────────────────
+  /* Seitlich gezogene Titel gleiten nach 12 s Ruhe langsam auf ihre
+   * Ausgangslage zurück. Nur mobil sind Titel überhaupt Scroller — auf
+   * Desktop gibt es keinen Scrollweg, die Handler bleiben stumm. */
+
+  const TITEL_SCROLLER =
+    '.go-ticker-teaser__content, ' +
+    'article:has(> a > time) h3, ' +
+    'article[data-teaser-name="HorizontalTimelineTeaser"] h3';
+  const RUECK_RUHE_MS = 12000;
+  const RUECK_DAUER_MS = 1100;
+
+  const rueckTimer = new WeakMap(); // Ruhe-Timer je Titel
+  const rueckFahrt = new WeakMap(); // Marke der laufenden Rückfahrt
+
+  const zurueckgleiten = (el) => {
+    rueckTimer.delete(el);
+    const von = el.scrollLeft;
+    if (von <= 0) return;
+    const marke = {};
+    rueckFahrt.set(el, marke);
+    const start = performance.now();
+    const schritt = (t) => {
+      if (rueckFahrt.get(el) !== marke) return; // vom Finger unterbrochen
+      const p = Math.min(1, (t - start) / RUECK_DAUER_MS);
+      const weich = p < 0.5 ? 2 * p * p : 1 - (2 - 2 * p) ** 2 / 2;
+      el.scrollLeft = von * (1 - weich);
+      if (p < 1) requestAnimationFrame(schritt);
+      else rueckFahrt.delete(el);
+    };
+    requestAnimationFrame(schritt);
+  };
+
+  /* scroll-Events bubbeln nicht — die Capture-Phase fängt sie trotzdem. */
+  document.addEventListener('scroll', (ev) => {
+    const el = ev.target;
+    if (!(el instanceof Element) || !el.matches(TITEL_SCROLLER)) return;
+    if (rueckFahrt.has(el)) return; // eigene Fahrt zählt nicht als Unruhe
+    clearTimeout(rueckTimer.get(el));
+    rueckTimer.set(el, setTimeout(() => zurueckgleiten(el), RUECK_RUHE_MS));
+  }, true);
+
+  /* Anfassen bricht eine laufende Rückfahrt ab — der Finger gewinnt. */
+  for (const typ of ['pointerdown', 'touchstart', 'wheel']) {
+    document.addEventListener(typ, (ev) => {
+      const el = ev.target instanceof Element
+        && ev.target.closest(TITEL_SCROLLER);
+      if (el) rueckFahrt.delete(el);
+    }, { capture: true, passive: true });
+  }
 
   // ── Richtungs-Snapping an den Tagesköpfen ────────────────────────────
 

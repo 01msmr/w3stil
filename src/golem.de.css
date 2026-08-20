@@ -422,6 +422,14 @@ body:has(.ticker-list) .go-content-header {
   color: var(--gl-muted) !important;
 }
 
+/* Titel ausdrücklich mitfärben: WebKit wendet die :visited-Farbe nur auf
+ * Elemente an, die der Selektor selbst trifft — Kinder ERBEN sie nicht
+ * (Chrome schon; auf dem iPhone blieben Titel gelesener Zeilen dunkel). */
+.go-ticker-teaser:visited .go-ticker-teaser__content,
+.go-ticker-teaser:visited .go-ticker-teaser__content > * {
+  color: var(--gl-muted) !important;
+}
+
 /* Der Farbtausch im Uhrzeit-Chip: gelesene Zeilen zeigen statt der Uhrzeit
  * das Häkchen. Beides sind reine color-Wechsel — die einzige Sorte Änderung,
  * die :visited an Nachfahren erlaubt (der heise-Teil färbt so seit jeher
@@ -703,15 +711,16 @@ main > .go-col--full:has(.go-button):hover {
  * Tageskopf — das Snap-Ziel sitzt mobil zusätzlich tiefer (Userscript). */
 @media (max-width: 700px) {
   body:has(.ticker-list) {
-    --gl-size: 16px;
+    --gl-size: 17px;
     --gl-inset: 2px;
-    --gl-title-x: 46px;
+    --gl-title-x: 49px;
   }
 
-  /* Kaum Raum links und rechts der Uhr. */
+  /* Kaum Raum links und rechts der Uhr; Zeilenhöhe --w3-row-h. */
   .go-ticker-teaser {
     gap: 0.4em !important;
     padding-left: 4px !important;
+    padding-block: calc((var(--w3-row-h) - 1lh) / 2) !important;
   }
 
   /* Lange Titel seitlich ziehbar — ohne sichtbaren Balken. Kein Ellipsis
@@ -720,6 +729,11 @@ main > .go-col--full:has(.go-button):hover {
     overflow-x: auto !important;
     text-overflow: clip !important;
     scrollbar-width: none !important;
+
+    /* Volle Zeilenhöhe als Zieh-Fläche: die Box wird unsichtbar über das
+     * Zeilenpolster ausgedehnt (dieselbe Formel wie das Zeilen-Padding). */
+    margin-block: calc((var(--w3-row-h) - 1lh) / -2) !important;
+    padding-block: calc((var(--w3-row-h) - 1lh) / 2) !important;
 
     /* Eigene Ebene: WebKit malt die :visited-Farbe in Scrollern sonst
      * verzögert — hereingescrollter Text erschien erst dunkler. */

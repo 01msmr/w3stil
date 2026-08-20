@@ -546,15 +546,16 @@ article[data-teaser-name="HorizontalTimelineTeaser"]:hover {
  * Enger und kleiner wie die anderen Ticker; flacherer Tageskopf. */
 @media (max-width: 700px) {
   body:has(article[data-teaser-name="HorizontalTimelineTeaser"]) {
-    --mi-size: 16px;
+    --mi-size: 17px;
     --mi-bleed: 4px;
-    --mi-title-x: 56px;
+    --mi-title-x: 59px;
     --mi-head-size: 18px;
   }
 
-  /* Kaum Raum rechts der Uhr. */
+  /* Kaum Raum rechts der Uhr; Zeilenhöhe --w3-row-h. */
   article[data-teaser-name="HorizontalTimelineTeaser"] {
     gap: 0.4em !important;
+    padding-block: calc((var(--w3-row-h) - 1lh) / 2) !important;
   }
 
   /* Lange Titel seitlich ziehbar — ohne sichtbaren Balken. Der Titel muss
@@ -566,6 +567,11 @@ article[data-teaser-name="HorizontalTimelineTeaser"]:hover {
     scrollbar-width: none !important;
     position: relative !important;
     z-index: 1 !important;
+
+    /* Volle Zeilenhöhe als Zieh-Fläche: die Box wird unsichtbar über das
+     * Zeilenpolster ausgedehnt (dieselbe Formel wie das Zeilen-Padding). */
+    margin-block: calc((var(--w3-row-h) - 1lh) / -2) !important;
+    padding-block: calc((var(--w3-row-h) - 1lh) / 2) !important;
 
     /* Eigene Ebene gegen WebKits verzögertes :visited-Malen im Scroller. */
     transform: translateZ(0) !important;

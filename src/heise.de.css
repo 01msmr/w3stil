@@ -328,6 +328,14 @@ a.w3-row:visited {
   color: var(--hs-read) !important;
 }
 
+/* Titel ausdrücklich mitfärben: WebKit wendet die :visited-Farbe nur auf
+ * Elemente an, die der Selektor selbst trifft — Kinder ERBEN sie nicht
+ * (Chrome schon; auf dem iPhone blieben Titel gelesener Zeilen dunkel). */
+a.w3-row:visited h3,
+a.w3-row:visited h3 > span {
+  color: var(--hs-read) !important;
+}
+
 /* Der Farbtausch im Uhrzeit-Chip gelesener Zeilen: Ziffern tauchen in die
  * Chipfläche ab, das Häkchen tritt hervor — gedimmt wie die Zeilenschrift,
  * nicht in voller Textfarbe. Beim Hover kehrt die Uhrzeit zurück: die
@@ -659,14 +667,15 @@ article:has(> a[href*="/bestenlisten/"]) > a > time {
  * flacherer Tageskopf. */
 @media (max-width: 700px) {
   body:has(article > a > time) {
-    --hs-size: 16px;
+    --hs-size: 17px;
     --hs-bleed: 4px;
-    --hs-title-x: 32px;
+    --hs-title-x: 34px;
   }
 
-  /* Kaum Raum rechts der Uhr. */
+  /* Kaum Raum rechts der Uhr; Zeilenhöhe --w3-row-h. */
   article:has(> a > time) > a {
     gap: 0.4em !important;
+    padding-block: calc((var(--w3-row-h) - 1lh) / 2) !important;
   }
 
   /* Lange Titel seitlich ziehbar — ohne sichtbaren Balken. */
@@ -674,6 +683,11 @@ article:has(> a[href*="/bestenlisten/"]) > a > time {
     overflow-x: auto !important;
     text-overflow: clip !important;
     scrollbar-width: none !important;
+
+    /* Volle Zeilenhöhe als Zieh-Fläche: die Box wird unsichtbar über das
+     * Zeilenpolster ausgedehnt (dieselbe Formel wie das Zeilen-Padding). */
+    margin-block: calc((var(--w3-row-h) - 1lh) / -2) !important;
+    padding-block: calc((var(--w3-row-h) - 1lh) / 2) !important;
 
     /* Eigene Ebene gegen WebKits verzögertes :visited-Malen im Scroller. */
     transform: translateZ(0) !important;

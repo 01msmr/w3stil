@@ -72,13 +72,18 @@
     --w3-plus-scale: 1.05;
     --w3-head-size: 18px;
 
+    /* Mobile Zeilenhöhe: Textzeile plus Polster ergeben zusammen diesen
+     * Wert — die Zeilen setzen padding-block: calc((h - 1lh) / 2), die
+     * Zieh-Flächen der Titel dieselbe Formel als negative Ränder. */
+    --w3-row-h: 48px;
+
     /* Ziehbare Titel: eine feste Blendzone (--w3-title-fade-w) fällt an
      * jeder Schnittkante auf 10 % Deckkraft ab — so ist Abgeschnittenes
      * als überlang erkennbar. Kein Abfall auf 0: die Zeichen an der
      * Kante bleiben lesbar. Die Maske klebt am Element, nicht am Inhalt.
      * Alle drei Gradienten haben dieselben vier Stops, damit die
      * Keyframes weich interpolieren statt hart umzuschalten. */
-    --w3-title-fade-w: 44px;
+    --w3-title-fade-w: 55px;
     --w3-title-fade: linear-gradient(to right,
       #000, #000 var(--w3-title-fade-w),
       #000 calc(100% - var(--w3-title-fade-w)), rgb(0 0 0 / 0.1));
