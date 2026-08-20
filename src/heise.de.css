@@ -765,13 +765,13 @@ article:has(> a[href*="/bestenlisten/"]) > a > time {
 /* ── Telefon: Uhr als Quadrat — Mechanik wie bei golem (dort erklärt). ── */
 @media (max-width: 500px) {
   body:has(article > a > time) {
-    --hs-title-x: 37px; /* gemessen: 53 - 16 (Chip-Delta Quadrat) */
+    --hs-title-x: 33px; /* gemessen: 53 - 20 (Chip-Delta kleines Quadrat) */
   }
 
   /* Der Quadrat-Chip ist höher als die Textzeile — das Zeilenpolster
    * bemisst sich hier an ihm (Begründung bei golem). */
   article:has(> a > time) > a {
-    padding-block: calc((var(--w3-row-h) - 2.8 * var(--w3-chip-font) * var(--hs-size)) / 2) !important;
+    padding-block: calc((var(--w3-row-h) - 2.4 * var(--w3-chip-font) * var(--hs-size)) / 2) !important;
   }
 
   article > a > time {
@@ -779,10 +779,10 @@ article:has(> a[href*="/bestenlisten/"]) > a > time {
     justify-items: center !important;
     align-content: center !important;
     box-sizing: border-box !important;
-    min-width: 2.8em !important;
-    height: 2.8em !important;
-    padding: 0.25em 0.35em !important;
-    line-height: 1.15 !important;
+    min-width: 2.4em !important;
+    height: 2.4em !important;
+    padding: 0.15em 0.25em !important;
+    line-height: 1.05 !important;
   }
 
   article > a > time .w3-hh,
@@ -844,5 +844,36 @@ article:has(> a[href*="/bestenlisten/"]) > a > time {
     article:has(> a > time) > a {
       mask-image: var(--w3-title-fade) !important;
     }
+  }
+}
+
+/* ── Minuten betont ─────────────────────────────────────────────────────
+ * Die Minuten (ohne Doppelpunkt) in voller Textfarbe, auf allen Breiten —
+ * die Stunde ist Kontext, die Minute trägt die Information. */
+article > a > time .w3-mm {
+  color: var(--hs-fg) !important;
+}
+
+article > a > time .w3-colon {
+  color: var(--hs-muted) !important;
+}
+
+/* Die Ziffern-Tarnung gelesener Zeilen braucht die Spans AUSDRÜCKLICH:
+ * WebKit vererbt :visited-Farben nicht in Kind-Elemente (siehe Titel) —
+ * und die betonten Minuten stünden sonst dunkel im leeren Chip. */
+a.w3-row:visited > time .w3-hh,
+a.w3-row:visited > time .w3-mm,
+a.w3-row:visited > time .w3-colon {
+  color: var(--hs-chip) !important;
+}
+
+/* Beim Hover kehrt die Uhrzeit zurück — nach der Tarnung notiert, die
+ * Reihenfolge entscheidet bei gleicher Spezifität. Nur für Geräte mit
+ * echtem Hover; Touch würde die Ziffern beim Ziehen aufblitzen lassen. */
+@media (hover: hover) {
+  a.w3-row:hover > time .w3-hh,
+  a.w3-row:hover > time .w3-mm,
+  a.w3-row:hover > time .w3-colon {
+    color: var(--hs-fg) !important;
   }
 }

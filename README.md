@@ -81,7 +81,8 @@ Variablen-Schicht per `@media`; die Zeilenhöhe ist fest (`--w3-row-h`,
 48px — das Polster ergibt sich aus `calc((h - 1lh) / 2)`). Unter 500px
 (iPhone, nicht iPad) stapelt der Uhrzeit-Chip Stunden über `:Minuten`
 im Quadrat (Ziffern zentriert, der Doppelpunkt zählt dabei nicht mit;
-die Spans injiziert das Userscript), und überlange Zeilen scrollen als
+die Spans injiziert das Userscript — sie tragen auf allen Breiten die
+betonte Minute in voller Textfarbe), und überlange Zeilen scrollen als
 Ganzes — die Uhr fährt mit weg, ihr Platz gehört dem Titel. Zwischen
 500 und 700px scrollt stattdessen nur der Titel (ohne Scrollbalken,
 Zieh-Fläche = volle Zeilenhöhe). Eine scroll-getriebene Maske

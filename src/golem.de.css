@@ -812,21 +812,21 @@ main > .go-col--full:has(.go-button):hover {
 
 /* ── Telefon: Uhr als Quadrat ───────────────────────────────────────────
  * Unter 500px (iPhones; iPads beginnen bei 744px) stapelt der Chip die
- * Stunden über ":Minuten" — rechtsbündig im 2.8em-Quadrat, schmaler als
+ * Stunden über ":Minuten" — rechtsbündig im 2.4em-Quadrat, schmaler als
  * das 5-Zeichen-Rechteck; der gewonnene Raum gehört dem Titel (Flucht
  * nachgezogen). Die Spans injiziert das Userscript; ohne sie bleibt der
  * Chip einzeilig und wächst über min-width hinaus — nichts wird
  * abgeschnitten. Das Häkchen zentriert seine center-Maske von selbst. */
 @media (max-width: 500px) {
   body:has(.ticker-list) {
-    --gl-title-x: 33px; /* 49 - 16 (Chip-Delta, wie bei heise gemessen) */
+    --gl-title-x: 29px; /* 49 - 20 (Chip-Delta, wie bei heise gemessen) */
   }
 
   /* Der Quadrat-Chip (2.8 × Chipschrift) ist höher als die Textzeile —
    * das Zeilenpolster bemisst sich hier an ihm, sonst wüchse die Zeile
    * über --w3-row-h hinaus. */
   .go-ticker-teaser {
-    padding-block: calc((var(--w3-row-h) - 2.8 * var(--w3-chip-font) * var(--gl-size)) / 2) !important;
+    padding-block: calc((var(--w3-row-h) - 2.4 * var(--w3-chip-font) * var(--gl-size)) / 2) !important;
   }
 
   .go-ticker-teaser__datetime {
@@ -834,10 +834,10 @@ main > .go-col--full:has(.go-button):hover {
     justify-items: center !important;
     align-content: center !important;
     box-sizing: border-box !important;
-    min-width: 2.8em !important;
-    height: 2.8em !important;
-    padding: 0.25em 0.35em !important;
-    line-height: 1.15 !important;
+    min-width: 2.4em !important;
+    height: 2.4em !important;
+    padding: 0.15em 0.25em !important;
+    line-height: 1.05 !important;
   }
 
   .go-ticker-teaser__datetime .w3-hh,
@@ -891,4 +891,21 @@ main > .go-col--full:has(.go-button):hover {
       mask-image: var(--w3-title-fade) !important;
     }
   }
+}
+
+/* ── Minuten betont — wie bei heise (dort erklärt). ─────────────────────*/
+.go-ticker-teaser__datetime .w3-mm {
+  color: var(--gl-fg) !important;
+}
+
+.go-ticker-teaser__datetime .w3-colon {
+  color: var(--gl-muted) !important;
+}
+
+/* Ziffern-Tarnung gelesener Zeilen ausdrücklich für die Spans (WebKit
+ * vererbt :visited-Farben nicht in Kinder; Begründung bei heise). */
+.go-ticker-teaser:visited .go-ticker-teaser__datetime .w3-hh,
+.go-ticker-teaser:visited .go-ticker-teaser__datetime .w3-mm,
+.go-ticker-teaser:visited .go-ticker-teaser__datetime .w3-colon {
+  color: var(--gl-chip) !important;
 }
