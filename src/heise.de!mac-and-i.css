@@ -615,3 +615,46 @@ article[data-teaser-name="HorizontalTimelineTeaser"]:hover {
     box-shadow: 6px 14px 22px rgb(0 0 0 / 0.42) !important;
   }
 }
+
+/* ── Telefon: Uhr als Quadrat — Mechanik wie bei golem (dort erklärt).
+ * Platte und Häkchen ziehen mit: die Platte deckt exakt das Quadrat
+ * (2.8 × --mi-cf, Radius wie der Chip), das Häkchen rückt in dessen
+ * Mitte ((2.8 − 1.4) / 2 = 0.7 --mi-cf). */
+@media (max-width: 500px) {
+  body:has(article[data-teaser-name="HorizontalTimelineTeaser"]) {
+    --mi-title-x: 43px; /* 59 - 16 (Chip-Delta, wie bei heise gemessen) */
+  }
+
+  /* Der Quadrat-Chip ist höher als die Textzeile — das Zeilenpolster
+   * bemisst sich hier an ihm (Begründung bei golem). */
+  article[data-teaser-name="HorizontalTimelineTeaser"] {
+    padding-block: calc((var(--w3-row-h) - 2.8 * var(--w3-chip-font) * var(--mi-size)) / 2) !important;
+  }
+
+  article[data-teaser-name="HorizontalTimelineTeaser"] > time {
+    display: inline-grid !important;
+    justify-items: end !important;
+    align-content: center !important;
+    box-sizing: border-box !important;
+    min-width: 2.8em !important;
+    height: 2.8em !important;
+    padding: 0.25em 0.35em !important;
+    line-height: 1.15 !important;
+  }
+
+  article[data-teaser-name="HorizontalTimelineTeaser"] > time .w3-hh,
+  article[data-teaser-name="HorizontalTimelineTeaser"] > time .w3-mm {
+    display: block !important;
+  }
+
+  article[data-teaser-name="HorizontalTimelineTeaser"] > a > .w3-plate {
+    left: calc(var(--mi-bleed) + var(--mi-inset)) !important;
+    width: calc(2.8 * var(--mi-cf)) !important;
+    height: calc(2.8 * var(--mi-cf)) !important;
+    border-radius: 4px !important;
+  }
+
+  article[data-teaser-name="HorizontalTimelineTeaser"] > a > .w3-check {
+    left: calc(var(--mi-bleed) + var(--mi-inset) + 0.7 * var(--mi-cf)) !important;
+  }
+}

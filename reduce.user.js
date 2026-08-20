@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        reduce-ticker
 // @namespace   msmr.co
-// @version     0.8.0
+// @version     0.9.0
 // @description Kürzt Ressort-Chips und formatiert Tagesköpfe der Newsticker
 // @author      msmr
 // @license     MIT
@@ -167,10 +167,37 @@
     }
   };
 
+  /* Uhrzeit in zwei Spans (Stunden / ":Minuten"): CSS kann Text nicht dort
+   * umbrechen, wo kein Umbruchpunkt ist. Auf Desktop bleiben die Spans
+   * inline und unsichtbar; der Phone-Block der Styles stapelt sie zum
+   * Quadrat-Chip. Der Text kann direkt im Chip liegen (golem, heise) oder
+   * in einem Span darunter (Mac & i). */
+  const uhr = () => {
+    for (const chip of document.querySelectorAll(
+      '.go-ticker-teaser__datetime, article > a > time, ' +
+      'article[data-teaser-name="HorizontalTimelineTeaser"] > time'
+    )) {
+      if (chip.querySelector('.w3-hh')) continue;
+      const knoten = [chip, ...chip.querySelectorAll(':scope > span')]
+        .flatMap((el) => [...el.childNodes])
+        .find((n) => n.nodeType === 3 && /^\s*\d{1,2}:\d{2}\s*$/.test(n.nodeValue));
+      if (!knoten) continue;
+      const [, hh, mm] = knoten.nodeValue.match(/(\d{1,2})(:\d{2})/);
+      const h = document.createElement('span');
+      h.className = 'w3-hh';
+      h.textContent = hh;
+      const m = document.createElement('span');
+      m.className = 'w3-mm';
+      m.textContent = mm;
+      knoten.replaceWith(h, m);
+    }
+  };
+
   const trim = () => {
     chips();
     koepfe();
     marker();
+    uhr();
   };
 
   trim();

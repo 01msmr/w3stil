@@ -669,7 +669,7 @@ article:has(> a[href*="/bestenlisten/"]) > a > time {
   body:has(article > a > time) {
     --hs-size: 17px;
     --hs-bleed: 4px;
-    --hs-title-x: 34px;
+    --hs-title-x: 53px; /* gemessen (Playwright, 17px): Titel-Ist 53.3 */
   }
 
   /* Kaum Raum rechts der Uhr; Zeilenhöhe --w3-row-h. */
@@ -759,5 +759,34 @@ article:has(> a[href*="/bestenlisten/"]) > a > time {
 
   a.w3-row:visited:hover > time > .w3-check {
     background-color: var(--hs-read) !important;
+  }
+}
+
+/* ── Telefon: Uhr als Quadrat — Mechanik wie bei golem (dort erklärt). ── */
+@media (max-width: 500px) {
+  body:has(article > a > time) {
+    --hs-title-x: 37px; /* gemessen: 53 - 16 (Chip-Delta Quadrat) */
+  }
+
+  /* Der Quadrat-Chip ist höher als die Textzeile — das Zeilenpolster
+   * bemisst sich hier an ihm (Begründung bei golem). */
+  article:has(> a > time) > a {
+    padding-block: calc((var(--w3-row-h) - 2.8 * var(--w3-chip-font) * var(--hs-size)) / 2) !important;
+  }
+
+  article > a > time {
+    display: inline-grid !important;
+    justify-items: end !important;
+    align-content: center !important;
+    box-sizing: border-box !important;
+    min-width: 2.8em !important;
+    height: 2.8em !important;
+    padding: 0.25em 0.35em !important;
+    line-height: 1.15 !important;
+  }
+
+  article > a > time .w3-hh,
+  article > a > time .w3-mm {
+    display: block !important;
   }
 }

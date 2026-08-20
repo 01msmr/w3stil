@@ -78,7 +78,10 @@ tools/ios-sync.sh     baut und befüllt den Userscripts-Ordner (iCloud);
 Der Dateiname bestimmt den Matcher (`heise.de.css` → Domain inkl.
 Subdomains); Mobil ist keine eigene Fassung, sondern eine
 Variablen-Schicht per `@media`; die Zeilenhöhe ist fest (`--w3-row-h`,
-48px — das Polster ergibt sich aus `calc((h - 1lh) / 2)`). Überlange
+48px — das Polster ergibt sich aus `calc((h - 1lh) / 2)`). Unter 500px
+(iPhone, nicht iPad) stapelt der Uhrzeit-Chip Stunden über `:Minuten`,
+rechtsbündig im Quadrat — der gewonnene Raum gehört dem Titel; die
+Spans dafür injiziert das Userscript. Überlange
 Titel sind dort seitlich ziehbar (ohne Scrollbalken, über die volle
 Zeilenhöhe); eine scroll-getriebene Maske
 (`--w3-title-fade-*` in `_tokens.css`) blendet jede tatsächlich
