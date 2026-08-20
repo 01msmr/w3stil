@@ -73,7 +73,7 @@
     --w3-head-size: 18px;
 
     /* Ziehbare Titel: eine feste Blendzone (--w3-title-fade-w) fällt an
-     * jeder Schnittkante auf 25 % Deckkraft ab — so ist Abgeschnittenes
+     * jeder Schnittkante auf 10 % Deckkraft ab — so ist Abgeschnittenes
      * als überlang erkennbar. Kein Abfall auf 0: die Zeichen an der
      * Kante bleiben lesbar. Die Maske klebt am Element, nicht am Inhalt.
      * Alle drei Gradienten haben dieselben vier Stops, damit die
@@ -81,12 +81,12 @@
     --w3-title-fade-w: 44px;
     --w3-title-fade: linear-gradient(to right,
       #000, #000 var(--w3-title-fade-w),
-      #000 calc(100% - var(--w3-title-fade-w)), rgb(0 0 0 / 0.25));
+      #000 calc(100% - var(--w3-title-fade-w)), rgb(0 0 0 / 0.1));
     --w3-title-fade-both: linear-gradient(to right,
-      rgb(0 0 0 / 0.25), #000 var(--w3-title-fade-w),
-      #000 calc(100% - var(--w3-title-fade-w)), rgb(0 0 0 / 0.25));
+      rgb(0 0 0 / 0.1), #000 var(--w3-title-fade-w),
+      #000 calc(100% - var(--w3-title-fade-w)), rgb(0 0 0 / 0.1));
     --w3-title-fade-l: linear-gradient(to right,
-      rgb(0 0 0 / 0.25), #000 var(--w3-title-fade-w),
+      rgb(0 0 0 / 0.1), #000 var(--w3-title-fade-w),
       #000 calc(100% - var(--w3-title-fade-w)), #000);
   }
 
