@@ -922,6 +922,7 @@ a.w3-row:visited > time .w3-colon {
     width: fit-content !important;
     background: var(--hs-page) !important;
     border-radius: 999px !important;
+    border: 1px solid var(--hs-fg) !important;
     padding: 0.2em 0.9em !important;
     margin-left: -0.9em !important;
   }

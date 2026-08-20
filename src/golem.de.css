@@ -951,13 +951,27 @@ main > .go-col--full:has(.go-button):hover {
 @media (max-width: 700px) {
   .go-col:has(.ticker-list) > h2 {
     position: sticky !important;
-    top: 4px !important;
+
+    /* golems Kopfleiste (.go-header__wrapper) klebt selbst und läge mit
+     * ihrem Maximal-z-index über der Pille — solange sie sichtbar ist,
+     * parkt die Pille UNTER ihr (70px Leistenhöhe + 4). */
+    top: calc(var(--gl-sitehead) + 4px) !important;
+    transition: top 0.25s ease !important;
     z-index: 5 !important;
     pointer-events: none !important;
     width: fit-content !important;
     background: var(--gl-page) !important;
+    border: 1px solid var(--gl-fg) !important;
     border-radius: 999px !important;
     margin: 0.5em 0 0.2em calc(var(--gl-title-x) - 0.9em) !important;
     padding: 0.2em 0.9em !important;
+
+    --gl-sitehead: 70px;
+  }
+
+  /* Beim Runterscrollen blendet golem die Leiste aus und markiert das
+   * mit einer Klasse am Wrapper — die Pille rückt dann an den Rand. */
+  body:has(.go-header--off-screen) .go-col:has(.ticker-list) > h2 {
+    top: 4px !important;
   }
 }
