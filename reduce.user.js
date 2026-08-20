@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        reduce-ticker
 // @namespace   msmr.co
-// @version     0.5.1
+// @version     0.6.0
 // @description Kürzt Ressort-Chips und formatiert Tagesköpfe der Newsticker
 // @author      msmr
 // @license     MIT
@@ -23,9 +23,18 @@
  *
  * Aus "heise security" wird "security", aus "Mac & i Magazin" wird "Mac & i".
  * "heise online" verschwindet ganz: es ist das Standard-Ressort des Tickers
- * und traegt dort keine Information. Auf dem Mac-&-i-Ticker gilt dasselbe
- * fuer "Mac & i Magazin" (dort ist ALLES Mac & i); fremde Brandings wie
- * "heise security" bleiben und werden nur gekuerzt.
+ * und trägt dort keine Information. Auf dem Mac-&-i-Ticker gilt dasselbe
+ * für "Mac & i Magazin" (dort ist ALLES Mac & i); fremde Brandings wie
+ * "heise security" bleiben und werden nur gekürzt.
+ *
+ * heise liefert die Chips über zwei verschiedene Auszeichnungen aus — mal als
+ * span.whitespace-nowrap unter h3 + div, mal mit data-component="Branding".
+ * Beide Wege laufen deshalb durch DIESELBE Entscheidungsfunktion (chipText).
+ * Vorher hatte jeder Selektor seine eigene Regelmenge, und die des
+ * Branding-Zweigs kannte den Entfernen-Fall nicht: Sobald heise auf Branding
+ * umstellte, wurde aus "heise online" ein Chip mit der Aufschrift "ONLINE",
+ * statt zu verschwinden. Kommt ein dritter Auslieferungsweg dazu, ist das
+ * eine Zeile in ZIELE — keine zweite Regelmenge.
  *
  * Die Tagesköpfe verlieren ihr "Heute –"/"Gestern –" (das Datum daneben
  * sagt dasselbe) und werden auf beiden Seiten einheitlich als
@@ -37,10 +46,11 @@
  * heise-Ticker (viele Zeilen je Tag) greift der Sog nur in einem engen
  * Bereich um das Ziel (~30% der Fensterhöhe, ≈250px), sonst ließe sich
  * das Innere langer Tage nie in Ruhe lesen; der kurze Mac-&-i-Ticker
- * zieht über jede Entfernung an. CSS-Snap (proximity) kann beides nicht: sein Fangradius ist
- * browserintern, und er springt auch gegen die Scrollrichtung zurück.
- * Während der Gleitfahrt sind Scroll-Ereignisse stummgeschaltet, sonst
- * fütterte die eigene Animation die Richtungslogik.
+ * zieht über jede Entfernung an. CSS-Snap (proximity) kann beides nicht:
+ * sein Fangradius ist browserintern, und er springt auch gegen die
+ * Scrollrichtung zurück. Während der Gleitfahrt sind Scroll-Ereignisse
+ * stummgeschaltet, sonst fütterte die eigene Animation die Richtungslogik.
+ *
  * "heise+ exklusiv" bleibt unangetastet: das Plus hängt am Markennamen, ohne
  * ihn bliebe nur "exklusiv" übrig. Einwortige Chips ("bestenlisten", "WTF")
  * ändern sich nicht.
@@ -58,42 +68,71 @@
   const MONATE = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli',
     'August', 'September', 'Oktober', 'November', 'Dezember'];
 
+  // ── Ressort-Chips ────────────────────────────────────────────────────
+
+  /* Auf dem Mac-&-i-Ticker trägt "Mac & i" keine Information — dort ist alles
+   * Mac & i. Im Haupt-Ticker unterscheidet das Chip sehr wohl und bleibt. */
+  const MACI = location.pathname.startsWith('/mac-and-i');
+
+  /* Alle bekannten Auslieferungswege der Chips. Neue Fassung von heise?
+   * Hier eine Zeile ergänzen — die Regeln stehen nur in chipText(). */
+  const ZIELE = [
+    'article h3 + div > span.whitespace-nowrap',
+    '[data-component="Branding"]',
+  ];
+
+  /* null      → Element entfernen
+   * undefined → unverändert lassen
+   * String    → neuer Text */
+  const chipText = (roh) => {
+    const t = roh.trim();
+    if (!t) return undefined;
+    if (/^heise\s+online$/i.test(t)) return null;
+    if (MACI && /^mac\s*&\s*i(\s+magazin)?$/i.test(t)) return null;
+    const kurz = t.replace(/^heise\s+/i, '').replace(/\s+Magazin$/i, '');
+    return kurz === roh ? undefined : kurz;
+  };
+
+  const chips = () => {
+    for (const sel of ZIELE) {
+      for (const el of document.querySelectorAll(sel)) {
+        /* textContent würde Kindknoten löschen. Enthält das Chip Elemente
+         * (SVG, sr-only-Text), nur den ersten Textknoten anfassen. */
+        const neu = chipText(el.textContent);
+        if (neu === null) {
+          el.remove();
+        } else if (neu !== undefined) {
+          const node = [...el.childNodes].find(
+            (n) => n.nodeType === 3 && n.nodeValue.trim()
+          );
+          if (el.children.length && node) node.nodeValue = neu;
+          else el.textContent = neu;
+        }
+      }
+    }
+  };
+
+  // ── Tagesköpfe ───────────────────────────────────────────────────────
+
+  const KOEPFE =
+    'section > div:first-child > h2, ' +
+    '.go-col:has(.ticker-list) > h2';
+
+  const koepfe = () => {
+    for (const el of document.querySelectorAll(KOEPFE)) {
+      const t = el.textContent;
+      let kurz = t.replace(/^\s*(heute|gestern)\s*[\u2013\u2014-]\s*/i, '');
+      kurz = kurz.replace(
+        /^(\S+),\s*(?:den\s+)?(\d{1,2})\.(\d{1,2})\.(\d{4})\s*$/,
+        (_, wd, d, m, y) => wd + ', den ' + (+d) + '. ' + MONATE[+m - 1] + ' ' + y
+      );
+      if (kurz !== t) el.textContent = kurz;
+    }
+  };
+
   const trim = () => {
-    document
-      .querySelectorAll('article h3 + div > span.whitespace-nowrap')
-      .forEach((el) => {
-        const t = el.textContent;
-        if (/^heise\s+online$/i.test(t.trim())) {
-          el.remove();
-          return;
-        }
-        const kurz = t.replace(/^heise\s+/i, '').replace(/\s+Magazin$/i, '');
-        if (kurz !== t) el.textContent = kurz;
-      });
-
-    document
-      .querySelectorAll('[data-component="Branding"]')
-      .forEach((el) => {
-        const t = el.textContent.trim();
-        if (/^mac & i( magazin)?$/i.test(t)) {
-          el.remove();
-          return;
-        }
-        const kurz = t.replace(/^heise\s+/i, '').replace(/\s+Magazin$/i, '');
-        if (kurz !== t) el.textContent = kurz;
-      });
-
-    document
-      .querySelectorAll('section > div:first-child > h2, .go-col:has(.ticker-list) > h2')
-      .forEach((el) => {
-        const t = el.textContent;
-        let kurz = t.replace(/^\s*(heute|gestern)\s*[\u2013\u2014-]\s*/i, '');
-        kurz = kurz.replace(
-          /^(\S+),\s*(?:den\s+)?(\d{1,2})\.(\d{1,2})\.(\d{4})\s*$/,
-          (_, wd, d, m, y) => wd + ', den ' + (+d) + '. ' + MONATE[+m - 1] + ' ' + y
-        );
-        if (kurz !== t) el.textContent = kurz;
-      });
+    chips();
+    koepfe();
   };
 
   trim();
@@ -115,7 +154,7 @@
   /* Anzieh-Reichweite: auf Seiten mit langen Tagen (golem, heise-Ticker)
    * greift der Snap nur nahe am Ziel — relativ zur Fensterhöhe, damit sich
    * das Verhalten kleinen Fenstern anpasst. Mac & i: unbegrenzt. */
-  const BEGRENZT = !location.pathname.startsWith('/mac-and-i');
+  const BEGRENZT = !MACI;
   const reichweite = () =>
     BEGRENZT ? Math.round(window.innerHeight * 0.3) : Infinity;
 
