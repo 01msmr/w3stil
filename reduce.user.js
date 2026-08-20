@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        reduce-ticker
 // @namespace   msmr.co
-// @version     0.6.1
+// @version     0.6.2
 // @description Kürzt Ressort-Chips und formatiert Tagesköpfe der Newsticker
 // @author      msmr
 // @license     MIT
@@ -151,8 +151,10 @@
   const RUHE_MS = 150;   // so lange muss das Scrollen stehen, bevor gesnappt wird
 
   /* Zielposition: so viel Raum bleibt über dem Kopf. Mobil fast nichts —
-   * unter der iOS-Statusleiste soll kein Rest des Vortags stehen. */
-  const luft = () => (window.innerWidth < 700 ? 2 : 12);
+   * unter der iOS-Statusleiste soll kein Rest des Vortags stehen; auf
+   * Mac & i sogar leicht negativ, der Kopf rückt bis an die Leiste. */
+  const luft = () =>
+    window.innerWidth < 700 ? (MACI ? -6 : 2) : 12;
 
   /* Anzieh-Reichweite: auf Seiten mit langen Tagen (golem, heise-Ticker)
    * greift der Snap nur nahe am Ziel — relativ zur Fensterhöhe, damit sich

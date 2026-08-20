@@ -260,6 +260,7 @@ body:has(.ticker-list) .go-content-header {
   font-variant-numeric: tabular-nums !important;
   font-size: calc(1em * var(--w3-chip-font)) !important;
   letter-spacing: 0.03em !important;
+  line-height: var(--gl-lh) !important;
 
   /* Anker und Stapelkontext für das Häkchen: der eigene z-index isoliert
    * dessen mix-blend-mode auf den Chip — sonst blendete es gegen alles, was
@@ -701,12 +702,13 @@ main > .go-col--full:has(.go-button):hover {
   body:has(.ticker-list) {
     --gl-size: 16px;
     --gl-inset: 2px;
-    --gl-title-x: 52px;
+    --gl-title-x: 46px;
   }
 
-  /* Kaum Raum rechts der Uhr. */
+  /* Kaum Raum links und rechts der Uhr. */
   .go-ticker-teaser {
     gap: 0.4em !important;
+    padding-left: 4px !important;
   }
 
   /* Lange Titel seitlich ziehbar — ohne sichtbaren Balken. Kein Ellipsis

@@ -44,7 +44,9 @@ body:has(article > a > time) {
    * Farbe für beide, damit Häkchen und Zeilentext nicht auseinanderlaufen.
    * Muss dunkler bleiben als die Chipfläche, sonst verliert der
    * darken-Blend des Häkchens (siehe dort). */
-  --hs-read: color-mix(in oklab, var(--hs-muted) 75%, var(--hs-page));
+  /* 55% statt 75% Farbanteil: die Dimmung war zu zaghaft, gelesen wirkte
+   * wie aktiv. */
+  --hs-read: color-mix(in oklab, var(--hs-muted) 55%, var(--hs-page));
 
   /* Marken-Blau: Füllung der Hover-Zeile. Bei golem ist das Schwarz. */
   --hs-blue: #14315b;
@@ -212,6 +214,7 @@ article > a > time {
   font-variant-numeric: tabular-nums !important;
   font-size: calc(var(--hs-size) * var(--w3-chip-font)) !important;
   letter-spacing: 0.03em !important;
+  line-height: var(--hs-lh) !important;
   transition: none !important;
   position: relative !important;
   z-index: 0 !important;
@@ -648,8 +651,8 @@ article:has(> a[href*="/bestenlisten/"]) > a > time {
 @media (max-width: 700px) {
   body:has(article > a > time) {
     --hs-size: 16px;
-    --hs-bleed: 8px;
-    --hs-title-x: 36px;
+    --hs-bleed: 4px;
+    --hs-title-x: 32px;
   }
 
   /* Kaum Raum rechts der Uhr. */
