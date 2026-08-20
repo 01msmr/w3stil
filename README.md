@@ -3,6 +3,46 @@
 Reduziertes Lese-Layout für häufig besuchte Seiten. Quelle sind plain-CSS-Dateien;
 der Build erzeugt ein einzelnes UserCSS-Artefakt für [Stylus](https://add0n.com/stylus.html).
 
+## Schnellstart
+
+Zwei Bausteine gehören zusammen: der **Style** (Aussehen) und das
+**Userscript** (Textkürzungen, Gelesen-Häkchen, Tages-Snapping). Beide
+installieren, sonst fehlt die Hälfte.
+
+**Chrome, Vivaldi, Edge, Firefox (Desktop):**
+
+1. Erweiterungen [Stylus](https://add0n.com/stylus.html) und
+   [Tampermonkey](https://www.tampermonkey.net/) installieren
+   (Chrome/Vivaldi: in der Erweiterungsverwaltung „Nutzerskripte zulassen"
+   aktivieren).
+2. `https://w3.msmr.co/reduce.user.css` öffnen → in Stylus installieren.
+3. `https://w3.msmr.co/reduce.user.js` öffnen → in Tampermonkey installieren.
+4. Fertig — Updates holen beide Erweiterungen künftig selbst.
+
+**Mac (Safari):**
+
+1. App [Userscripts](https://apps.apple.com/de/app/userscripts/id1463298887)
+   laden, öffnen, als Verzeichnis **iCloud Drive → Userscripts** wählen;
+   Erweiterung in Safari aktivieren und den Seiten erlauben.
+2. Einmal `tools/ios-sync.sh` aus diesem Repo ausführen — füllt den Ordner.
+3. Aktualisieren: dasselbe Skript erneut ausführen, Seite neu laden.
+
+**iPhone/iPad (Safari):**
+
+1. Dieselbe App [Userscripts](https://apps.apple.com/de/app/userscripts/id1463298887)
+   laden; Erweiterung unter Einstellungen → Apps → Safari → Erweiterungen
+   aktivieren und golem.de/heise.de erlauben.
+2. In der App dasselbe Verzeichnis wählen (iCloud Drive → Userscripts) —
+   zickt das, hilft der Kurzbefehl
+   [„copy Userscripts"](https://www.icloud.com/shortcuts/bb1852c5f7cd43d8960801817af6547e),
+   der die Dateien in den lokalen App-Ordner kopiert (automatisierbar beim
+   Safari-Start).
+3. Aktualisieren: passiert über iCloud bzw. den Kurzbefehl von selbst,
+   sobald am Mac `tools/ios-sync.sh` gelaufen ist.
+
+Details, Stolpersteine und die Werkstatt-Themen stehen in den Abschnitten
+unten.
+
 ```
 src/_reset.css        Basis, wird Domain-Sektionen ohne @no-reset vorangestellt
 src/_tokens.css       domainübergreifende Konstanten, in JEDER Sektion
