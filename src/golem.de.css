@@ -720,7 +720,6 @@ main > .go-col--full:has(.go-button):hover {
     overflow-x: auto !important;
     text-overflow: clip !important;
     scrollbar-width: none !important;
-    mask-image: var(--w3-title-fade) !important;
 
     /* Eigene Ebene: WebKit malt die :visited-Farbe in Scrollern sonst
      * verzögert — hereingescrollter Text erschien erst dunkler. */
@@ -731,12 +730,21 @@ main > .go-col--full:has(.go-button):hover {
     display: none !important;
   }
 
-  /* Hineingescrollt: beidseitige Maske. Guard nötig — ohne
-   * Timeline-Support liefe die Animation zeitbasiert sofort durch. */
+  /* Schnittkanten abblenden — die Maske kommt NUR aus den Keyframes:
+   * ohne Scrollüberschuss ist die Timeline inaktiv und nichts maskiert.
+   * Kein mask-image !important in der Grundregel — das schlüge in der
+   * Kaskade die Animationswerte und fror die Maske statisch ein. */
   @supports (animation-timeline: scroll()) {
     .go-ticker-teaser__content {
       animation: w3-title-fade linear both !important;
       animation-timeline: scroll(self inline) !important;
+    }
+  }
+
+  /* Ohne Timeline-Support (Firefox): statische rechte Kante als Notlösung. */
+  @supports not (animation-timeline: scroll()) {
+    .go-ticker-teaser__content {
+      mask-image: var(--w3-title-fade) !important;
     }
   }
 

@@ -73,28 +73,29 @@
     --w3-head-size: 18px;
 
     /* Ziehbare Titel: eine feste Blendzone (--w3-title-fade-w) fällt an
-     * jeder Schnittkante auf 30 % Deckkraft ab — so ist Abgeschnittenes
+     * jeder Schnittkante auf 25 % Deckkraft ab — so ist Abgeschnittenes
      * als überlang erkennbar. Kein Abfall auf 0: die Zeichen an der
      * Kante bleiben lesbar. Die Maske klebt am Element, nicht am Inhalt.
      * Alle drei Gradienten haben dieselben vier Stops, damit die
      * Keyframes weich interpolieren statt hart umzuschalten. */
-    --w3-title-fade-w: 24px;
+    --w3-title-fade-w: 44px;
     --w3-title-fade: linear-gradient(to right,
       #000, #000 var(--w3-title-fade-w),
-      #000 calc(100% - var(--w3-title-fade-w)), rgb(0 0 0 / 0.3));
+      #000 calc(100% - var(--w3-title-fade-w)), rgb(0 0 0 / 0.25));
     --w3-title-fade-both: linear-gradient(to right,
-      rgb(0 0 0 / 0.3), #000 var(--w3-title-fade-w),
-      #000 calc(100% - var(--w3-title-fade-w)), rgb(0 0 0 / 0.3));
+      rgb(0 0 0 / 0.25), #000 var(--w3-title-fade-w),
+      #000 calc(100% - var(--w3-title-fade-w)), rgb(0 0 0 / 0.25));
     --w3-title-fade-l: linear-gradient(to right,
-      rgb(0 0 0 / 0.3), #000 var(--w3-title-fade-w),
+      rgb(0 0 0 / 0.25), #000 var(--w3-title-fade-w),
       #000 calc(100% - var(--w3-title-fade-w)), #000);
   }
 
   /* Zeitachse = eigener horizontaler Scrollweg (Safari 26+/Chrome 115+).
    * Abgeblendet wird nur, wo wirklich etwas abgeschnitten ist: am Anfang
    * nur rechts, dazwischen beidseitig, am Ende nur links. Ohne
-   * Scrollüberschuss ist die Timeline inaktiv → Grundzustand der
-   * Site-Regel (rechte Kante, die kurze Titel ohnehin nie erreichen). */
+   * Scrollüberschuss ist die Timeline inaktiv → gar keine Maske. Die
+   * Site-Regeln setzen deshalb KEIN mask-image !important — das schlüge
+   * in der Kaskade die Animationswerte (nur Firefox-Fallback tut es). */
   @keyframes w3-title-fade {
     0% { mask-image: var(--w3-title-fade); }
     4%, 96% { mask-image: var(--w3-title-fade-both); }
