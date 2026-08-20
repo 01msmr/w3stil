@@ -160,15 +160,16 @@ div:has(> section > article[data-teaser-name="HorizontalTimelineTeaser"]) > sect
   box-shadow: 12px 28px 45px rgb(0 0 0 / 0.42) !important;
 }
 
-/* Trennlinie zwischen den Zeilen — dieselbe Mischung wie überall. Die hr
- * liegen fertig im Markup, sie werden nur umgefärbt. expect: 20..200 */
+/* Trennlinie zwischen den Zeilen: VOLL TRANSPARENT — nur der 1px-Takt
+ * bleibt erhalten, die Linie selbst ist unsichtbar (Vorgabe). Die hr
+ * liegen fertig im Markup. expect: 20..200 */
 div:has(> section > article[data-teaser-name="HorizontalTimelineTeaser"]) > section > hr {
   /* heise blendet die hr selbst aus (display: none) — ohne das hier gäbe es
    * keine Trennlinien. */
   display: block !important;
   margin: 0 !important;
   border: 0 !important;
-  border-top: var(--w3-divider-w) solid color-mix(in srgb, var(--mi-page) var(--w3-divider-mix), var(--mi-card)) !important;
+  border-top: var(--w3-divider-w) solid transparent !important;
 }
 
 /* ── Zeilen ───────────────────────────────────────────────────────────── */
