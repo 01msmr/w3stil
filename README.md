@@ -89,6 +89,10 @@ Ganzes — die Uhr fährt mit weg, ihr Platz gehört dem Titel. Zwischen
 Zieh-Fläche = volle Zeilenhöhe). Eine scroll-getriebene Maske
 (`--w3-title-fade-*` in `_tokens.css`) blendet jede tatsächlich
 abgeschnittene Kante über eine feste Zone auf 10 % Deckkraft ab —
-rechts am Anfang, beidseitig mittendrin, links am Ende. `main` trägt
+rechts am Anfang, beidseitig mittendrin, links am Ende. Alle drei
+Ticker folgen dem System-Dark-Mode: je Site kippt ein `@media`-Block
+nur die Grundvariablen (invertierte, für Dunkel nachjustierte Farben),
+alles Abgeleitete rechnet per `color-mix` mit; die Blendmodi von
+Häkchen und Platte invertieren am Dateiende mit. `main` trägt
 nur Quellen — `dist/` ist gitignored und wird ausschließlich von der
 Action gebaut.

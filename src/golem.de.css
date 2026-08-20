@@ -74,6 +74,24 @@ body:has(.ticker-list) {
   --gl-title-x: 96px;
 }
 
+/* ── Dark Mode ──────────────────────────────────────────────────────────
+ * Nur die Grundfarben kippen — invertiert und für Dunkel nachjustiert.
+ * Alles Abgeleitete (Chipfläche, Gelesen-Fläche, Trennlinien, Hover-
+ * Mischungen) rechnet per color-mix von selbst mit; der Hover invertiert
+ * damit ebenfalls (helle Zeile, dunkle Schrift). Die Blend-Inversion des
+ * Häkchens steht am Dateiende — sie muss in der Kaskade hinter der
+ * Grundregel liegen. */
+@media (prefers-color-scheme: dark) {
+  body:has(.ticker-list) {
+    --gl-fg: #e6e6e6;
+    --gl-card: #1c1c1c;
+    --gl-muted: #9a9a9a;
+    --gl-page: #0f0f0f;
+    --gl-accent: #35a05f;
+    --gl-head-color: #909090;
+  }
+}
+
 /* golem klemmt die Spalte mit overflow: hidden ab. Ohne das hier wird der
  * Überstand der Hover-Fläche abgeschnitten und die Hinweise im grauen Rand
  * bleiben unsichtbar. Betrifft nur die Spalte, die die Ticker-Liste enthält.
@@ -908,4 +926,18 @@ main > .go-col--full:has(.go-button):hover {
 .go-ticker-teaser:visited .go-ticker-teaser__datetime .w3-mm,
 .go-ticker-teaser:visited .go-ticker-teaser__datetime .w3-colon {
   color: var(--gl-chip) !important;
+}
+
+/* ── Dark Mode: Blend-Inversion des Häkchens ────────────────────────────
+ * Der Tarn-Trick ist auf Hell gebaut: unbesucht card-farben (weiß) und
+ * darken — nichts ist heller als der Untergrund, das Häkchen unsichtbar.
+ * Auf Dunkel gilt das Gegenteil: die Card-Farbe ist dunkler als alles im
+ * Chip, unsichtbar macht sie lighten; die Gelesen-Farbe (heller als der
+ * Chip) gewinnt und zeichnet den Check. Der Blendmodus darf per Media
+ * Query wechseln — nur per :visited dürfte er es nicht. Am Dateiende,
+ * damit die Kaskade sicher die Grundregel schlägt. */
+@media (prefers-color-scheme: dark) {
+  .go-ticker-teaser__datetime > .w3-check {
+    mix-blend-mode: lighten !important;
+  }
 }

@@ -76,6 +76,19 @@ body:has(article[data-teaser-name="HorizontalTimelineTeaser"]) {
   --mi-title-x: 106px;
 }
 
+/* ── Dark Mode — wie bei golem: nur Grundfarben, Abgeleitetes rechnet
+ * mit. Der weiße Tageskopf (--mi-head-color) bleibt — er steht ohnehin
+ * auf dunklem Grund. Blend-Inversionen von Platte und Häkchen am Ende. */
+@media (prefers-color-scheme: dark) {
+  body:has(article[data-teaser-name="HorizontalTimelineTeaser"]) {
+    --mi-fg: #dfe5ea;
+    --mi-card: #1c1c1c;
+    --mi-muted: #8ba0bd;
+    --mi-page: #0c0c0c;
+    --mi-alert: oklch(0.62 0.19 27.518);
+  }
+}
+
 /* Auch der Seitengrund außerhalb der Karte wird golems Grau — heises
  * Blaugrau bliebe sonst als Rahmen sichtbar. expect: 1 */
 body:has(article[data-teaser-name="HorizontalTimelineTeaser"]) {
@@ -719,4 +732,21 @@ article[data-teaser-name="HorizontalTimelineTeaser"] > time .w3-hh {
 
 article[data-teaser-name="HorizontalTimelineTeaser"] > time .w3-colon {
   color: var(--mi-muted) !important;
+}
+
+/* ── Dark Mode: Blend-Inversion von Platte und Häkchen (Begründung bei
+ * golem) — hier tauschen beide zusätzlich ihre Ruhefarbe, weil sie als
+ * Literale gesetzt sind: Platte weiß + darken (unbesucht unsichtbar,
+ * besucht chip-farben und löscht die nun helleren Ziffern), Häkchen
+ * schwarz + lighten (besucht zeichnet die helle Gelesen-Farbe). */
+@media (prefers-color-scheme: dark) {
+  article[data-teaser-name="HorizontalTimelineTeaser"] > a > .w3-plate {
+    mix-blend-mode: darken !important;
+    background-color: #fff !important;
+  }
+
+  article[data-teaser-name="HorizontalTimelineTeaser"] > a > .w3-check {
+    mix-blend-mode: lighten !important;
+    background-color: #000 !important;
+  }
 }

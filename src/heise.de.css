@@ -91,6 +91,24 @@ body:has(article > a > time) {
   --hs-title-x: 82px;
 }
 
+/* ── Dark Mode — wie bei golem: nur Grundfarben, Abgeleitetes rechnet mit. */
+@media (prefers-color-scheme: dark) {
+  body:has(article > a > time) {
+    --hs-fg: #dfe5ea;
+    --hs-card: #161b22;
+    --hs-muted: #8ba0bd;
+    --hs-page: #0b0f14;
+
+    /* Hover-Fläche hell statt dunkel: der Hover-Text ist card-farben
+     * (jetzt dunkel) und braucht einen hellen Grund — die invertierte
+     * Entsprechung des Marken-Blaus. */
+    --hs-blue: #a9c2e2;
+    --hs-accent: #23a19a;
+    --hs-head-color: #8ba0bd;
+    --hs-alert: oklch(0.62 0.19 27.518);
+  }
+}
+
 /* Die weiße Inhaltskarte wird zur grauen Fläche, auf der die Tages-Chips
  * liegen. Gefasst über ihre Beziehung zur Liste, nicht über ihre
  * Utility-Klassen. expect: 1 */
@@ -875,5 +893,12 @@ a.w3-row:visited > time .w3-colon {
   a.w3-row:hover > time .w3-mm,
   a.w3-row:hover > time .w3-colon {
     color: var(--hs-fg) !important;
+  }
+}
+
+/* ── Dark Mode: Blend-Inversion des Häkchens (Begründung bei golem). ── */
+@media (prefers-color-scheme: dark) {
+  article > a > time > .w3-check {
+    mix-blend-mode: lighten !important;
   }
 }
