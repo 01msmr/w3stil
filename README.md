@@ -70,7 +70,8 @@ build.mjs             src/ → dist/reduce.user.css + dist/safari/  (ohne Depend
 reduce.user.js        Userscript: Text, Gelesen-Marker, Snapping
 tools/probe.user.js   Analyse-Overlay zum Schreiben neuer Regeln
 tools/check.mjs       prüft per Playwright, ob die Selektoren noch matchen
-tools/ios-sync.sh     baut und befüllt den Userscripts-Ordner (iCloud)
+tools/ios-sync.sh     baut und befüllt den Userscripts-Ordner (iCloud);
+                      warnt, wenn der Checkout hinter origin/main liegt
 ```
 
 Der Dateiname bestimmt den Matcher (`heise.de.css` → Domain inkl.

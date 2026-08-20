@@ -4,7 +4,7 @@
 # Dateien über iCloud Drive automatisch nach; "Aktualisieren" heißt schlicht:
 # dieses Skript erneut ausführen.
 #
-#   tools/ios-sync.sh                 # pull + build + kopieren
+#   tools/ios-sync.sh                 # build + kopieren
 #   USERSCRIPTS_DIR=... tools/ios-sync.sh   # abweichender App-Ordner
 set -eu
 
@@ -33,7 +33,18 @@ if [ -z "$ZIEL" ] || [ ! -d "$ZIEL" ]; then
 fi
 
 cd "$ROOT"
-git pull --ff-only -q || echo "! git pull übersprungen (offline oder lokale Änderungen)"
+
+# Kein Pull — nur warnen, wenn der Checkout hinter origin/main liegt (der
+# Build und seine @version kämen sonst veraltet in den iCloud-Ordner).
+if git fetch -q origin main 2>/dev/null; then
+  HINTEN="$(git rev-list --count HEAD..origin/main)"
+  if [ "$HINTEN" -gt 0 ]; then
+    echo "! Checkout liegt $HINTEN Commit(s) hinter origin/main — ggf. erst pullen"
+  fi
+else
+  echo "! git fetch fehlgeschlagen (offline?) — Stand von origin/main unbekannt"
+fi
+
 node build.mjs
 cp -f dist/safari/*.user.css reduce.user.js "$ZIEL/"
 
