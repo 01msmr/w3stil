@@ -91,7 +91,8 @@ Zieh-Fläche = volle Zeilenhöhe). Eine scroll-getriebene Maske
 abgeschnittene Kante über eine feste Zone auf 10 % Deckkraft ab —
 rechts am Anfang, beidseitig mittendrin, links am Ende. Der jeweils
 zutreffende Tageskopf klebt mobil als Pille oben — Fläche im
-Seitengrund-Ton mit 1px-Kontur in der Textfarbe; Taps gehen durch sie
+Seitengrund-Ton, die 1px-Kontur (gedämpfte Palette) erscheint nur im
+Klebe-Zustand (Klasse `w3-stuck` vom Userscript); Taps gehen durch sie
 hindurch. Bei golem parkt die Pille unter der eigenen klebenden
 Kopfleiste und rückt nach oben, sobald die ausblendet
 (`go-header--off-screen`). Das Snapping zielt weiter auf die

@@ -763,8 +763,13 @@ article[data-teaser-name="HorizontalTimelineTeaser"] > time .w3-colon {
     width: fit-content !important;
     background: var(--mi-page) !important;
     border-radius: 999px !important;
-    border: 1px solid var(--mi-fg) !important;
+    border: 1px solid transparent !important;
     margin: 0.4em 0 calc(0.2em + 16px) calc(var(--mi-title-x) - 0.9em) !important;
     padding: 0.2em 0.9em !important;
+  }
+
+  /* Rand nur im Klebe-Zustand (Klasse vom Userscript), gedaempfte Farbe. */
+  div:has(> section > article[data-teaser-name="HorizontalTimelineTeaser"]) > h2.w3-stuck {
+    border-color: var(--mi-muted) !important;
   }
 }

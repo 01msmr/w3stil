@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        reduce-ticker
 // @namespace   msmr.co
-// @version     0.11.0
+// @version     0.12.0
 // @description Kürzt Ressort-Chips und formatiert Tagesköpfe der Newsticker
 // @author      msmr
 // @license     MIT
@@ -324,6 +324,32 @@
       - el.getBoundingClientRect().height
       - parseFloat(cs.marginBottom);
   };
+
+  // ── Klebe-Kontur ─────────────────────────────────────────────────────
+  /* Die Tageskopf-Pille trägt ihren Rand nur im Klebe-Zustand. CSS kann
+   * „klebt gerade" nicht abfragen (scroll-state-Queries fehlen in
+   * WebKit); der Vergleich Ist-Position vs. Fluss-Position (flussTop)
+   * liefert es exakt: klebt der Kopf, ist er nach unten versetzt. Die
+   * Optik hängt an .w3-stuck im Style. */
+  let stuckTick = false;
+  const stuckPruefen = () => {
+    stuckTick = false;
+    for (const el of document.querySelectorAll(SNAP_ZIELE)) {
+      if (getComputedStyle(el).position !== 'sticky') {
+        el.classList.remove('w3-stuck');
+        continue;
+      }
+      const versatz = el.getBoundingClientRect().top - flussTop(el);
+      el.classList.toggle('w3-stuck', versatz > 1);
+    }
+  };
+  window.addEventListener('scroll', () => {
+    if (!stuckTick) {
+      stuckTick = true;
+      requestAnimationFrame(stuckPruefen);
+    }
+  }, { passive: true });
+  stuckPruefen();
 
   const snap = () => {
     if (!richtung) return;

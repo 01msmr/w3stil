@@ -961,7 +961,7 @@ main > .go-col--full:has(.go-button):hover {
     pointer-events: none !important;
     width: fit-content !important;
     background: var(--gl-page) !important;
-    border: 1px solid var(--gl-fg) !important;
+    border: 1px solid transparent !important;
     border-radius: 999px !important;
     margin: 0.5em 0 0.2em calc(var(--gl-title-x) - 0.9em) !important;
     padding: 0.2em 0.9em !important;
@@ -973,5 +973,10 @@ main > .go-col--full:has(.go-button):hover {
    * mit einer Klasse am Wrapper — die Pille rückt dann an den Rand. */
   body:has(.go-header--off-screen) .go-col:has(.ticker-list) > h2 {
     top: 4px !important;
+  }
+
+  /* Rand nur im Klebe-Zustand (Klasse vom Userscript), gedämpfte Farbe. */
+  .go-col:has(.ticker-list) > h2.w3-stuck {
+    border-color: var(--gl-muted) !important;
   }
 }
