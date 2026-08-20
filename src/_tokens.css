@@ -72,11 +72,32 @@
     --w3-plus-scale: 1.05;
     --w3-head-size: 18px;
 
-    /* Ziehbare Titel: die letzten 5 % fallen auf 30 % Deckkraft ab — so
-     * ist ein abgeschnittener Titel als überlang erkennbar. Kein Abfall
-     * auf 0: am Scroll-Ende bleiben die letzten Zeichen lesbar. Die Maske
-     * klebt am Element, nicht am Inhalt, und markiert darum stets die
-     * Schnittkante; kurze Titel erreichen die Zone nicht. */
-    --w3-title-fade: linear-gradient(to right, #000 95%, rgb(0 0 0 / 0.3));
+    /* Ziehbare Titel: eine feste Blendzone (--w3-title-fade-w) fällt an
+     * jeder Schnittkante auf 30 % Deckkraft ab — so ist Abgeschnittenes
+     * als überlang erkennbar. Kein Abfall auf 0: die Zeichen an der
+     * Kante bleiben lesbar. Die Maske klebt am Element, nicht am Inhalt.
+     * Alle drei Gradienten haben dieselben vier Stops, damit die
+     * Keyframes weich interpolieren statt hart umzuschalten. */
+    --w3-title-fade-w: 24px;
+    --w3-title-fade: linear-gradient(to right,
+      #000, #000 var(--w3-title-fade-w),
+      #000 calc(100% - var(--w3-title-fade-w)), rgb(0 0 0 / 0.3));
+    --w3-title-fade-both: linear-gradient(to right,
+      rgb(0 0 0 / 0.3), #000 var(--w3-title-fade-w),
+      #000 calc(100% - var(--w3-title-fade-w)), rgb(0 0 0 / 0.3));
+    --w3-title-fade-l: linear-gradient(to right,
+      rgb(0 0 0 / 0.3), #000 var(--w3-title-fade-w),
+      #000 calc(100% - var(--w3-title-fade-w)), #000);
+  }
+
+  /* Zeitachse = eigener horizontaler Scrollweg (Safari 26+/Chrome 115+).
+   * Abgeblendet wird nur, wo wirklich etwas abgeschnitten ist: am Anfang
+   * nur rechts, dazwischen beidseitig, am Ende nur links. Ohne
+   * Scrollüberschuss ist die Timeline inaktiv → Grundzustand der
+   * Site-Regel (rechte Kante, die kurze Titel ohnehin nie erreichen). */
+  @keyframes w3-title-fade {
+    0% { mask-image: var(--w3-title-fade); }
+    4%, 96% { mask-image: var(--w3-title-fade-both); }
+    100% { mask-image: var(--w3-title-fade-l); }
   }
 }

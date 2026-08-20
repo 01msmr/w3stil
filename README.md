@@ -75,5 +75,10 @@ tools/ios-sync.sh     baut und befüllt den Userscripts-Ordner (iCloud)
 
 Der Dateiname bestimmt den Matcher (`heise.de.css` → Domain inkl.
 Subdomains); Mobil ist keine eigene Fassung, sondern eine
-Variablen-Schicht per `@media`. `main` trägt nur Quellen — `dist/` ist
-gitignored und wird ausschließlich von der Action gebaut.
+Variablen-Schicht per `@media`. Überlange Titel sind dort seitlich
+ziehbar (ohne Scrollbalken); eine scroll-getriebene Maske
+(`--w3-title-fade-*` in `_tokens.css`) blendet jede tatsächlich
+abgeschnittene Kante über eine feste Zone auf 30 % Deckkraft ab —
+rechts am Anfang, beidseitig mittendrin, links am Ende. `main` trägt
+nur Quellen — `dist/` ist gitignored und wird ausschließlich von der
+Action gebaut.
