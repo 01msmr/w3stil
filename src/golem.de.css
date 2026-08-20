@@ -893,8 +893,8 @@ main > .go-col--full:has(.go-button):hover {
   }
 }
 
-/* ── Minuten betont — wie bei heise (dort erklärt). ─────────────────────*/
-.go-ticker-teaser__datetime .w3-mm {
+/* ── Stunden betont — wie bei heise (dort erklärt). ──────────────────────*/
+.go-ticker-teaser__datetime .w3-hh {
   color: var(--gl-fg) !important;
 }
 

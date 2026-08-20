@@ -847,10 +847,10 @@ article:has(> a[href*="/bestenlisten/"]) > a > time {
   }
 }
 
-/* ── Minuten betont ─────────────────────────────────────────────────────
- * Die Minuten (ohne Doppelpunkt) in voller Textfarbe, auf allen Breiten —
- * die Stunde ist Kontext, die Minute trägt die Information. */
-article > a > time .w3-mm {
+/* ── Stunden betont ──────────────────────────────────────────────────────
+ * Die Stunden in voller Textfarbe, auf allen Breiten — Minuten und
+ * Doppelpunkt bleiben gedämpft. */
+article > a > time .w3-hh {
   color: var(--hs-fg) !important;
 }
 

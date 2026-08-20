@@ -711,9 +711,9 @@ article[data-teaser-name="HorizontalTimelineTeaser"]:hover {
   }
 }
 
-/* ── Minuten betont — wie bei heise (dort erklärt). Keine Tarn-Regeln
+/* ── Stunden betont — wie bei heise (dort erklärt). Keine Tarn-Regeln
  * nötig: gelesene Uhren deckt hier die Platte ab. ───────────────────────*/
-article[data-teaser-name="HorizontalTimelineTeaser"] > time .w3-mm {
+article[data-teaser-name="HorizontalTimelineTeaser"] > time .w3-hh {
   color: var(--mi-fg) !important;
 }
 
