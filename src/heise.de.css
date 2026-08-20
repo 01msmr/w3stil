@@ -684,6 +684,15 @@ article:has(> a[href*="/bestenlisten/"]) > a > time {
     display: none !important;
   }
 
+  /* Hineingescrollt: beidseitige Maske. Guard nötig — ohne
+   * Timeline-Support liefe die Animation zeitbasiert sofort durch. */
+  @supports (animation-timeline: scroll()) {
+    article:has(> a > time) h3 {
+      animation: w3-title-fade linear both !important;
+      animation-timeline: scroll(self inline) !important;
+    }
+  }
+
   section:has(article > a > time) > div:first-child {
     padding: 0.7em 0 calc(0.2em + 16px) var(--hs-title-x) !important;
   }

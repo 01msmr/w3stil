@@ -731,6 +731,15 @@ main > .go-col--full:has(.go-button):hover {
     display: none !important;
   }
 
+  /* Hineingescrollt: beidseitige Maske. Guard nötig — ohne
+   * Timeline-Support liefe die Animation zeitbasiert sofort durch. */
+  @supports (animation-timeline: scroll()) {
+    .go-ticker-teaser__content {
+      animation: w3-title-fade linear both !important;
+      animation-timeline: scroll(self inline) !important;
+    }
+  }
+
   .go-col:has(.ticker-list) > h2 {
     padding: 0.7em 0 0.2em var(--gl-title-x) !important;
   }
