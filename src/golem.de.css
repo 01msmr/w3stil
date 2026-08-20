@@ -709,6 +709,18 @@ main > .go-col--full:has(.go-button):hover {
     gap: 0.4em !important;
   }
 
+  /* Lange Titel seitlich ziehbar — ohne sichtbaren Balken. Kein Ellipsis
+   * mehr: die Kürzung wäre eine Lüge, wenn man weiterschieben kann. */
+  .go-ticker-teaser__content {
+    overflow-x: auto !important;
+    text-overflow: clip !important;
+    scrollbar-width: none !important;
+  }
+
+  .go-ticker-teaser__content::-webkit-scrollbar {
+    display: none !important;
+  }
+
   .go-col:has(.ticker-list) > h2 {
     padding: 0.7em 0 0.2em var(--gl-title-x) !important;
   }

@@ -657,6 +657,17 @@ article:has(> a[href*="/bestenlisten/"]) > a > time {
     gap: 0.4em !important;
   }
 
+  /* Lange Titel seitlich ziehbar — ohne sichtbaren Balken. */
+  article:has(> a > time) h3 {
+    overflow-x: auto !important;
+    text-overflow: clip !important;
+    scrollbar-width: none !important;
+  }
+
+  article:has(> a > time) h3::-webkit-scrollbar {
+    display: none !important;
+  }
+
   section:has(article > a > time) > div:first-child {
     padding: 0.7em 0 calc(0.2em + 16px) var(--hs-title-x) !important;
   }

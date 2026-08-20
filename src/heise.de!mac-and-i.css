@@ -494,6 +494,21 @@ article[data-teaser-name="HorizontalTimelineTeaser"]:hover {
     gap: 0.4em !important;
   }
 
+  /* Lange Titel seitlich ziehbar — ohne sichtbaren Balken. Der Titel muss
+   * dafür ÜBER der aufgespannten Link-Fläche (a::after) liegen, sonst
+   * fängt die den Fingerzug ab; als Link-Kind bleibt er trotzdem tippbar. */
+  article[data-teaser-name="HorizontalTimelineTeaser"] h3 {
+    overflow-x: auto !important;
+    text-overflow: clip !important;
+    scrollbar-width: none !important;
+    position: relative !important;
+    z-index: 1 !important;
+  }
+
+  article[data-teaser-name="HorizontalTimelineTeaser"] h3::-webkit-scrollbar {
+    display: none !important;
+  }
+
   /* Mehr Weißraum über der Tageszeile — der Bereich unter der Statusleiste
    * bleibt beim Andocken leer. */
   div:has(> section > article[data-teaser-name="HorizontalTimelineTeaser"]) > h2 {
