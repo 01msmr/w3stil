@@ -81,7 +81,11 @@ body:has(article[data-teaser-name="HorizontalTimelineTeaser"]) {
   /* Zur Wortmarke passende Schrift: das Logo ist eine schwere kursive
    * Grotesk im Helvetica-Schnitt — Helvetica Neue kommt ihr auf macOS am
    * nächsten, hier bewusst in normalem Gewicht. */
-  --mi-head-font: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  /* Helvetica für Menü, Tagesköpfe und Zeilen. Helvetica Neue/Helvetica
+   * gibt es nur auf Apple-Systemen; Windows fällt auf das metrisch
+   * verwandte Arial, Linux auf Liberation Sans (Arial-Metriken) bzw.
+   * Nimbus Sans (Helvetica-Klon) zurück. */
+  --mi-head-font: "Helvetica Neue", Helvetica, Arial, "Liberation Sans", "Nimbus Sans", sans-serif;
 
   /* 24px mehr als beim Haupt-Ticker (die Zeilenpolsterung liegt hier
    * INNERHALB des Chips), minus die 14px des kleineren Chip-Einzugs:
@@ -255,6 +259,7 @@ article[data-teaser-name="HorizontalTimelineTeaser"] {
   padding: 0.5em var(--mi-bleed) !important;
   background: var(--mi-card) !important;
   color: var(--mi-fg) !important;
+  font-family: var(--mi-head-font) !important;
   font-size: var(--mi-size) !important;
   line-height: var(--mi-lh) !important;
   font-weight: 400 !important;
@@ -705,15 +710,12 @@ article:hover .w3-row h3 span {
   color: #fff !important;
 }
 
-/* Desktop: der Titel unter dem Cursor wechselt in die Menüschrift der
- * Kapsel (Helvetica, fett — aufrecht, nicht kursiv wie im Menü) — Weiß
- * auf dem Hover-Grau trägt als leichte Serifenlose zu wenig Kontrast.
+/* Desktop: der Titel unter dem Cursor wird fett (die Schrift ist ohnehin
+ * Helvetica) — Weiß auf dem Hover-Grau trägt mager zu wenig Kontrast.
  * Nur mit echtem Hover; Touch hat keinen. */
 @media (hover: hover) and (min-width: 701px) {
   article:hover .w3-row h3 span {
-    font-family: var(--mi-head-font) !important;
     font-weight: 700 !important;
-    font-style: normal !important;
 
     /* Weicher dunkler Schlagschatten unter dem weißen Titel — hebt ihn vom
      * Hover-Grau ab, ohne den Ton zu verdunkeln. Billig: eine Zeile, einmal
