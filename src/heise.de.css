@@ -138,8 +138,10 @@ div:has(> section article > a > time) {
 /* Feine Trennlinie zwischen den Zeilen: Seitengrund-Grau in 75% Intensität,
  * um 25% Kartenweiß aufgehellt — deckend, ohne Alpha (Mischverhältnis in
  * _tokens.css). Nur zwischen Zeilen, nicht über der ersten — sonst zöge sie eine
- * Kante quer durch den oberen Chip-Radius. expect: 20..400 */
-article:has(> a > time) + article:has(> a > time) {
+ * Kante quer durch den oberen Chip-Radius. Geschwister-Kombinator ~ statt +:
+ * heise schiebt (leere) Anzeigen-Container zwischen die Zeilen, nach denen
+ * die nächste Zeile sonst ohne Linie stünde. expect: 20..400 */
+article:has(> a > time) ~ article:has(> a > time) {
   border-top: var(--w3-divider-w) solid color-mix(in srgb, var(--hs-page) var(--w3-divider-mix), var(--hs-card)) !important;
 }
 

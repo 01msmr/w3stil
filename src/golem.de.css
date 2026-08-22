@@ -161,17 +161,21 @@ body:has(.ticker-list) main {
  *
  * .go-grid--50-50 als Marker statt eines zweiten :has(): :has() darf nicht in
  * :has() verschachtelt werden, die Regel fiele sonst vollständig aus. Auf der
- * Ticker-Seite trägt allein der Highlight-Block diese Klasse. expect: 0..7 */
-main > *:has(.ticker-list):has(+ .go-grid--50-50) .ticker-list li:last-child .go-ticker-teaser,
-main > *:has(.ticker-list):has(+ .go-col--full) .ticker-list li:last-child .go-ticker-teaser {
+ * Ticker-Seite trägt allein der Highlight-Block diese Klasse.
+ *
+ * Nur die LETZTE Liste des Containers: golem packt mehrere Tage (Kopf +
+ * Liste) in einen Block, und nur dessen letzte Liste stößt an die
+ * angebundene Zeile — die Tage davor behalten ihre Radien. expect: 0..7 */
+main > *:has(.ticker-list):has(+ .go-grid--50-50) .ticker-list:last-of-type li:last-child .go-ticker-teaser,
+main > *:has(.ticker-list):has(+ .go-col--full) .ticker-list:last-of-type li:last-child .go-ticker-teaser {
   border-radius: 0 !important;
 }
 
 /* Auch die Liste selbst gibt ihre unteren Radien ab. Ohne das kerbt ihre
  * eigene abgerundete Fläche die Naht ein, obwohl die letzte Artikelzeile
  * bereits eckig ist — der Grund biss sichtbar in das Weiß. */
-main > *:has(.ticker-list):has(+ .go-grid--50-50) .ticker-list,
-main > *:has(.ticker-list):has(+ .go-col--full) .ticker-list {
+main > *:has(.ticker-list):has(+ .go-grid--50-50) .ticker-list:last-of-type,
+main > *:has(.ticker-list):has(+ .go-col--full) .ticker-list:last-of-type {
   border-radius: var(--gl-radius) var(--gl-radius) 0 0 !important;
 }
 
