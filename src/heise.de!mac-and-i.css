@@ -151,27 +151,20 @@ div:has(> section > article[data-teaser-name="HorizontalTimelineTeaser"]) > sect
   background: none !important;
   border-radius: var(--mi-radius) !important;
 
-  /* Die Section selbst wirft KEINEN Schatten — den tragen die Zeilen
-   * (nächste Regel). Ein drop-shadow-Filter auf der Section beschattete
-   * alles in ihr, auch die Hinweis-Chips im grauen Rand. */
-  box-shadow: none !important;
-  filter: none !important;
-}
-
-/* Der Schatten des Tages-Chips sitzt an JEDER Zeile als box-shadow: er
- * wird nur außerhalb der Zeilenbox gemalt, also nicht auf die Chips, die
- * absolut links außerhalb stehen. Die folgende Zeile deckt ihn ab — bis
- * auf die 1px-Fuge, durch die er durchscheint: der echte Schatten in den
- * Fugen bleibt. Unterhalb der letzten Zeile und rechts ist er der Schatten
- * der Karte. Grundzustand mit Alpha 0, die Transition blendet ihn ein.
- * expect: 20..200 */
-div:has(> section > article[data-teaser-name="HorizontalTimelineTeaser"]) > section > article {
+  /* Schatten als box-shadow der SECTION: er wird nur außerhalb ihrer Box
+   * gemalt — die Hinweis-Chips im grauen Rand bleiben frei (ein
+   * drop-shadow-Filter beschattete sie mit), und nichts stapelt sich.
+   * Die Fugen bleiben transparent, zeigen aber die Seite, keinen
+   * Schatten — bewusst, Zeilen-Schatten je Zeile stapelten sich in den
+   * Fugen zu einer harten Linie. Grundzustand mit Alpha 0, die
+   * Transition blendet ihn ein. */
   box-shadow: 8px 20px 29px 6px rgb(0 0 0 / 0) !important;
+  filter: none !important;
   transition: box-shadow 0.25s ease-out !important;
 }
 
 /* Der Tages-Chip, in dem der Cursor steht, hebt sich kräftig. expect: 1..14 */
-div:has(> section > article[data-teaser-name="HorizontalTimelineTeaser"]) > section:hover > article {
+div:has(> section > article[data-teaser-name="HorizontalTimelineTeaser"]) > section:hover {
   box-shadow: 8px 20px 29px 6px rgb(0 0 0 / 0.42) !important;
 }
 
@@ -723,7 +716,7 @@ article[data-teaser-name="HorizontalTimelineTeaser"]:hover {
     background: var(--mi-card) !important;
   }
 
-  div:has(> section > article[data-teaser-name="HorizontalTimelineTeaser"]) > section:hover > article {
+  div:has(> section > article[data-teaser-name="HorizontalTimelineTeaser"]) > section:hover {
     box-shadow: 8px 20px 29px 6px rgb(0 0 0 / 0) !important;
   }
 
@@ -883,7 +876,7 @@ article[data-teaser-name="HorizontalTimelineTeaser"] > time .w3-colon {
  * (Nebeneffekt der entkernten Section). Die Section bekommt ihr Weiß
  * hier zurück, und die Fugen werden exakt seitengrund-farben gemalt:
  * ohne Hover-Schatten (Touch) ist das pixelidentisch mit echter
- * Transparenz. Desktop behält Transparent-Fugen samt Zeilen-Schatten. */
+ * Transparenz. Desktop behält Transparent-Fugen. */
 @media (max-width: 500px) {
   div:has(> section > article[data-teaser-name="HorizontalTimelineTeaser"]) > section {
     background: var(--mi-card) !important;
