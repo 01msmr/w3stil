@@ -479,6 +479,17 @@ header[class*="theme-mac-and-i"] > a {
  * Rand mit — plus 2px, die die Glyphen 1px unter die geometrische Mitte
  * setzen: schwere Kursive wirkt sonst zu hoch. Gemessen: Glyphen
  * 15.9–42.1 von 56, Mitte 29. */
+/* Das Logo-Segment hovert wie die Rubriken: hellgraue Fläche, links mit
+ * dem Halbkreis der Kapsel. */
+header[class*="theme-mac-and-i"] > a {
+  border-radius: 999px 0 0 999px !important;
+}
+
+header[class*="theme-mac-and-i"] > a:hover,
+header[class*="theme-mac-and-i"] > a:focus-visible {
+  background: var(--mi-chip) !important;
+}
+
 header[class*="theme-mac-and-i"] > a svg {
   height: 36px !important;
   width: auto !important;
