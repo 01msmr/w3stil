@@ -720,6 +720,12 @@ article:hover .w3-row h3 span {
      * gemalt, nichts animiert. */
     text-shadow: 0 1px 2px rgb(0 0 0 / 0.45) !important;
   }
+
+  /* Der Vorspann bis zum Doppelpunkt (Span vom Userscript) bleibt normal —
+   * fett ist nur der eigentliche Titel. Ruhend und gelesen unverändert. */
+  article:hover .w3-row h3 .w3-kicker {
+    font-weight: 400 !important;
+  }
 }
 
 a.w3-row:visited,

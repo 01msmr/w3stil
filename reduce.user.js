@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        reduce-ticker
 // @namespace   msmr.co
-// @version     0.13.0
+// @version     0.14.0
 // @description Kürzt Ressort-Chips und formatiert Tagesköpfe der Newsticker
 // @author      msmr
 // @license     MIT
@@ -226,12 +226,38 @@
     }
   };
 
+  /* Mac & i: der Vorspann vor dem ersten Doppelpunkt ("Kicker: Titel")
+   * bekommt einen eigenen Span, damit der Style ihn unter dem Cursor
+   * normal statt fett setzen kann — CSS kann Text nicht teilen. Nur der
+   * erste Doppelpunkt, nur wenn danach Text folgt; einmalig je Titel. */
+  const kicker = () => {
+    if (!maci()) return;
+    for (const h3 of document.querySelectorAll(
+      'article[data-teaser-name="HorizontalTimelineTeaser"] h3'
+    )) {
+      if (h3.querySelector('.w3-kicker')) continue;
+      const walker = document.createTreeWalker(h3, NodeFilter.SHOW_TEXT);
+      let node;
+      while ((node = walker.nextNode())) {
+        const m = node.nodeValue.match(/^(\s*[^:]{1,80}:)(\s+\S.*)$/s);
+        if (!m) continue;
+        const span = document.createElement('span');
+        span.className = 'w3-kicker';
+        span.textContent = m[1];
+        node.nodeValue = m[2];
+        node.parentNode.insertBefore(span, node);
+        break;
+      }
+    }
+  };
+
   const trim = () => {
     if (!istTicker()) return;
     chips();
     koepfe();
     marker();
     uhr();
+    kicker();
   };
 
   /* Entprellt, s. Kopfkommentar. */
