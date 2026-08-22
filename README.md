@@ -17,7 +17,10 @@ Zwei Teile, die zusammengehören:
   kürzt Chip-Texte, vereinheitlicht Tagesköpfe, injiziert die
   Gelesen-Marker (WebKit wendet `:visited` weder auf Pseudo-Elemente noch
   auf `:has()` an), snappt beim Scrollen zum nächsten Tageskopf und
-  stellt seitlich gezogene Titel nach 9 s Ruhe zurück.
+  stellt seitlich gezogene Titel nach 9 s Ruhe zurück. Es lädt auf der
+  ganzen heise-/golem-Domain und prüft zur Laufzeit, ob die Route ein
+  Ticker ist — heise ist eine Single-Page-App, ein enges `@match` griffe
+  nach Klick von der Startseite nie.
 
 Veröffentlicht wird über GitHub Actions: ein Push auf `main` baut und
 force-pusht die Auslieferungsdateien auf den Branch `publish`, von dort
@@ -95,7 +98,11 @@ Seitengrund-Ton, die 1px-Kontur (gedämpfte Palette) erscheint nur im
 Klebe-Zustand (Klasse `w3-stuck` vom Userscript); Taps gehen durch sie
 hindurch. Bei golem parkt die Pille unter der eigenen klebenden
 Kopfleiste und rückt nach oben, sobald die ausblendet
-(`go-header--off-screen`). Das Snapping zielt weiter auf die
+(`go-header--off-screen`); am Desktop klebt golems Kopfleiste dagegen
+nicht mehr, sie scrollt mit und kann keinen Tageskopf überdecken. golems
+„International"-Hinweis ist ein quadratischer Chip mit Weltkugel (Font
+Awesome „globe" als CSS-Maske, wie das Gelesen-Häkchen). Hover-Zustände
+schalten überall in einem Frame, ohne Überblendung. Das Snapping zielt weiter auf die
 Originalstelle oberhalb des Zeilencontainers (das Userscript
 rekonstruiert die Fluss-Position klebender Köpfe). Alle drei
 Ticker folgen dem System-Dark-Mode: je Site kippt ein `@media`-Block

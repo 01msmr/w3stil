@@ -1,13 +1,12 @@
 // ==UserScript==
 // @name        reduce-ticker
 // @namespace   msmr.co
-// @version     0.12.0
+// @version     0.13.0
 // @description Kürzt Ressort-Chips und formatiert Tagesköpfe der Newsticker
 // @author      msmr
 // @license     MIT
-// @match       https://www.heise.de/newsticker*
-// @match       https://www.heise.de/mac-and-i/newsticker*
-// @match       https://www.golem.de/ticker*
+// @match       https://www.heise.de/*
+// @match       https://www.golem.de/*
 // @run-at      document-idle
 // @grant       none
 // @noframes
@@ -35,6 +34,20 @@
  * umstellte, wurde aus "heise online" ein Chip mit der Aufschrift "ONLINE",
  * statt zu verschwinden. Kommt ein dritter Auslieferungsweg dazu, ist das
  * eine Zeile in ZIELE — keine zweite Regelmenge.
+ *
+ * BREITES @match, Ticker-Prüfung zur Laufzeit: heise ist eine Single-Page-App.
+ * Wer von der Startseite in den Ticker navigiert, löst keinen Seitenladevorgang
+ * aus — bei engem @match injiziert Tampermonkey dann nie und meldet "Dieses
+ * Userscript wurde noch nicht ausgeführt". Das Skript lädt deshalb auf der
+ * ganzen Domain und entscheidet über istTicker(), ob es etwas tut. Weil das
+ * Dokument beim Routenwechsel erhalten bleibt, überlebt der MutationObserver
+ * und greift auf der neuen Route ohne Zutun.
+ *
+ * Aus demselben Grund sind istTicker() und maci() FUNKTIONEN: bei SPA-
+ * Navigation ändert sich location.pathname, ohne dass das Skript neu läuft.
+ * Als Konstanten blieben sie beim Wechsel zwischen Haupt- und Mac-&-i-Ticker
+ * auf dem Wert der zuerst geladenen Seite stehen — die Chips würden dann
+ * falsch behandelt und das Snapping mit der falschen Reichweite arbeiten.
  *
  * Die Tagesköpfe verlieren ihr "Heute –"/"Gestern –" (das Datum daneben
  * sagt dasselbe) und werden auf beiden Seiten einheitlich als
@@ -64,7 +77,10 @@
  *
  * Der MutationObserver deckt nachgeladene Zeilen ab (Blättern, "mehr laden").
  * Er löst durch die eigenen Ersetzungen erneut aus, läuft dann aber leer
- * durch, weil nichts mehr zu ersetzen ist — keine Schleife.
+ * durch, weil nichts mehr zu ersetzen ist — keine Schleife. Entprellt per
+ * requestAnimationFrame: seit marker() und uhr() selbst Elemente einfügen,
+ * ist jeder Durchlauf teuer, und heises Anzeigen erzeugen dreistellige
+ * Mutationszahlen pro Sekunde.
  *
  * Bewusst ohne Versions-Automatik: das Skript ist statisch, die Version wird
  * bei der seltenen Änderung von Hand erhöht. */
@@ -75,11 +91,18 @@
   const MONATE = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli',
     'August', 'September', 'Oktober', 'November', 'Dezember'];
 
-  // ── Ressort-Chips ────────────────────────────────────────────────────
+  // ── Laufzeit-Prüfungen (s. Kopfkommentar: SPA) ───────────────────────
+
+  /* Alle drei Ticker: /newsticker, /mac-and-i/newsticker, golems /ticker. */
+  const istTicker = () =>
+    /^\/(mac-and-i\/)?newsticker/.test(location.pathname) ||
+    /^\/ticker/.test(location.pathname);
 
   /* Auf dem Mac-&-i-Ticker trägt "Mac & i" keine Information — dort ist alles
    * Mac & i. Im Haupt-Ticker unterscheidet das Chip sehr wohl und bleibt. */
-  const MACI = location.pathname.startsWith('/mac-and-i');
+  const maci = () => location.pathname.startsWith('/mac-and-i');
+
+  // ── Ressort-Chips ────────────────────────────────────────────────────
 
   /* Alle bekannten Auslieferungswege der Chips. Neue Fassung von heise?
    * Hier eine Zeile ergänzen — die Regeln stehen nur in chipText(). */
@@ -90,14 +113,18 @@
 
   /* null      → Element entfernen
    * undefined → unverändert lassen
-   * String    → neuer Text */
+   * String    → neuer Text
+   *
+   * Verglichen wird gegen den GETRIMMTEN Text: sonst gölte bloßer Leerraum
+   * als Änderung, das Skript schriebe den Knoten neu, und die dadurch
+   * ausgelöste Mutation triebe einen weiteren Durchlauf an. */
   const chipText = (roh) => {
     const t = roh.trim();
     if (!t) return undefined;
     if (/^heise\s+online$/i.test(t)) return null;
-    if (MACI && /^mac\s*&\s*i(\s+magazin)?$/i.test(t)) return null;
+    if (maci() && /^mac\s*&\s*i(\s+magazin)?$/i.test(t)) return null;
     const kurz = t.replace(/^heise\s+/i, '').replace(/\s+Magazin$/i, '');
-    return kurz === roh ? undefined : kurz;
+    return kurz === t ? undefined : kurz;
   };
 
   const chips = () => {
@@ -152,7 +179,7 @@
        * ein :has() trägt — die Visited-Regeln hängen deshalb an a.w3-row. */
       chip.closest('a')?.classList.add('w3-row');
     }
-    if (!MACI) return;
+    if (!maci()) return;
     for (const a of document.querySelectorAll(
       'article[data-teaser-name="HorizontalTimelineTeaser"] > a'
     )) {
@@ -200,14 +227,26 @@
   };
 
   const trim = () => {
+    if (!istTicker()) return;
     chips();
     koepfe();
     marker();
     uhr();
   };
 
+  /* Entprellt, s. Kopfkommentar. */
+  let geplant = false;
+  const anstossen = () => {
+    if (geplant) return;
+    geplant = true;
+    requestAnimationFrame(() => {
+      geplant = false;
+      trim();
+    });
+  };
+
   trim();
-  new MutationObserver(trim).observe(document.body, {
+  new MutationObserver(anstossen).observe(document.body, {
     childList: true,
     subtree: true,
   });
@@ -280,14 +319,13 @@
    * unter der iOS-Statusleiste soll kein Rest des Vortags stehen; auf
    * Mac & i sogar leicht negativ, der Kopf rückt bis an die Leiste. */
   const luft = () =>
-    window.innerWidth < 700 ? (MACI ? -6 : 2) : 12;
+    window.innerWidth < 700 ? (maci() ? -6 : 2) : 12;
 
   /* Anzieh-Reichweite: auf Seiten mit langen Tagen (golem, heise-Ticker)
    * greift der Snap nur nahe am Ziel — relativ zur Fensterhöhe, damit sich
    * das Verhalten kleinen Fenstern anpasst. Mac & i: unbegrenzt. */
-  const BEGRENZT = !MACI;
   const reichweite = () =>
-    BEGRENZT ? Math.round(window.innerHeight * 0.3) : Infinity;
+    maci() ? Infinity : Math.round(window.innerHeight * 0.3);
 
   /* Richtung wird KUMULIERT gegen einen Referenzpunkt gemessen, nicht pro
    * Event: Trackpads liefern viele ~1px-Events, eine Schwelle pro Event
@@ -334,6 +372,7 @@
   let stuckTick = false;
   const stuckPruefen = () => {
     stuckTick = false;
+    if (!istTicker()) return;
     for (const el of document.querySelectorAll(SNAP_ZIELE)) {
       if (getComputedStyle(el).position !== 'sticky') {
         el.classList.remove('w3-stuck');
@@ -352,7 +391,7 @@
   stuckPruefen();
 
   const snap = () => {
-    if (!richtung) return;
+    if (!richtung || !istTicker()) return;
     const y = window.scrollY;
     const ziele = [...document.querySelectorAll(SNAP_ZIELE)]
       .map((el) => Math.round(flussTop(el) + y - luft()))
@@ -384,7 +423,7 @@
   };
 
   window.addEventListener('scroll', () => {
-    if (faehrt) return;
+    if (faehrt || !istTicker()) return;
     const y = window.scrollY;
 
     /* Verriegelt: refY bleibt auf dem Landepunkt stehen — beim Entriegeln

@@ -155,10 +155,12 @@ div:has(> section > article[data-teaser-name="HorizontalTimelineTeaser"]) > sect
    * statt box-shadow: der beschattet die SILHOUETTE, sein Blur blutet
    * durch die 1px-Fugen — durch die transparenten Schlitze ist damit
    * ECHTER Schatten zu sehen (box-shadow malt nur außerhalb der Box).
-   * Grundzustand mit Alpha 0, damit die Transition weich läuft. */
+   * Grundzustand mit Alpha 0 statt filter: none — so wechselt beim Hover
+   * nur der Schattenwert, nicht die Filterkette. Ohne Übergang: ein
+   * einblendender Schatten (vorher 0.25s) las sich als verzögerter Hover. */
   box-shadow: none !important;
   filter: drop-shadow(12px 28px 22px rgb(0 0 0 / 0)) !important;
-  transition: filter 0.25s ease-out !important;
+  transition: none !important;
 }
 
 /* Der Tages-Chip, in dem der Cursor steht, hebt sich kräftig: Offsets und

@@ -306,7 +306,10 @@ article h3 + div > span {
   letter-spacing: 0.03em !important;
   line-height: var(--hs-lh) !important;
   text-transform: uppercase !important;
-  transition: background-color 0.25s ease, color 0.25s ease !important;
+
+  /* Hart wie die Zeile: ein nachziehender Chip (vorher 0.25s) las sich als
+   * verzögerter Hover. */
+  transition: none !important;
 }
 
 /* Kommentarzähler entfällt — die Zahl trägt beim Überfliegen nichts bei.
