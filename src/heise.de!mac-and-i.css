@@ -59,7 +59,8 @@ body:has(article[data-teaser-name="HorizontalTimelineTeaser"]) {
   /* Chip-Schriftgröße als Rechenbasis für Platte und Häkchen (unten). */
   --mi-cf: calc(var(--mi-size) * var(--w3-chip-font));
   --mi-chip: color-mix(in oklab, var(--mi-fg) var(--w3-chip-mix), var(--mi-card));
-  --mi-read: color-mix(in oklab, var(--mi-muted) 75%, var(--mi-page));
+  /* Gelesen: zwei Drittel der Textfarbe auf Kartenweiß. */
+  --mi-read: color-mix(in oklab, var(--mi-fg) 66%, var(--mi-card));
 
   /* EIN Hover-Ton für Zeile und Fugen der gehoverten Karte: Seitengrau um
    * 21% Schwarz (halbe Dichte des 0.42-Schattens), davon ein Viertel
