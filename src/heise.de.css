@@ -215,11 +215,11 @@ article:has(> a > time) > a {
   transition: none !important;
 }
 
-/* Der Vorspann bis zum Doppelpunkt (Span vom Userscript) auf zwei Drittel
+/* Der Vorspann bis zum Doppelpunkt (Span vom Userscript) auf die Hälfte
  * gedimmt — relativ zur jeweiligen Schriftfarbe, in jedem Zustand.
  * expect: 0..200 */
 article:has(> a > time) h3 .w3-kicker {
-  opacity: 0.66 !important;
+  opacity: 0.5 !important;
 }
 
 /* Uhrzeit als Chip. heise setzt dem <time> eine feste Breite — die muss weg,
