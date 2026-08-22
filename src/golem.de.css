@@ -273,6 +273,19 @@ body:has(.ticker-list) .go-content-header {
   opacity: 0.66 !important;
 }
 
+/* Dark Mode: die Anteile vertauscht — ruhend zwei Drittel, unter dem
+ * Cursor ein Drittel. */
+@media (prefers-color-scheme: dark) {
+  .go-ticker-teaser .w3-kicker {
+    opacity: 0.66 !important;
+  }
+
+  .go-ticker-teaser:hover .w3-kicker,
+  .go-ticker-teaser:focus-visible .w3-kicker {
+    opacity: 0.33 !important;
+  }
+}
+
 /* Uhrzeit-Icon und Plus-Badge tragen in einer Zeilenliste nichts bei. */
 .go-ticker-teaser svg {
   display: none !important;

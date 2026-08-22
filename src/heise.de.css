@@ -228,6 +228,19 @@ article:has(> a > time) > a:focus-visible h3 .w3-kicker {
   opacity: 0.66 !important;
 }
 
+/* Dark Mode: die Anteile vertauscht — ruhend zwei Drittel, unter dem
+ * Cursor ein Drittel. */
+@media (prefers-color-scheme: dark) {
+  article:has(> a > time) h3 .w3-kicker {
+    opacity: 0.66 !important;
+  }
+
+  article:has(> a > time) > a:hover h3 .w3-kicker,
+  article:has(> a > time) > a:focus-visible h3 .w3-kicker {
+    opacity: 0.33 !important;
+  }
+}
+
 /* Uhrzeit als Chip. heise setzt dem <time> eine feste Breite — die muss weg,
  * sonst sitzt der Chip in einem zu breiten Kasten.
  *
