@@ -59,13 +59,12 @@ body:has(article[data-teaser-name="HorizontalTimelineTeaser"]) {
   /* Chip-Schriftgröße als Rechenbasis für Platte und Häkchen (unten). */
   --mi-cf: calc(var(--mi-size) * var(--w3-chip-font));
   --mi-chip: color-mix(in oklab, var(--mi-fg) var(--w3-chip-mix), var(--mi-card));
-  /* Gelesen: zwei Drittel der Textfarbe auf Kartenweiß. */
-  --mi-read: color-mix(in oklab, var(--mi-fg) 66%, var(--mi-card));
+  /* Gelesen: halbe Textfarbe auf Kartenweiß (Titel und Häkchen). */
+  --mi-read: color-mix(in oklab, var(--mi-fg) 50%, var(--mi-card));
 
   /* EIN Hover-Ton für Zeile und Fugen der gehoverten Karte: Seitengrau um
-   * 21% Schwarz (halbe Dichte des 0.42-Schattens), davon ein Viertel
-   * Richtung Weiß aufgehellt. */
-  --mi-hover: color-mix(in srgb, color-mix(in srgb, #000 21%, var(--mi-page)) 75%, #fff);
+   * 34% Schwarz — dunkel genug, dass der weiße fette Titel trägt. */
+  --mi-hover: color-mix(in srgb, #000 34%, var(--mi-page));
   /* Weiß auf dem abgedunkelten Grund — Vorgabe nur für diese Seite.
    * Ebenso eigen: größere, kursive, nicht fette Kopfschrift. */
   --mi-head-color: #fff;
@@ -137,8 +136,24 @@ div:has(> section > article[data-teaser-name="HorizontalTimelineTeaser"]) > h2 {
   font-style: normal !important;
   line-height: var(--mi-lh) !important;
 
-  /* Gleiches Licht wie die Zeilencontainer. */
-  text-shadow: 2px 4px 4px rgb(0 0 0 / 0.45) !important;
+  /* Ruhig: leicht in den Grund gedimmt, ohne Schatten — Weiß und Schatten
+   * kommen erst mit dem Hover (unten). */
+  color: color-mix(in srgb, var(--mi-head-color) 85%, var(--mi-page)) !important;
+
+  /* Schatten mit Alpha 0 statt none, damit er wie der Karten-Schatten
+   * einblendet (gleiche Dauer). */
+  text-shadow: 2px 4px 4px rgb(0 0 0 / 0) !important;
+  transition: text-shadow 0.375s ease-out, color 0.375s ease-out !important;
+}
+
+/* Cursor im Tagesblock (Kopf oder Karte): der Kopf hebt sich wie die Karte
+ * — gleiches Licht, und kontrastreicher in Kartenweiß. Nur mit echtem
+ * Hover. expect: 1..14 */
+@media (hover: hover) {
+  div:has(> section > article[data-teaser-name="HorizontalTimelineTeaser"]):hover > h2 {
+    color: var(--mi-head-color) !important;
+    text-shadow: 2px 4px 4px rgb(0 0 0 / 0.45) !important;
+  }
 }
 
 /* Die Dekolinie unter dem Tageskopf. expect: 1..14 */
@@ -166,7 +181,7 @@ div:has(> section > article[data-teaser-name="HorizontalTimelineTeaser"]) > sect
    * Transition blendet ihn ein. */
   box-shadow: 8px 20px 29px 6px rgb(0 0 0 / 0) !important;
   filter: none !important;
-  transition: box-shadow 0.25s ease-out !important;
+  transition: box-shadow 0.375s ease-out !important;
 }
 
 /* Der Tages-Chip, in dem der Cursor steht, hebt sich kräftig. expect: 1..14 */
@@ -672,6 +687,23 @@ article:hover .w3-row,
 article:hover .w3-row h3,
 article:hover .w3-row h3 span {
   color: #fff !important;
+}
+
+/* Desktop: der Titel unter dem Cursor wechselt in die Menüschrift der
+ * Kapsel (Helvetica, fett — aufrecht, nicht kursiv wie im Menü) — Weiß
+ * auf dem Hover-Grau trägt als leichte Serifenlose zu wenig Kontrast.
+ * Nur mit echtem Hover; Touch hat keinen. */
+@media (hover: hover) and (min-width: 701px) {
+  article:hover .w3-row h3 span {
+    font-family: var(--mi-head-font) !important;
+    font-weight: 700 !important;
+    font-style: normal !important;
+
+    /* Weicher dunkler Schlagschatten unter dem weißen Titel — hebt ihn vom
+     * Hover-Grau ab, ohne den Ton zu verdunkeln. Billig: eine Zeile, einmal
+     * gemalt, nichts animiert. */
+    text-shadow: 0 1px 2px rgb(0 0 0 / 0.45) !important;
+  }
 }
 
 a.w3-row:visited,
