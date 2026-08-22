@@ -259,13 +259,13 @@ body:has(.ticker-list) .go-content-header {
   overflow: visible !important;
 }
 
-/* Der Vorspann bis zum Doppelpunkt (Span vom Userscript): ruhend auf ein
- * Drittel gedimmt, unter dem Cursor auf zwei Drittel. Deckkraft statt
+/* Der Vorspann bis zum Doppelpunkt (Span vom Userscript): ruhend auf die
+ * Hälfte gedimmt, unter dem Cursor auf zwei Drittel. Deckkraft statt
  * Farbe — so ist es in jedem Zustand relativ zur jeweiligen Schriftfarbe,
  * im invertierten Hover, bei gelesenen Zeilen und im Dark Mode gleich.
  * expect: 0..400 */
 .go-ticker-teaser .w3-kicker {
-  opacity: 0.33 !important;
+  opacity: 0.5 !important;
 }
 
 .go-ticker-teaser:hover .w3-kicker,
@@ -274,7 +274,7 @@ body:has(.ticker-list) .go-content-header {
 }
 
 /* Dark Mode: die Anteile vertauscht — ruhend zwei Drittel, unter dem
- * Cursor ein Drittel. */
+ * Cursor die Hälfte. */
 @media (prefers-color-scheme: dark) {
   .go-ticker-teaser .w3-kicker {
     opacity: 0.66 !important;
@@ -282,7 +282,7 @@ body:has(.ticker-list) .go-content-header {
 
   .go-ticker-teaser:hover .w3-kicker,
   .go-ticker-teaser:focus-visible .w3-kicker {
-    opacity: 0.33 !important;
+    opacity: 0.5 !important;
   }
 }
 

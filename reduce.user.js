@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        reduce-ticker
 // @namespace   msmr.co
-// @version     0.15.0
+// @version     0.16.0
 // @description Kürzt Ressort-Chips und formatiert Tagesköpfe der Newsticker
 // @author      msmr
 // @license     MIT
@@ -237,21 +237,26 @@
       'article[data-teaser-name="HorizontalTimelineTeaser"] h3'
     )) {
       if (h3.querySelector('.w3-kicker')) continue;
-      /* Das tiefste Element, das nur noch Text enthält (bei Mac & i der
-       * innere Span, bei golem der Content-Span selbst) — und dessen
-       * GANZER Text: golem liefert den Titel in mehreren Textknoten
-       * ("Kicker", ":", " ", "Titel"), Knoten für Knoten fände man den
-       * Doppelpunkt nie mit dem Vorspann zusammen. */
-      const blatt = [h3, ...h3.querySelectorAll('*')].find(
-        (el) => el.children.length === 0 && el.textContent.includes(':')
-      );
+      /* Das Element, dessen DIREKTE Textknoten zusammengenommen den Titel
+       * tragen — bei Mac & i der innere Span, bei golem der Content-Span
+       * (Titel in mehreren Textknoten: "Kicker", ":", " ", "Titel"), beim
+       * heise-Ticker die h3 selbst, auch wenn davor heise+-Bilder stehen.
+       * Nur direkte Textknoten: Kindelemente (Bilder) bleiben stehen. */
+      const texte = (el) => [...el.childNodes].filter((n) => n.nodeType === 3);
+      let m = null;
+      const blatt = [h3, ...h3.querySelectorAll('*')].find((el) => {
+        m = texte(el).map((n) => n.nodeValue).join('')
+          .match(/^(\s*[^:]{1,80}:)(\s+\S.*)$/s);
+        return !!m;
+      });
       if (!blatt) continue;
-      const m = blatt.textContent.match(/^(\s*[^:]{1,80}:)(\s+\S.*)$/s);
-      if (!m) continue;
+      const knoten = texte(blatt);
       const span = document.createElement('span');
       span.className = 'w3-kicker';
       span.textContent = m[1];
-      blatt.replaceChildren(span, document.createTextNode(m[2]));
+      blatt.insertBefore(span, knoten[0]);
+      knoten[0].nodeValue = m[2];
+      knoten.slice(1).forEach((n) => n.remove());
     }
   };
 
