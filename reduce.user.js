@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        reduce-ticker
 // @namespace   msmr.co
-// @version     0.16.0
+// @version     0.17.0
 // @description Kürzt Ressort-Chips und formatiert Tagesköpfe der Newsticker
 // @author      msmr
 // @license     MIT
@@ -287,7 +287,7 @@
   });
 
   // ── Titel-Rückstellung ───────────────────────────────────────────────
-  /* Seitlich gezogene Titel gleiten nach 12 s Ruhe langsam auf ihre
+  /* Seitlich gezogene Titel gleiten nach 4 s Ruhe langsam auf ihre
    * Ausgangslage zurück. Nur mobil sind Titel überhaupt Scroller — auf
    * Desktop gibt es keinen Scrollweg, die Handler bleiben stumm. */
 
@@ -299,7 +299,7 @@
     'article:has(> a > time) > a, article:has(> a > time) h3, ' +
     'article[data-teaser-name="HorizontalTimelineTeaser"], ' +
     'article[data-teaser-name="HorizontalTimelineTeaser"] h3';
-  const RUECK_RUHE_MS = 9000;
+  const RUECK_RUHE_MS = 4000;
   const RUECK_DAUER_MS = 750;
 
   const rueckTimer = new WeakMap(); // Ruhe-Timer je Titel

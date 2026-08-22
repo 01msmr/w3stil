@@ -418,12 +418,29 @@ article:has(> a > time) > a:focus-visible > time {
   color: var(--hs-fg) !important;
 }
 
-/* Im Hover ist die Chipfläche weiß — das Häkchen tarnt sich weiß und die
- * Uhrzeit ist wieder lesbar, auch auf gelesenen Zeilen. Nach der
- * :visited-Häkchen-Regel, um sie bei gleicher Spezifität zu schlagen. */
+/* Unter dem Cursor wie bei Mac & i (Begründung bei golem): das Häkchen
+ * BLEIBT auf gelesenen Zeilen — lighten-Blend, unbesucht schwarz
+ * (unsichtbar), besucht hell (70% Karte über der Gelesen-Hover-Fläche);
+ * der Chip wird zum leisen Kasten (25% Karte), die Ziffern tarnen sich
+ * darin. Nach der :visited-Häkchen-Regel. */
 article:has(> a > time) > a:hover > time > .w3-check,
 article:has(> a > time) > a:focus-visible > time > .w3-check {
-  background-color: var(--hs-card) !important;
+  mix-blend-mode: lighten !important;
+  background-color: #000 !important;
+}
+
+a.w3-row:visited:hover > time > .w3-check,
+a.w3-row:visited:focus-visible > time > .w3-check {
+  background-color: color-mix(in srgb, var(--hs-card) 70%, color-mix(in oklab, var(--hs-blue) var(--w3-read-hover), var(--hs-page))) !important;
+}
+
+a.w3-row:visited:hover > time,
+a.w3-row:visited:focus-visible > time,
+a.w3-row:visited:hover > time .w3-hh,
+a.w3-row:visited:hover > time .w3-mm,
+a.w3-row:visited:hover > time .w3-colon {
+  background: color-mix(in srgb, var(--hs-card) 25%, color-mix(in oklab, var(--hs-blue) var(--w3-read-hover), var(--hs-page))) !important;
+  color: color-mix(in srgb, var(--hs-card) 25%, color-mix(in oklab, var(--hs-blue) var(--w3-read-hover), var(--hs-page))) !important;
 }
 
 article:has(> a > time) > a:hover h3 + div > span,
@@ -788,6 +805,7 @@ article:has(> a[href*="/bestenlisten/"]) > a > time {
   }
 
   article:has(> a > time) > a:hover > time > .w3-check {
+    mix-blend-mode: darken !important;
     background-color: var(--hs-card) !important;
   }
 
@@ -802,7 +820,11 @@ article:has(> a[href*="/bestenlisten/"]) > a > time {
     color: var(--hs-read) !important;
   }
 
-  a.w3-row:visited:hover > time {
+  a.w3-row:visited:hover > time,
+  a.w3-row:visited:hover > time .w3-hh,
+  a.w3-row:visited:hover > time .w3-mm,
+  a.w3-row:visited:hover > time .w3-colon {
+    background: var(--hs-chip) !important;
     color: var(--hs-chip) !important;
   }
 
@@ -931,6 +953,20 @@ a.w3-row:visited > time .w3-colon {
 @media (prefers-color-scheme: dark) {
   article > a > time > .w3-check {
     mix-blend-mode: lighten !important;
+  }
+
+  /* Hover invers dazu: darken, unbesucht weiß (unsichtbar). */
+  article:has(> a > time) > a:hover > time > .w3-check,
+  article:has(> a > time) > a:focus-visible > time > .w3-check {
+    mix-blend-mode: darken !important;
+    background-color: #fff !important;
+  }
+
+  @media (hover: none) {
+    article:has(> a > time) > a:hover > time > .w3-check {
+      mix-blend-mode: lighten !important;
+      background-color: var(--hs-card) !important;
+    }
   }
 }
 

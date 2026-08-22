@@ -17,7 +17,7 @@ Zwei Teile, die zusammengehören:
   kürzt Chip-Texte, vereinheitlicht Tagesköpfe, injiziert die
   Gelesen-Marker (WebKit wendet `:visited` weder auf Pseudo-Elemente noch
   auf `:has()` an), snappt beim Scrollen zum nächsten Tageskopf und
-  stellt seitlich gezogene Titel nach 9 s Ruhe zurück. Es lädt auf der
+  stellt seitlich gezogene Titel nach 4 s Ruhe zurück. Es lädt auf der
   ganzen heise-/golem-Domain und prüft zur Laufzeit, ob die Route ein
   Ticker ist — heise ist eine Single-Page-App, ein enges `@match` griffe
   nach Klick von der Startseite nie.

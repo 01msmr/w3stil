@@ -580,13 +580,32 @@ body:has(.ticker-list) .go-content-header {
   color: var(--gl-fg) !important;
 }
 
-/* Im Hover ist die Chipfläche weiß — das Häkchen tarnt sich entsprechend
- * weiß und die Uhrzeit ist wieder lesbar, auch auf gelesenen Zeilen. Muss
- * nach der :visited-Häkchen-Regel stehen, um sie bei gleicher Spezifität
- * zu schlagen. */
+/* Unter dem Cursor wie bei Mac & i, nur in golems Farben und Verhältnissen:
+ * das Häkchen BLEIBT auf gelesenen Zeilen. Der Blendmodus darf unter
+ * :hover wechseln (unter :visited nicht): lighten — unbesucht schwarz
+ * (nichts ist dunkler, unsichtbar), besucht hell (70% Karte über der
+ * Gelesen-Hover-Fläche). Muss nach der :visited-Häkchen-Regel stehen. */
 .go-ticker-teaser:hover .go-ticker-teaser__datetime > .w3-check,
 .go-ticker-teaser:focus-visible .go-ticker-teaser__datetime > .w3-check {
-  background-color: var(--gl-card) !important;
+  mix-blend-mode: lighten !important;
+  background-color: #000 !important;
+}
+
+.go-ticker-teaser:visited:hover .go-ticker-teaser__datetime > .w3-check,
+.go-ticker-teaser:visited:focus-visible .go-ticker-teaser__datetime > .w3-check {
+  background-color: color-mix(in srgb, var(--gl-card) 70%, color-mix(in oklab, var(--gl-fg) var(--w3-read-hover), var(--gl-page))) !important;
+}
+
+/* Der Chip gelesener Zeilen unter dem Cursor: leiser Kasten (25% Karte
+ * über der Gelesen-Hover-Fläche), die Ziffern tarnen sich darin — die
+ * Uhrzeit kehrt hier NICHT zurück, das Häkchen trägt den Zustand. */
+.go-ticker-teaser:visited:hover .go-ticker-teaser__datetime,
+.go-ticker-teaser:visited:focus-visible .go-ticker-teaser__datetime,
+.go-ticker-teaser:visited:hover .go-ticker-teaser__datetime .w3-hh,
+.go-ticker-teaser:visited:hover .go-ticker-teaser__datetime .w3-mm,
+.go-ticker-teaser:visited:hover .go-ticker-teaser__datetime .w3-colon {
+  background: color-mix(in srgb, var(--gl-card) 25%, color-mix(in oklab, var(--gl-fg) var(--w3-read-hover), var(--gl-page))) !important;
+  color: color-mix(in srgb, var(--gl-card) 25%, color-mix(in oklab, var(--gl-fg) var(--w3-read-hover), var(--gl-page))) !important;
 }
 
 /* ── Seminare und Stellenmarkt ──────────────────────────────────────────
@@ -884,6 +903,7 @@ main > .go-col--full:has(.go-button):hover {
   }
 
   .go-ticker-teaser:hover .go-ticker-teaser__datetime > .w3-check {
+    mix-blend-mode: darken !important;
     background-color: var(--gl-card) !important;
   }
 
@@ -901,7 +921,11 @@ main > .go-col--full:has(.go-button):hover {
     color: var(--gl-muted) !important;
   }
 
-  .go-ticker-teaser:visited:hover .go-ticker-teaser__datetime {
+  .go-ticker-teaser:visited:hover .go-ticker-teaser__datetime,
+  .go-ticker-teaser:visited:hover .go-ticker-teaser__datetime .w3-hh,
+  .go-ticker-teaser:visited:hover .go-ticker-teaser__datetime .w3-mm,
+  .go-ticker-teaser:visited:hover .go-ticker-teaser__datetime .w3-colon {
+    background: var(--gl-chip) !important;
     color: var(--gl-chip) !important;
   }
 
@@ -1021,6 +1045,20 @@ main > .go-col--full:has(.go-button):hover {
 @media (prefers-color-scheme: dark) {
   .go-ticker-teaser__datetime > .w3-check {
     mix-blend-mode: lighten !important;
+  }
+
+  /* Hover invers dazu: darken, unbesucht weiß (unsichtbar). */
+  .go-ticker-teaser:hover .go-ticker-teaser__datetime > .w3-check,
+  .go-ticker-teaser:focus-visible .go-ticker-teaser__datetime > .w3-check {
+    mix-blend-mode: darken !important;
+    background-color: #fff !important;
+  }
+
+  @media (hover: none) {
+    .go-ticker-teaser:hover .go-ticker-teaser__datetime > .w3-check {
+      mix-blend-mode: lighten !important;
+      background-color: var(--gl-card) !important;
+    }
   }
 }
 
