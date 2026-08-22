@@ -594,7 +594,8 @@ header[class*="theme-mac-and-i"] ul[class*="gap-6"][class*="text-lg"] > li > a {
   border-radius: 0 !important;
   padding: 0 0.54em 7px !important;
 
-  /* Rubriken ruhend in halbem Grau, unter dem Cursor schwarz (Logo bleibt). */
+  /* Rubriken ruhend in halbem Grau; sobald der Cursor irgendwo in der
+   * Kapsel steht, alle schwarz (Regel unten; das Logo bleibt). */
   color: color-mix(in srgb, var(--mi-fg) 50%, var(--mi-card)) !important;
   text-decoration: none !important;
 
@@ -622,6 +623,10 @@ header[class*="theme-mac-and-i"] ul[class*="gap-6"][class*="text-lg"] > li:last-
 header[class*="theme-mac-and-i"] ul[class*="gap-6"][class*="text-lg"] > li > a:hover,
 header[class*="theme-mac-and-i"] ul[class*="gap-6"][class*="text-lg"] > li > a:focus-visible {
   background: var(--mi-chip) !important;
+}
+
+/* Cursor irgendwo in der Kapsel: alle Rubriken schwarz. */
+header[class*="theme-mac-and-i"]:hover ul[class*="gap-6"][class*="text-lg"] > li > a {
   color: #000 !important;
 }
 
