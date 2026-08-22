@@ -65,6 +65,10 @@ body:has(article[data-teaser-name="HorizontalTimelineTeaser"]) {
   /* EIN Hover-Ton für Zeile und Fugen der gehoverten Karte: Seitengrau um
    * 34% Schwarz — dunkel genug, dass der weiße fette Titel trägt. */
   --mi-hover: color-mix(in srgb, #000 34%, var(--mi-page));
+
+  /* Heller Hover-Ton: gelesene Titel, Uhrzeit-Chip und Platte auf der
+   * Hover-Fläche. */
+  --mi-hover-light: color-mix(in srgb, #fff 70%, var(--mi-hover));
   /* Weiß auf dem abgedunkelten Grund — Vorgabe nur für diese Seite.
    * Ebenso eigen: größere, kursive, nicht fette Kopfschrift. */
   --mi-head-color: #fff;
@@ -721,14 +725,21 @@ a.w3-row:visited h3 span {
 article:hover .w3-row:visited,
 article:hover .w3-row:visited h3,
 article:hover .w3-row:visited h3 span {
-  color: color-mix(in srgb, #fff 70%, var(--mi-hover)) !important;
+  color: var(--mi-hover-light) !important;
 }
 
-/* Dieselbe Abstufung für die Platte mit dem Häkchen: nicht chipweiß auf
- * dem Hover-Grau, sondern im hellen Hover-Ton wie der Titel; das Häkchen
- * darauf im Hover-Grau. */
+/* Der Uhrzeit-Chip jeder Zeile unter dem Cursor im hellen Hover-Ton statt
+ * chipweiß (er steht außerhalb des Links, :visited ist hier nicht nötig).
+ * Die Platte gelesener Zeilen nimmt EXAKT denselben Ton: ihr lighten-Blend
+ * löscht Ziffern nur, wenn sie mindestens so hell ist wie der Chip — ein
+ * dunklerer Plattenton ließe die Ziffern durchscheinen. Das Häkchen darauf
+ * im Hover-Grau. */
+article[data-teaser-name="HorizontalTimelineTeaser"]:hover > time {
+  background: var(--mi-hover-light) !important;
+}
+
 article:hover .w3-row:visited > .w3-plate {
-  background-color: color-mix(in srgb, #fff 70%, var(--mi-hover)) !important;
+  background-color: var(--mi-hover-light) !important;
 }
 
 article:hover .w3-row:visited > .w3-check {
