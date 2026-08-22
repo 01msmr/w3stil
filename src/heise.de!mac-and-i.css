@@ -666,7 +666,10 @@ a.w3-row:visited > .w3-check {
 
 a.w3-row:visited,
 a.w3-row:visited h3,
-a.w3-row:visited h3 > span {
+a.w3-row:visited h3 span {
+  /* ALLE Spans unter der h3: heise schachtelt den Titeltext zwei Ebenen
+   * tief (h3 > span > span) und gibt dem inneren Span eine eigene Farbe —
+   * die erbt nichts, WebKit färbt ohnehin nur, was der Selektor trifft. */
   color: var(--mi-read) !important;
 }
 
