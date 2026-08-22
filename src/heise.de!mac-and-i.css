@@ -69,6 +69,10 @@ body:has(article[data-teaser-name="HorizontalTimelineTeaser"]) {
   /* Heller Hover-Ton: gelesene Titel, Uhrzeit-Chip und Platte auf der
    * Hover-Fläche. */
   --mi-hover-light: color-mix(in srgb, #fff 70%, var(--mi-hover));
+
+  /* Uhrzeit-Chip und Platte auf der Hover-Fläche: nur ein Viertel Weiß
+   * über dem Hover-Grau — leise, kaum abgesetzt. */
+  --mi-hover-box: color-mix(in srgb, #fff 25%, var(--mi-hover));
   /* Weiß auf dem abgedunkelten Grund — Vorgabe nur für diese Seite.
    * Ebenso eigen: größere, kursive, nicht fette Kopfschrift. */
   --mi-head-color: #fff;
@@ -584,7 +588,9 @@ header[class*="theme-mac-and-i"] ul[class*="gap-6"][class*="text-lg"] > li > a {
   background: none !important;
   border-radius: 0 !important;
   padding: 0 0.54em 7px !important;
-  color: var(--mi-fg) !important;
+
+  /* Rubriken ruhend in halbem Grau, unter dem Cursor schwarz (Logo bleibt). */
+  color: color-mix(in srgb, var(--mi-fg) 50%, var(--mi-card)) !important;
   text-decoration: none !important;
 
   /* Wie die Wortmarke: Helvetica-Schnitt, fett, kursiv — etwas größer als
@@ -611,7 +617,7 @@ header[class*="theme-mac-and-i"] ul[class*="gap-6"][class*="text-lg"] > li:last-
 header[class*="theme-mac-and-i"] ul[class*="gap-6"][class*="text-lg"] > li > a:hover,
 header[class*="theme-mac-and-i"] ul[class*="gap-6"][class*="text-lg"] > li > a:focus-visible {
   background: var(--mi-chip) !important;
-  color: var(--mi-fg) !important;
+  color: #000 !important;
 }
 
 /* Die CleverPush-Glocke (fixierter Abo-Button unten am Rand) hat auf einer
@@ -645,12 +651,18 @@ article[data-teaser-name="HorizontalTimelineTeaser"] > a > .w3-plate {
   display: block !important;
   pointer-events: none !important;
   position: absolute !important;
-  left: calc(var(--mi-bleed) + var(--mi-inset) + 0.45 * var(--mi-cf)) !important;
+
+  /* Deckungsgleich mit dem ganzen Uhrzeit-Chip (5 Tabellenziffern à 0.6
+   * plus Laufweite und 2×0.6 Polster ≈ 4.35 Chipschrift breit, 1.35 Zeile
+   * plus 2×0.25 Polster hoch) — nicht nur über den Ziffern: sonst zeichnet
+   * sich die Platte, sobald ihr Ton vom Chip abweicht (Hover), als Kasten
+   * im Kasten ab. */
+  left: calc(var(--mi-bleed) + var(--mi-inset)) !important;
   top: 50% !important;
   transform: translateY(-50%) !important;
-  width: calc(3.5 * var(--mi-cf)) !important;
-  height: calc(1.4 * var(--mi-cf)) !important;
-  border-radius: 3px !important;
+  width: calc(4.35 * var(--mi-cf)) !important;
+  height: calc(1.85 * var(--mi-cf)) !important;
+  border-radius: 4px !important;
   mix-blend-mode: lighten !important;
   background-color: #000 !important;
 }
@@ -735,15 +747,35 @@ article:hover .w3-row:visited h3 span {
  * dunklerer Plattenton ließe die Ziffern durchscheinen. Das Häkchen darauf
  * im Hover-Grau. */
 article[data-teaser-name="HorizontalTimelineTeaser"]:hover > time {
-  background: var(--mi-hover-light) !important;
+  background: var(--mi-hover-box) !important;
+}
+
+/* Unter dem Cursor sind die Ziffern HELL (Zeilenfarben) — ein lighten-
+ * Blend könnte sie nicht mehr löschen. Die Platte kippt deshalb beim
+ * Hover auf darken: unbesucht weiß (nichts ist dunkler, unsichtbar),
+ * besucht im Kastenton — deckt die hellen Ziffern, der Kasten behält
+ * seinen Ton. */
+article:hover .w3-row > .w3-plate {
+  mix-blend-mode: darken !important;
+  background-color: #fff !important;
 }
 
 article:hover .w3-row:visited > .w3-plate {
-  background-color: var(--mi-hover-light) !important;
+  background-color: var(--mi-hover-box) !important;
+}
+
+/* Das Häkchen in der Farbe des gelesenen Titels unter dem Cursor (hell).
+ * Der darken-Blend zeigte nur Dunkleres als die Platte — der Blendmodus
+ * darf sich unter :hover ändern (unter :visited nicht): lighten, und die
+ * Grundfarbe unbesuchter Zeilen kippt auf Schwarz, damit sie unsichtbar
+ * bleibt; besucht übernimmt den hellen Ton. */
+article:hover .w3-row > .w3-check {
+  mix-blend-mode: lighten !important;
+  background-color: #000 !important;
 }
 
 article:hover .w3-row:visited > .w3-check {
-  background-color: var(--mi-hover) !important;
+  background-color: var(--mi-hover-light) !important;
 }
 
 /* Hover invertiert die ganze Zeile — der Hover hängt am article, nicht am
@@ -941,6 +973,20 @@ article[data-teaser-name="HorizontalTimelineTeaser"] > time .w3-hh {
 
 article[data-teaser-name="HorizontalTimelineTeaser"] > time .w3-colon {
   color: var(--mi-muted) !important;
+}
+
+/* Unter dem Cursor folgt die Uhr den Zeilenfarben: Stunden weiß wie der
+ * Titel, ":Minuten" wie bisher abgestuft — im hellen Hover-Ton statt in
+ * voller Deckung. Gelesene Uhren deckt die Platte ab, der Gelesen-Ton
+ * braucht hier keine Regel. */
+article[data-teaser-name="HorizontalTimelineTeaser"]:hover > time .w3-hh {
+  color: #fff !important;
+}
+
+article[data-teaser-name="HorizontalTimelineTeaser"]:hover > time,
+article[data-teaser-name="HorizontalTimelineTeaser"]:hover > time .w3-colon,
+article[data-teaser-name="HorizontalTimelineTeaser"]:hover > time .w3-mm {
+  color: var(--mi-hover-light) !important;
 }
 
 /* ── Dark Mode: Blend-Inversion von Platte und Häkchen (Begründung bei
