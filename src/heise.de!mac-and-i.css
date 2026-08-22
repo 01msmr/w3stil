@@ -151,22 +151,28 @@ div:has(> section > article[data-teaser-name="HorizontalTimelineTeaser"]) > sect
   background: none !important;
   border-radius: var(--mi-radius) !important;
 
-  /* Passiv ohne Schatten — er kommt erst mit dem Hover. drop-shadow
-   * statt box-shadow: der beschattet die SILHOUETTE, sein Blur blutet
-   * durch die 1px-Fugen — durch die transparenten Schlitze ist damit
-   * ECHTER Schatten zu sehen (box-shadow malt nur außerhalb der Box).
-   * Grundzustand mit Alpha 0 statt filter: none — so wechselt beim Hover
-   * nur der Schattenwert, nicht die Filterkette. Ohne Übergang: ein
-   * einblendender Schatten (vorher 0.25s) las sich als verzögerter Hover. */
+  /* Die Section selbst wirft KEINEN Schatten — den tragen die Zeilen
+   * (nächste Regel). Ein drop-shadow-Filter auf der Section beschattete
+   * alles in ihr, auch die Hinweis-Chips im grauen Rand. */
   box-shadow: none !important;
-  filter: drop-shadow(12px 28px 22px rgb(0 0 0 / 0)) !important;
-  transition: none !important;
+  filter: none !important;
 }
 
-/* Der Tages-Chip, in dem der Cursor steht, hebt sich kräftig: Offsets und
- * Blur verdoppelt (+100% gegenüber dem Ruhezustand). expect: 1..14 */
-div:has(> section > article[data-teaser-name="HorizontalTimelineTeaser"]) > section:hover {
-  filter: drop-shadow(12px 28px 22px rgb(0 0 0 / 0.42)) !important;
+/* Der Schatten des Tages-Chips sitzt an JEDER Zeile als box-shadow: er
+ * wird nur außerhalb der Zeilenbox gemalt, also nicht auf die Chips, die
+ * absolut links außerhalb stehen. Die folgende Zeile deckt ihn ab — bis
+ * auf die 1px-Fuge, durch die er durchscheint: der echte Schatten in den
+ * Fugen bleibt. Unterhalb der letzten Zeile und rechts ist er der Schatten
+ * der Karte. Grundzustand mit Alpha 0, die Transition blendet ihn ein.
+ * expect: 20..200 */
+div:has(> section > article[data-teaser-name="HorizontalTimelineTeaser"]) > section > article {
+  box-shadow: 8px 20px 29px 6px rgb(0 0 0 / 0) !important;
+  transition: box-shadow 0.25s ease-out !important;
+}
+
+/* Der Tages-Chip, in dem der Cursor steht, hebt sich kräftig. expect: 1..14 */
+div:has(> section > article[data-teaser-name="HorizontalTimelineTeaser"]) > section:hover > article {
+  box-shadow: 8px 20px 29px 6px rgb(0 0 0 / 0.42) !important;
 }
 
 /* Trennlinie zwischen den Zeilen: ECHT transparent — die Section trägt
@@ -318,10 +324,15 @@ article[data-teaser-name="HorizontalTimelineTeaser"] footer > span:has(> img[src
   display: none !important;
 }
 
-/* Branding-Chips ("heise security" …) wie die Hinweis-Chips des
- * Haupt-Tickers. Den "Mac & i Magazin"-Chip entfernt das Userscript — alles
- * hier IST Mac & i, CSS kann nicht nach Text selektieren. expect: 0..200 */
-article[data-teaser-name="HorizontalTimelineTeaser"] [data-component="Branding"] {
+/* ALLE Hinweis-Chips in einem Design, ohne Sonderfarben oder -größen:
+ * Branding ("autos", "iX" …), Update-Badge, Angebots-Hinweis und was heise
+ * sonst als Text-Span in den Footer stellt — wie die Hinweis-Chips des
+ * Haupt-Tickers. Den "Mac & i Magazin"-Chip entfernt das Userscript —
+ * alles hier IST Mac & i, CSS kann nicht nach Text selektieren.
+ * Die Bild-Spans (Kommentarzähler) bleiben außen vor. expect: 0..200 */
+article[data-teaser-name="HorizontalTimelineTeaser"] [data-component="Branding"],
+article[data-teaser-name="HorizontalTimelineTeaser"] footer > span:not(:has(> img)) {
+  display: inline-block !important;
   border: 0 !important;
   border-radius: 4px !important;
   background: color-mix(in oklab, var(--mi-fg) var(--w3-label-mix), var(--mi-page)) !important;
@@ -331,7 +342,27 @@ article[data-teaser-name="HorizontalTimelineTeaser"] [data-component="Branding"]
   font-size: calc(var(--mi-size) * var(--w3-chip-font)) !important;
   letter-spacing: 0.03em !important;
   line-height: var(--mi-lh) !important;
+  font-weight: 400 !important;
   text-transform: uppercase !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+}
+
+/* Der farbige Markenbalken neben dem Branding (3px, Ressortfarbe)
+ * entfällt — er wäre die einzige Sonderfarbe in der Leiste. expect: 0..60 */
+article[data-teaser-name="HorizontalTimelineTeaser"] footer > div > span:not([data-component]) {
+  display: none !important;
+}
+
+/* Medien-Marker (Video-Bild, Podcast-SVG): keine Chips, bleiben als Zeichen
+ * — gedämpft und auf Chiphöhe gebracht. expect: 0..40 */
+article[data-teaser-name="HorizontalTimelineTeaser"] footer > img,
+article[data-teaser-name="HorizontalTimelineTeaser"] footer > svg {
+  height: calc(var(--mi-size) * var(--w3-chip-font) * 1.25) !important;
+  width: auto !important;
+  margin: 0 !important;
+  color: var(--mi-muted) !important;
+  opacity: 0.8 !important;
 }
 
 /* Alert wie beim Haupt-Ticker: nur das rote Zeichen, ohne Chipfläche.
@@ -380,6 +411,10 @@ article[data-teaser-name="HorizontalTimelineTeaser"]:has(img[src*="heise_plus"])
  * Striche, gleichmäßig über die Kapselbreite verteilt. Die erste Kopfreihe
  * (Heftarchiv, Social, Abo-Knopf, Mobil-Flyout) entfällt. expect: 1 */
 header[class*="theme-mac-and-i"] {
+  /* Trennstriche in der Kapsel: deutlich leiser als die Zeilen-Linien —
+   * 45% statt 75% Seitengrau, der Rest Kartenweiß. */
+  --mi-capsule-line: color-mix(in srgb, var(--mi-page) 45%, var(--mi-card));
+
   display: flex !important;
   align-items: stretch !important;
   height: 56px !important;
@@ -393,7 +428,17 @@ header[class*="theme-mac-and-i"] {
   border-radius: 999px !important;
   padding: 0 !important;
   background: var(--mi-card) !important;
-  box-shadow: none !important;
+
+  /* Hebt sich beim Hover wie ein Tages-Chip, gleiche Einblendung
+   * (Grundzustand Alpha 0) — der Schatten auf 60% skaliert, die Kapsel
+   * ist flacher als eine Tageskarte; fast mittig unter ihr (kaum
+   * Seitenversatz) und mit 4px Spread etwas breiter als die Kapsel. */
+  box-shadow: 2px 7px 16px 4px rgb(0 0 0 / 0) !important;
+  transition: box-shadow 0.125s ease-out !important; /* doppelt so schnell wie die Karten */
+}
+
+header[class*="theme-mac-and-i"]:hover {
+  box-shadow: 2px 7px 16px 4px rgb(0 0 0 / 0.42) !important;
 }
 
 /* Das Logo-Segment: vertikal mittig, ohne eigene Fläche, mit Trennstrich
@@ -403,11 +448,15 @@ header[class*="theme-mac-and-i"] > a {
   display: flex !important;
   align-items: center !important;
 
-  /* heises lg:place-self-start würde das Logo nach oben ziehen. */
+  /* heises lg:place-self-start würde das Logo nach oben ziehen; auf dem
+   * Ticker setzt sich trotzdem ein center durch — die Höhe deshalb
+   * ausdrücklich voll, sonst endet der Trennstrich auf Logohöhe. */
   align-self: stretch !important;
+  height: 100% !important;
+  box-sizing: border-box !important;
   margin: 0 !important;
-  padding: 0 28px 0 36px !important;
-  border-right: 1px solid color-mix(in srgb, var(--mi-page) var(--w3-divider-mix), var(--mi-card)) !important;
+  padding: 0 17px 0 22px !important;
+  border-right: 1px solid var(--mi-capsule-line) !important;
 }
 
 /* Die Wortmarke OPTISCH mittig: ihr viewBox (96×32) trägt unten 6.5 und
@@ -474,7 +523,7 @@ header[class*="theme-mac-and-i"] ul[class*="gap-6"][class*="text-lg"] > li {
 
 /* In der Kapsel sind die Trennstriche feiner als zwischen den Zeilen. */
 header[class*="theme-mac-and-i"] ul[class*="gap-6"][class*="text-lg"] > li + li {
-  border-left: 1px solid color-mix(in srgb, var(--mi-page) var(--w3-divider-mix), var(--mi-card)) !important;
+  border-left: 1px solid var(--mi-capsule-line) !important;
 }
 
 header[class*="theme-mac-and-i"] ul[class*="gap-6"][class*="text-lg"] > li > a {
@@ -489,7 +538,7 @@ header[class*="theme-mac-and-i"] ul[class*="gap-6"][class*="text-lg"] > li > a {
   height: 100% !important;
   background: none !important;
   border-radius: 0 !important;
-  padding: 0 0.9em 7px !important;
+  padding: 0 0.54em 7px !important;
   color: var(--mi-fg) !important;
   text-decoration: none !important;
 
@@ -505,6 +554,12 @@ header[class*="theme-mac-and-i"] ul[class*="gap-6"][class*="text-lg"] > li > a {
  * beginnt die Kapsel mit dem Logo-Segment. */
 header[class*="theme-mac-and-i"] ul[class*="gap-6"][class*="text-lg"] > li:last-child > a {
   border-radius: 0 999px 999px 0 !important;
+
+  /* Der Halbkreis der Kapsel frisst unten rechts in den Text: auf Höhe
+   * der Textunterkante (25px unter der Kapselmitte) rückt die Rundung
+   * 15px ein — so viel Polster kommt dazu, damit das Wort optisch genauso
+   * weit von der Kante steht wie die anderen von ihren Strichen. */
+  padding-right: calc(0.54em + 15px) !important;
 }
 
 /* Hover: nur eine hellgraue Fläche, keine Invertierung. */
@@ -668,8 +723,12 @@ article[data-teaser-name="HorizontalTimelineTeaser"]:hover {
     background: var(--mi-card) !important;
   }
 
-  div:has(> section > article[data-teaser-name="HorizontalTimelineTeaser"]) > section:hover {
-    box-shadow: 6px 14px 22px rgb(0 0 0 / 0.42) !important;
+  div:has(> section > article[data-teaser-name="HorizontalTimelineTeaser"]) > section:hover > article {
+    box-shadow: 8px 20px 29px 6px rgb(0 0 0 / 0) !important;
+  }
+
+  header[class*="theme-mac-and-i"]:hover {
+    box-shadow: 2px 7px 16px 4px rgb(0 0 0 / 0) !important;
   }
 }
 
@@ -824,7 +883,7 @@ article[data-teaser-name="HorizontalTimelineTeaser"] > time .w3-colon {
  * (Nebeneffekt der entkernten Section). Die Section bekommt ihr Weiß
  * hier zurück, und die Fugen werden exakt seitengrund-farben gemalt:
  * ohne Hover-Schatten (Touch) ist das pixelidentisch mit echter
- * Transparenz. Desktop behält Transparent-Fugen samt drop-shadow. */
+ * Transparenz. Desktop behält Transparent-Fugen samt Zeilen-Schatten. */
 @media (max-width: 500px) {
   div:has(> section > article[data-teaser-name="HorizontalTimelineTeaser"]) > section {
     background: var(--mi-card) !important;
