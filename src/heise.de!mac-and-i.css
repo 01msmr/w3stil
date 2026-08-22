@@ -196,7 +196,8 @@ div:has(> section > article[data-teaser-name="HorizontalTimelineTeaser"]) > sect
  * der Zeile unter dem Cursor nehmen deren Hover-Fläche an und verschwinden
  * darin. expect: 20..200 */
 div:has(> section > article[data-teaser-name="HorizontalTimelineTeaser"]) > section:hover > hr {
-  border-top-color: color-mix(in srgb, #000 21%, var(--mi-page)) !important;
+  /* … und davon ein Viertel Richtung Weiß aufgehellt. */
+  border-top-color: color-mix(in srgb, color-mix(in srgb, #000 21%, var(--mi-page)) 75%, #fff) !important;
 }
 
 div:has(> section > article[data-teaser-name="HorizontalTimelineTeaser"]) > section:hover > article:hover + hr,
