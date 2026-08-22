@@ -102,7 +102,13 @@ Kopfleiste und rückt nach oben, sobald die ausblendet
 nicht mehr, sie scrollt mit und kann keinen Tageskopf überdecken. golems
 „International"-Hinweis ist ein quadratischer Chip mit Weltkugel (Font
 Awesome „globe" als CSS-Maske, wie das Gelesen-Häkchen). Hover-Zustände
-schalten überall in einem Frame, ohne Überblendung. Das Snapping zielt weiter auf die
+schalten überall in einem Frame, ohne Überblendung — nur Schatten blenden
+ein. Mac & i: die Kopfzeile ist eine Kapsel (Wortmarke optisch mittig,
+Rubriken auf ihrer Grundlinie, Trennstriche derzeit transparent), Karte
+und Kapsel heben sich beim Hover per `box-shadow`; die Fugen der
+gehoverten Karte und die Zeile unter dem Cursor teilen einen Hover-Ton
+(`--mi-hover`, Titel weiß), alle Hinweis-Chips tragen ein Design, gelesene
+Titel stehen in zwei Dritteln der Textfarbe. Das Snapping zielt weiter auf die
 Originalstelle oberhalb des Zeilencontainers (das Userscript
 rekonstruiert die Fluss-Position klebender Köpfe). Alle drei
 Ticker folgen dem System-Dark-Mode: je Site kippt ein `@media`-Block
