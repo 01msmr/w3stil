@@ -715,6 +715,15 @@ a.w3-row:visited h3 span {
   color: var(--mi-read) !important;
 }
 
+/* Gelesene Zeile unter dem Cursor: heller als ihr Gelesen-Ton, aber kein
+ * Weiß — so bleibt „gelesen" auch im Hover ablesbar. Hinter der
+ * Gelesen-Regel und spezifischer als der Hover (article:hover). */
+article:hover .w3-row:visited,
+article:hover .w3-row:visited h3,
+article:hover .w3-row:visited h3 span {
+  color: color-mix(in srgb, #fff 70%, var(--mi-hover)) !important;
+}
+
 /* Hover invertiert die ganze Zeile — der Hover hängt am article, nicht am
  * Link, damit auch Uhrzeit und Rand mitgehen wie beim Haupt-Ticker. */
 /* Hover ist hier bewusst leise — anders als die invertierenden Zeilen der
