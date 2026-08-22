@@ -724,6 +724,17 @@ article:hover .w3-row:visited h3 span {
   color: color-mix(in srgb, #fff 70%, var(--mi-hover)) !important;
 }
 
+/* Dieselbe Abstufung für die Platte mit dem Häkchen: nicht chipweiß auf
+ * dem Hover-Grau, sondern im hellen Hover-Ton wie der Titel; das Häkchen
+ * darauf im Hover-Grau. */
+article:hover .w3-row:visited > .w3-plate {
+  background-color: color-mix(in srgb, #fff 70%, var(--mi-hover)) !important;
+}
+
+article:hover .w3-row:visited > .w3-check {
+  background-color: var(--mi-hover) !important;
+}
+
 /* Hover invertiert die ganze Zeile — der Hover hängt am article, nicht am
  * Link, damit auch Uhrzeit und Rand mitgehen wie beim Haupt-Ticker. */
 /* Hover ist hier bewusst leise — anders als die invertierenden Zeilen der
