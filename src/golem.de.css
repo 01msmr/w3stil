@@ -259,11 +259,18 @@ body:has(.ticker-list) .go-content-header {
   overflow: visible !important;
 }
 
-/* Der Vorspann bis zum Doppelpunkt (Span vom Userscript) auf die Hälfte
- * gedimmt — in jedem Zustand relativ zur jeweiligen Schriftfarbe, also
- * auch im invertierten Hover und bei gelesenen Zeilen. expect: 0..400 */
+/* Der Vorspann bis zum Doppelpunkt (Span vom Userscript): ruhend auf ein
+ * Drittel gedimmt, unter dem Cursor auf zwei Drittel. Deckkraft statt
+ * Farbe — so ist es in jedem Zustand relativ zur jeweiligen Schriftfarbe,
+ * im invertierten Hover, bei gelesenen Zeilen und im Dark Mode gleich.
+ * expect: 0..400 */
 .go-ticker-teaser .w3-kicker {
-  opacity: 0.5 !important;
+  opacity: 0.33 !important;
+}
+
+.go-ticker-teaser:hover .w3-kicker,
+.go-ticker-teaser:focus-visible .w3-kicker {
+  opacity: 0.66 !important;
 }
 
 /* Uhrzeit-Icon und Plus-Badge tragen in einer Zeilenliste nichts bei. */
