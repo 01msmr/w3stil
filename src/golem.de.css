@@ -565,8 +565,14 @@ body:has(.ticker-list) .go-content-header {
  * sonst der Reihenfolge nach verlieren. */
 .go-ticker-teaser:visited:hover,
 .go-ticker-teaser:visited:focus-visible {
-  background-color: color-mix(in oklab, var(--gl-fg) var(--w3-read-hover), var(--gl-page)) !important;
-  color: color-mix(in oklab, var(--gl-card) var(--w3-read-hover-text), var(--gl-fg)) !important;
+  --gl-read-hover-bg: color-mix(in oklab, var(--gl-fg) var(--w3-read-hover), var(--gl-page));
+
+  background-color: var(--gl-read-hover-bg) !important;
+
+  /* Schrift wie bei Mac & i RELATIV zur Hover-Fläche: 70% Kartenfarbe über
+   * der Gelesen-Hover-Fläche — hell, aber nicht voll; die Farben selbst
+   * bleiben golems (Karte/Text), nur das Mischverhältnis ist dasselbe. */
+  color: color-mix(in srgb, var(--gl-card) 70%, var(--gl-read-hover-bg)) !important;
 }
 
 /* Der Chip invertiert mit: weiße Fläche, schwarze Ziffern. Muss nach der
