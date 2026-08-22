@@ -17,12 +17,13 @@
   --w3-read-card: 75%;
 
   /* Farbanteil (Schwarz bzw. Marken-Blau) der Hover-Fläche gelesener Zeilen —
-   * deutlich heller als der volle Hover, damit „gelesen" auch unter dem
-   * Cursor ablesbar bleibt. */
-  --w3-read-hover: 40%;
+   * heller als der volle Hover, damit „gelesen" auch unter dem Cursor
+   * ablesbar bleibt, aber dunkel genug für Kontrast zur Schrift (40% war
+   * mit der 85%-Schrift bei etwa 2.5:1). */
+  --w3-read-hover: 60%;
 
   /* Weißanteil der Schrift auf der Gelesen-Hover-Fläche. */
-  --w3-read-hover-text: 85%;
+  --w3-read-hover-text: 90%;
 
   /* Anteil der Textfarbe in der Fläche des Uhrzeit-Chips bzw. der
    * Hinweis-Chips auf dem Seitengrund. */
