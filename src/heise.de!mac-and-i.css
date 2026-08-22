@@ -186,6 +186,22 @@ div:has(> section > article[data-teaser-name="HorizontalTimelineTeaser"]) > sect
   background: none !important;
   height: 0 !important;
   border-top: var(--w3-divider-w) solid transparent !important;
+  transition: none !important;
+}
+
+/* Ersatz für den Schatten in den Fugen (der box-shadow der Section kommt
+ * nicht hinein): solange der Cursor in der Karte steht, färben sich die
+ * Fugen auf halbem Weg zum Schattenton — Seitengrau um 21% Schwarz, die
+ * halbe Dichte des 0.42-Schattens. Die beiden Fugen direkt über und unter
+ * der Zeile unter dem Cursor nehmen deren Hover-Fläche an und verschwinden
+ * darin. expect: 20..200 */
+div:has(> section > article[data-teaser-name="HorizontalTimelineTeaser"]) > section:hover > hr {
+  border-top-color: color-mix(in srgb, #000 21%, var(--mi-page)) !important;
+}
+
+div:has(> section > article[data-teaser-name="HorizontalTimelineTeaser"]) > section:hover > article:hover + hr,
+div:has(> section > article[data-teaser-name="HorizontalTimelineTeaser"]) > section:hover > hr:has(+ article:hover) {
+  border-top-color: color-mix(in srgb, var(--mi-page) 33%, var(--mi-card)) !important;
 }
 
 /* ── Navi-Pille: Logo vertikal zentriert ────────────────────────────────
@@ -206,6 +222,9 @@ header.theme-mac-and-i > a:first-child {
 
 /* expect: 20..200 */
 article[data-teaser-name="HorizontalTimelineTeaser"] {
+  /* Hart wie die Fugen, die beim Zeilen-Hover ihre Farbe übernehmen —
+   * heises transition-Utilities würden sie sonst nachziehen lassen. */
+  transition: none !important;
   display: flex !important;
   align-items: center !important;
   gap: 1em !important;
@@ -718,6 +737,10 @@ article[data-teaser-name="HorizontalTimelineTeaser"]:hover {
 
   div:has(> section > article[data-teaser-name="HorizontalTimelineTeaser"]) > section:hover {
     box-shadow: 8px 20px 29px 6px rgb(0 0 0 / 0) !important;
+  }
+
+  div:has(> section > article[data-teaser-name="HorizontalTimelineTeaser"]) > section:hover > hr {
+    border-top-color: transparent !important;
   }
 
   header[class*="theme-mac-and-i"]:hover {
