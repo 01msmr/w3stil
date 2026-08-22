@@ -722,9 +722,30 @@ article:hover .w3-row h3 span {
   }
 
   /* Der Vorspann bis zum Doppelpunkt (Span vom Userscript) bleibt normal —
-   * fett ist nur der eigentliche Titel. Ruhend und gelesen unverändert. */
+   * fett ist nur der eigentliche Titel. */
   article:hover .w3-row h3 .w3-kicker {
     font-weight: 400 !important;
+  }
+}
+
+/* Der Vorspann gedimmt wie auf den anderen Tickern: ruhend die Hälfte,
+ * unter dem Cursor zwei Drittel — Deckkraft, also relativ zur jeweiligen
+ * Schriftfarbe (auch gelesen); im Dark Mode vertauscht. */
+article[data-teaser-name="HorizontalTimelineTeaser"] h3 .w3-kicker {
+  opacity: 0.5 !important;
+}
+
+article[data-teaser-name="HorizontalTimelineTeaser"]:hover h3 .w3-kicker {
+  opacity: 0.66 !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  article[data-teaser-name="HorizontalTimelineTeaser"] h3 .w3-kicker {
+    opacity: 0.66 !important;
+  }
+
+  article[data-teaser-name="HorizontalTimelineTeaser"]:hover h3 .w3-kicker {
+    opacity: 0.5 !important;
   }
 }
 
