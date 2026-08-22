@@ -60,6 +60,11 @@ body:has(article[data-teaser-name="HorizontalTimelineTeaser"]) {
   --mi-cf: calc(var(--mi-size) * var(--w3-chip-font));
   --mi-chip: color-mix(in oklab, var(--mi-fg) var(--w3-chip-mix), var(--mi-card));
   --mi-read: color-mix(in oklab, var(--mi-muted) 75%, var(--mi-page));
+
+  /* EIN Hover-Ton für Zeile und Fugen der gehoverten Karte: Seitengrau um
+   * 21% Schwarz (halbe Dichte des 0.42-Schattens), davon ein Viertel
+   * Richtung Weiß aufgehellt. */
+  --mi-hover: color-mix(in srgb, color-mix(in srgb, #000 21%, var(--mi-page)) 75%, #fff);
   /* Weiß auf dem abgedunkelten Grund — Vorgabe nur für diese Seite.
    * Ebenso eigen: größere, kursive, nicht fette Kopfschrift. */
   --mi-head-color: #fff;
@@ -191,18 +196,11 @@ div:has(> section > article[data-teaser-name="HorizontalTimelineTeaser"]) > sect
 
 /* Ersatz für den Schatten in den Fugen (der box-shadow der Section kommt
  * nicht hinein): solange der Cursor in der Karte steht, färben sich die
- * Fugen auf halbem Weg zum Schattenton — Seitengrau um 21% Schwarz, die
- * halbe Dichte des 0.42-Schattens. Die beiden Fugen direkt über und unter
- * der Zeile unter dem Cursor nehmen deren Hover-Fläche an und verschwinden
- * darin. expect: 20..200 */
+ * Fugen im Hover-Ton (--mi-hover). Die Zeile unter dem Cursor trägt
+ * denselben Ton, ihre beiden Nachbarfugen verschwinden also in ihr.
+ * expect: 20..200 */
 div:has(> section > article[data-teaser-name="HorizontalTimelineTeaser"]) > section:hover > hr {
-  /* … und davon ein Viertel Richtung Weiß aufgehellt. */
-  border-top-color: color-mix(in srgb, color-mix(in srgb, #000 21%, var(--mi-page)) 75%, #fff) !important;
-}
-
-div:has(> section > article[data-teaser-name="HorizontalTimelineTeaser"]) > section:hover > article:hover + hr,
-div:has(> section > article[data-teaser-name="HorizontalTimelineTeaser"]) > section:hover > hr:has(+ article:hover) {
-  border-top-color: color-mix(in srgb, var(--mi-page) 33%, var(--mi-card)) !important;
+  border-top-color: var(--mi-hover) !important;
 }
 
 /* ── Navi-Pille: Logo vertikal zentriert ────────────────────────────────
@@ -424,9 +422,12 @@ article[data-teaser-name="HorizontalTimelineTeaser"]:has(img[src*="heise_plus"])
  * Striche, gleichmäßig über die Kapselbreite verteilt. Die erste Kopfreihe
  * (Heftarchiv, Social, Abo-Knopf, Mobil-Flyout) entfällt. expect: 1 */
 header[class*="theme-mac-and-i"] {
-  /* Trennstriche in der Kapsel: deutlich leiser als die Zeilen-Linien —
-   * 45% statt 75% Seitengrau, der Rest Kartenweiß. */
-  --mi-capsule-line: color-mix(in srgb, var(--mi-page) 45%, var(--mi-card));
+  /* Trennstriche in der Kapsel: derzeit unsichtbar (transparent). Die
+   * Striche bleiben als 1px-Rahmen im Layout stehen — zum Zurückholen nur
+   * die Farbe tauschen: 45% Seitengrau auf Kartenweiß, deutlich leiser als
+   * die Zeilen-Linien. */
+  --mi-capsule-line: transparent;
+  /* --mi-capsule-line: color-mix(in srgb, var(--mi-page) 45%, var(--mi-card)); */
 
   display: flex !important;
   align-items: stretch !important;
@@ -675,7 +676,7 @@ a.w3-row:visited h3 > span {
  * Seitengrau-Anteils auf Weiß. Schrift, Uhrzeit-Chip und Rand-Chips
  * bleiben unverändert; auch Alert-Zeilen hovern so. */
 article[data-teaser-name="HorizontalTimelineTeaser"]:hover {
-  background: color-mix(in srgb, var(--mi-page) 33%, var(--mi-card)) !important;
+  background: var(--mi-hover) !important;
 }
 
 /* ── Mobil ──────────────────────────────────────────────────────────────
