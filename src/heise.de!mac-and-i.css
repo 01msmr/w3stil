@@ -664,6 +664,16 @@ a.w3-row:visited > .w3-check {
  * Uhrzeit-Ziffern.
  */
 
+/* Hover: Titel weiß auf der Hover-Fläche. Steht VOR der Gelesen-Regel und
+ * hat GENAU deren Spezifität (deshalb ohne Attribut-Selektor: article +
+ * :hover + .w3-row = a + .w3-row + :visited) — gelesene Zeilen behalten
+ * also auch unter dem Cursor ihren Gelesen-Ton. */
+article:hover .w3-row,
+article:hover .w3-row h3,
+article:hover .w3-row h3 span {
+  color: #fff !important;
+}
+
 a.w3-row:visited,
 a.w3-row:visited h3,
 a.w3-row:visited h3 span {
