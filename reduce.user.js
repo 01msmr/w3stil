@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        reduce-ticker
 // @namespace   msmr.co
-// @version     0.14.0
+// @version     0.15.0
 // @description Kürzt Ressort-Chips und formatiert Tagesköpfe der Newsticker
 // @author      msmr
 // @license     MIT
@@ -226,28 +226,32 @@
     }
   };
 
-  /* Mac & i: der Vorspann vor dem ersten Doppelpunkt ("Kicker: Titel")
-   * bekommt einen eigenen Span, damit der Style ihn unter dem Cursor
-   * normal statt fett setzen kann — CSS kann Text nicht teilen. Nur der
-   * erste Doppelpunkt, nur wenn danach Text folgt; einmalig je Titel. */
+  /* Der Vorspann vor dem ersten Doppelpunkt ("Kicker: Titel") bekommt auf
+   * allen drei Tickern einen eigenen Span — CSS kann Text nicht teilen.
+   * Mac & i setzt ihn unter dem Cursor normal statt fett, golem und der
+   * heise-Ticker dimmen ihn. Nur der erste Doppelpunkt, nur wenn danach
+   * Text folgt; einmalig je Titel. */
   const kicker = () => {
-    if (!maci()) return;
     for (const h3 of document.querySelectorAll(
+      '.go-ticker-teaser__content, article:has(> a > time) h3, ' +
       'article[data-teaser-name="HorizontalTimelineTeaser"] h3'
     )) {
       if (h3.querySelector('.w3-kicker')) continue;
-      const walker = document.createTreeWalker(h3, NodeFilter.SHOW_TEXT);
-      let node;
-      while ((node = walker.nextNode())) {
-        const m = node.nodeValue.match(/^(\s*[^:]{1,80}:)(\s+\S.*)$/s);
-        if (!m) continue;
-        const span = document.createElement('span');
-        span.className = 'w3-kicker';
-        span.textContent = m[1];
-        node.nodeValue = m[2];
-        node.parentNode.insertBefore(span, node);
-        break;
-      }
+      /* Das tiefste Element, das nur noch Text enthält (bei Mac & i der
+       * innere Span, bei golem der Content-Span selbst) — und dessen
+       * GANZER Text: golem liefert den Titel in mehreren Textknoten
+       * ("Kicker", ":", " ", "Titel"), Knoten für Knoten fände man den
+       * Doppelpunkt nie mit dem Vorspann zusammen. */
+      const blatt = [h3, ...h3.querySelectorAll('*')].find(
+        (el) => el.children.length === 0 && el.textContent.includes(':')
+      );
+      if (!blatt) continue;
+      const m = blatt.textContent.match(/^(\s*[^:]{1,80}:)(\s+\S.*)$/s);
+      if (!m) continue;
+      const span = document.createElement('span');
+      span.className = 'w3-kicker';
+      span.textContent = m[1];
+      blatt.replaceChildren(span, document.createTextNode(m[2]));
     }
   };
 

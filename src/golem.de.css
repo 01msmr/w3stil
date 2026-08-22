@@ -259,6 +259,13 @@ body:has(.ticker-list) .go-content-header {
   overflow: visible !important;
 }
 
+/* Der Vorspann bis zum Doppelpunkt (Span vom Userscript) auf zwei Drittel
+ * gedimmt — in jedem Zustand relativ zur jeweiligen Schriftfarbe, also
+ * auch im invertierten Hover und bei gelesenen Zeilen. expect: 0..400 */
+.go-ticker-teaser .w3-kicker {
+  opacity: 0.66 !important;
+}
+
 /* Uhrzeit-Icon und Plus-Badge tragen in einer Zeilenliste nichts bei. */
 .go-ticker-teaser svg {
   display: none !important;
