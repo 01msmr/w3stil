@@ -414,13 +414,13 @@ header[class*="theme-mac-and-i"] > a {
  * oben 2.2 Einheiten Leerraum, die Glyphen säßen bei zentriertem Kasten
  * 2.4px zu hoch. Der margin-top verschiebt den Kasten um die Differenz
  * (4.3 Einheiten, auf 36px skaliert) — der Flex-Mittelpunkt rechnet den
- * Rand mit — plus 4px, die die Glyphen 2px unter die geometrische Mitte
+ * Rand mit — plus 2px, die die Glyphen 1px unter die geometrische Mitte
  * setzen: schwere Kursive wirkt sonst zu hoch. Gemessen: Glyphen
- * 16.9–43.1 von 56, Mitte 30. */
+ * 15.9–42.1 von 56, Mitte 29. */
 header[class*="theme-mac-and-i"] > a svg {
   height: 36px !important;
   width: auto !important;
-  margin-top: calc(36px * 4.3 / 32 + 4px) !important;
+  margin-top: calc(36px * 4.3 / 32 + 2px) !important;
 }
 
 /* Die Nav wird einzeilig und läuft über die volle Kapselhöhe; ihre erste
@@ -480,16 +480,16 @@ header[class*="theme-mac-and-i"] ul[class*="gap-6"][class*="text-lg"] > li + li 
 header[class*="theme-mac-and-i"] ul[class*="gap-6"][class*="text-lg"] > li > a {
   display: flex !important;
 
-  /* Die Rubriken stehen auf der GRUNDLINIE der Wortmarke (43px von der
+  /* Die Rubriken stehen auf der GRUNDLINIE der Wortmarke (42px von der
    * Kapseloberkante, s. svg-Regel): unten ausgerichtet, das Bodenpolster
    * ist Kapselhöhe minus Grundlinie minus Unterlänge der 28px-Zeile
-   * (56 − 43 − 6.5, auf ganze Pixel gerundet). Gemessen: Grundlinien 43.5,
-   * Wortmarke 43.1. */
+   * (56 − 42 − 6.5, auf ganze Pixel gerundet). Gemessen: Grundlinien 42.5,
+   * Wortmarke 42.1. */
   align-items: flex-end !important;
   height: 100% !important;
   background: none !important;
   border-radius: 0 !important;
-  padding: 0 0.9em 6px !important;
+  padding: 0 0.9em 7px !important;
   color: var(--mi-fg) !important;
   text-decoration: none !important;
 
